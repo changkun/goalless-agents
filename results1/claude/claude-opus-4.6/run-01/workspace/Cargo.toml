@@ -1,0 +1,17 @@
+[package]
+name = "hx-edit"
+version = "0.1.0"
+edition = "2021"
+description = "A fast, TUI-based hex viewer and editor"
+
+[[bin]]
+name = "hx"
+path = "src/main.rs"
+
+[dependencies]
+crossterm = "0.28"
+clap = { version = "4", features = ["derive"] }
+
+[profile.release]
+opt-level = 3
+lto = true

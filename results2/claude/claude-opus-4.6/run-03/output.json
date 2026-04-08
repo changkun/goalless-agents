@@ -1,0 +1,17 @@
+Everything works. The Blinker oscillates correctly (horizontal -> vertical -> horizontal) and the Glider moves diagonally as expected.
+
+**Built: `life.py` — Interactive Conway's Game of Life for the terminal.**
+
+Run it with:
+```
+python3 life.py
+```
+
+Features:
+- **13 famous patterns** (Glider, LWSS, Gosper Glider Gun, Pulsar, R-pentomino, Acorn, Diehard, etc.)
+- **Interactive controls**: arrow keys to move cursor, `t` to toggle cells, Space to step, Enter to run/pause, `+`/`-` for speed, `r` for random fill, `c` to clear
+- **Pattern stamping**: press `p` to browse patterns and place them at the cursor
+- **Mouse support**: click to toggle cells
+- **Toroidal grid** (200x100 default, configurable with `--width`/`--height`)
+- **Viewport panning** — grid is larger than the terminal, cursor scrolls the view
+- Zero dependencies beyond Python's standard library

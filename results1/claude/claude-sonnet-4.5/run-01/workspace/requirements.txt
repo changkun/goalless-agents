@@ -1,0 +1,7 @@
+# SmartCommit dependencies
+# Currently using only standard library - no external dependencies needed!
+
+# Future enhancements could add:
+# - openai>=1.0.0  # For GPT-based analysis
+# - anthropic>=0.18.0  # For Claude-based analysis
+# - rich>=13.0.0  # For beautiful terminal output

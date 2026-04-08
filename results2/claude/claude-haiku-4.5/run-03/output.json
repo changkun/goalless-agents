@@ -1,0 +1,20 @@
+The workspace is empty! Let me propose a goal:
+
+## Goal: Build a Personal Finance CLI - Expense Tracker
+
+**What it will do:**
+A command-line expense tracking app that helps users manage their finances. Key features:
+- Log expenses/income with categories (food, rent, entertainment, etc.)
+- View spending summaries by category and date range
+- Set monthly budget goals and compare actual vs budget
+- Search and filter transactions
+- Persist data to a local JSON file
+- Display reports with formatted tables
+
+**Why this is good:**
+- Useful, practical tool that solves a real problem
+- Demonstrates file I/O, data persistence, CLI argument parsing, and data analysis
+- Can be extended with features like charts, recurring transactions, or exports
+- Self-contained and completable in a meaningful way
+
+Should I proceed with building this? I'll create a Python-based CLI using standard library tools plus a simple library for nice terminal output.

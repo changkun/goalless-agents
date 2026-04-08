@@ -1,0 +1,11 @@
+pyproject.toml
+gitdigest/__init__.py
+gitdigest/cli.py
+gitdigest/digest.py
+gitdigest/git.py
+gitdigest.egg-info/PKG-INFO
+gitdigest.egg-info/SOURCES.txt
+gitdigest.egg-info/dependency_links.txt
+gitdigest.egg-info/entry_points.txt
+gitdigest.egg-info/requires.txt
+gitdigest.egg-info/top_level.txt

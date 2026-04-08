@@ -1,0 +1,15 @@
+The workspace is empty. I'll build something concrete and useful.
+
+**Goal: Build a terminal-based real-time system monitor dashboard**
+
+A Python CLI tool using `rich` that displays:
+- CPU usage (per-core and total)
+- Memory usage with visual bars
+- Disk I/O and space
+- Network traffic
+- Top processes by CPU/memory
+- Live-updating display with keyboard controls
+
+This is practical, visually interesting, and demonstrates good CLI design patterns.
+
+Should I proceed with implementing this?

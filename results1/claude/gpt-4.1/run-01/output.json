@@ -1,0 +1,13 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+API Error: 400 {"error":{"message":"litellm.BadRequestError: AzureException BadRequestError - Unrecognized request arguments supplied: context_management, output_configNo fallback model group found for original model_group=azure/gpt-4.1. Fallbacks=[{'azure/gpt-4.1-mini': ['azure/gpt-4.1']}]. Received Model Group=azure/gpt-4.1\nAvailable Model Group Fallbacks=None\nError doing the fallback: litellm.BadRequestError: AzureException BadRequestError - Unrecognized request arguments supplied: context_management, output_configNo fallback model group found for original model_group=azure/gpt-4.1. Fallbacks=[{'azure/gpt-4.1-mini': ['azure/gpt-4.1']}]","type":"invalid_request_error","param":null,"code":"400"}}

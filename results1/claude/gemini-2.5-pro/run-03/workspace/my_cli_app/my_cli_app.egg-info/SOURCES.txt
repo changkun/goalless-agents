@@ -1,0 +1,9 @@
+setup.py
+my_cli_app/__init__.py
+my_cli_app/__main__.py
+my_cli_app/commands.py
+my_cli_app.egg-info/PKG-INFO
+my_cli_app.egg-info/SOURCES.txt
+my_cli_app.egg-info/dependency_links.txt
+my_cli_app.egg-info/entry_points.txt
+my_cli_app.egg-info/top_level.txt

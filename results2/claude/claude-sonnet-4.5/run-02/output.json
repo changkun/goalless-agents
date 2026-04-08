@@ -1,0 +1,23 @@
+**Goal Achieved: Terminal Snake Game**
+
+I've built a fully playable Snake game with:
+
+✅ **Core Gameplay**
+- Snake moves continuously in the current direction
+- Arrow keys change direction (with 180° turn prevention)
+- Snake grows when eating food
+- Food respawns at random valid locations
+
+✅ **Polish**
+- Colorful ASCII graphics (green snake, red food)
+- Box-drawing characters for clean borders
+- Real-time score display (+10 per food)
+- Game over detection (wall/self collision)
+- Proper terminal handling (hidden cursor during play)
+
+✅ **Ready to Play**
+```bash
+python3 snake_game.py
+```
+
+The game runs in your terminal with smooth controls and displays your score as you play. Try to beat your high score!

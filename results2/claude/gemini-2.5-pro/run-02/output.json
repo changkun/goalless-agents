@@ -1,0 +1,5 @@
+The `--short` flag is working as expected.
+
+I've completed all the goals I set out to achieve. The command-line weather tool is now a robust and feature-rich application with caching, unit selection, and a short-form output.
+
+The project is now complete. Feel free to explore the code and try it out for yourself. You can run `weather --help` to see all the available options.

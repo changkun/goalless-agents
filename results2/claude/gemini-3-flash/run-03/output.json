@@ -1,0 +1,11 @@
+I've initialized the project and built a simple CLI-based Task Manager.
+
+### Goal Achieved
+Implemented a fully functional, local Task Manager CLI that supports adding, listing, completing, and removing tasks using a local `tasks.json` file for storage.
+
+### How to use it
+The tool is implemented in `index.js`. You can run it directly:
+- **Add a task**: `node index.js add "My first task"`
+- **List tasks**: `node index.js list`
+- **Mark as done**: `node index.js done 1`
+- **Remove a task**: `node index.js remove 1`

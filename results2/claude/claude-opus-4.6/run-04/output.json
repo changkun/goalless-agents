@@ -1,0 +1,19 @@
+Done. I built **Conway's Game of Life** as an interactive terminal simulator in `/workspace/life.py`.
+
+**What it does:**
+- Runs the classic B3/S23 cellular automaton in real-time in your terminal
+- Uses Unicode half-block characters for compact, dense rendering
+- Starts with a random grid on launch
+
+**Features:**
+- **7 classic patterns**: Glider, LWSS, Pulsar, Pentadecathlon, Gosper Glider Gun, R-pentomino, Acorn (keys `1`-`7`)
+- **Interactive controls**: pause/resume (Space), single-step (`s`), randomize (`r`), clear (`c`), speed +/- (`+`/`-`), toggle wrapping (`w`), quit (`q`)
+- **Toroidal wrapping** (togglable) so patterns wrap around edges
+- Auto-sizes to your terminal dimensions
+
+**Run it:**
+```
+python3 life.py
+```
+
+All engine logic is verified — blinker oscillation, glider movement, all pattern loads, wrap/no-wrap neighbor counting all pass.

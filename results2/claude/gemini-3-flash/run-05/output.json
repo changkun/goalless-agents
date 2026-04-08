@@ -1,0 +1,22 @@
+I have initialized a new project: **Task Monitor**.
+
+This is a lightweight CLI tool written in Go that executes a given command at a specified interval and alerts you if the execution time exceeds a defined threshold. It's useful for monitoring the performance of periodic scripts, API health checks, or any long-running maintenance tasks.
+
+### Features
+- **Configurable Interval**: Set how often the task should run (e.g., every 5 seconds, 1 minute).
+- **Performance Alerting**: Automatically logs an `[ALERT]` if the task takes longer than your threshold.
+- **Success/Failure Tracking**: Logs the status and duration of every execution.
+
+### How to use
+```bash
+# Build the tool
+go build -o task-monitor main.go
+
+# Example: Check if a request to example.com takes longer than 1 second, every 10 seconds
+./task-monitor -i 10s -t 1s curl -I https://example.com
+```
+
+### Files Created
+- `main.go`: The core logic for scheduling and monitoring.
+- `go.mod`: Go module definition.
+- `README.md`: Basic usage instructions.

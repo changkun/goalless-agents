@@ -1,0 +1,27 @@
+## ✅ Project Complete: Daily Standup Generator
+
+I've built a **standalone CLI tool** that generates professional standup summaries from your git commits using Claude AI.
+
+### What you get:
+
+**Core Files:**
+- `src/index.js` — Main module with git integration and Claude API calls
+- `src/cli.js` — Command-line interface with help and options
+- `package.json` — Dependencies (Anthropic SDK)
+
+**Key Features:**
+- 🎯 Fetches your recent commits and generates a natural standup summary
+- 🛠️ Easy CLI with `--limit` option to control how many commits to analyze
+- 📋 Ready-to-share bullet-point format
+- ✨ Uses Claude's latest model (claude-opus-4-6) for high-quality summaries
+
+### How to use:
+
+```bash
+npm install
+export ANTHROPIC_API_KEY=your-key
+npm start                # Summarize last 10 commits
+npm start -- --limit 20  # Summarize last 20 commits
+```
+
+The tool is designed to be immediately useful for developers who need quick standup summaries but also extensible—you could add options for filtering by author, time period, or branch in the future.

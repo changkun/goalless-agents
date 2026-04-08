@@ -1,0 +1,16 @@
+The workspace is empty. Here's my proposed goal:
+
+**Goal: Build a Terminal-Based Habit Tracker with Streaks**
+
+I'll create a CLI habit tracker in Python that lets users:
+- Add daily habits to track (e.g., "exercise", "read", "meditate")
+- Check off habits each day
+- View current and longest streaks for each habit
+- See a visual calendar heatmap of the past 30 days
+- Get motivational stats (completion rate, best day of week, etc.)
+
+Data will persist in a local JSON file. The UI will use colored terminal output to make streaks visually satisfying.
+
+This is practical (people actually use these), interesting (streak mechanics are engaging), and appropriately scoped for implementation.
+
+Should I proceed with building this?

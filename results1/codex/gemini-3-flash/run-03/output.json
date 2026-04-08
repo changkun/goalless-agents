@@ -1,0 +1,12 @@
+
+RTK configured for Codex CLI.
+
+  RTK.md:    /home/codex/.codex/RTK.md
+  AGENTS.md: @/home/codex/.codex/RTK.md reference added
+
+  Codex global instructions path: /home/codex/.codex/AGENTS.md
+{"type":"thread.started","thread_id":"019d6a96-afc3-7460-bb8b-f637f19ff225"}
+{"type":"turn.started"}
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 3/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 4/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}

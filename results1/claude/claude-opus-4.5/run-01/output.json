@@ -1,0 +1,31 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+**Built: `dirtree`** - a fast directory tree visualizer in Go.
+
+**Features:**
+- Tree structure with proper connectors (├──, └──, │)
+- File size display (`-s`)
+- Max depth limiting (`-L N`)
+- Hidden files (`-a`)
+- Directories only (`-d`)
+- Sort by size (`-S`)
+- Color-coded output (dirs=blue, code=green, docs=cyan)
+
+**Usage:**
+```
+./dirtree -s .              # Current dir with sizes
+./dirtree -S -s /path       # Sorted by size, largest first
+./dirtree -L 2 -d /path     # Only dirs, max 2 levels deep
+```
+
+Binary is at `/workspace/dirtree/dirtree` (2.5MB standalone).

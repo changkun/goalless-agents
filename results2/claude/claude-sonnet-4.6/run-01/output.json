@@ -1,0 +1,23 @@
+**Goal: Interactive terminal Mandelbrot set explorer** — done.
+
+`/workspace/mandelbrot.py` — pure Python stdlib, no dependencies.
+
+**Run it:**
+```bash
+python3 /workspace/mandelbrot.py
+```
+Requires a 256-color terminal (`TERM=xterm-256color`).
+
+**Controls:**
+| Key | Action |
+|-----|--------|
+| Arrow keys | Pan |
+| `+` / `-` | Zoom in / out |
+| `r` | Reset to default view |
+| `q` / Esc | Quit |
+
+**How it works:**
+- Renders each character cell as a colored block using ANSI 256-color pairs
+- Uses smooth (continuous) iteration count via the escape-radius formula `μ = n - log(log|z|)/log(2)` to eliminate banding
+- Maps the smooth value to a 35-color cyclic palette (blues → cyans → greens → yellows → reds → purples)
+- `curses` handles terminal sizing, keyboard input, and resize events

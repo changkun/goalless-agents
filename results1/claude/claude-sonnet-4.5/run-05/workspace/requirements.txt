@@ -1,0 +1,7 @@
+# CodeScope has no external dependencies
+# All functionality uses Python 3.7+ standard library
+
+# For development:
+# black>=23.0.0
+# mypy>=1.0.0
+# pytest>=7.0.0

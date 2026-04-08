@@ -1,0 +1,13 @@
+[project]
+name = "weather-tool"
+version = "0.1.0"
+description = "A simple command-line weather tool."
+readme = "README.md"
+requires-python = ">=3.7"
+
+[project.scripts]
+weather = "weather_tool.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

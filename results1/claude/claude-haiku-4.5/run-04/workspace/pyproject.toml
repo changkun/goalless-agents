@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "token-dashboard"
+version = "0.1.0"
+description = "CLI dashboard for tracking token usage across Claude API operations"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "anthropic>=0.25.0",
+    "click>=8.1.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+]
+
+[project.scripts]
+token-dashboard = "token_dashboard.cli:main"

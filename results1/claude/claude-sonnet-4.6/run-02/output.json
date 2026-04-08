@@ -1,0 +1,34 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+Built **devpulse** — a git repository analytics dashboard. 869 lines of pure Python, zero dependencies.
+
+**What it does:**
+
+```
+python -m devpulse /path/to/any/git/repo [--days N] [--no-heatmap] [--json]
+```
+
+**Seven panels:**
+- **Summary** — commits, insertions/deletions, contributor count, velocity (commits/day)
+- **52-week heatmap** — GitHub-style activity grid with 6 heat levels, active days, longest streak
+- **Commit timing** — hour-of-day sparkline + day-of-week bar chart (shows when devs actually code)
+- **Top contributors** — ranked table with share percentage and inline bars
+- **Hottest files** — file churn table sorted by change frequency, with per-author counts
+- **Language breakdown** — change distribution by file extension, 40+ languages recognized
+- **Recent commits** — last 20 with relative age, diff size, subject, and author
+
+**Architecture:**
+- `git.py` — two focused git-log passes (metadata + numstat); no shell injection possible
+- `render.py` — ANSI color primitives, no curses/rich dependency
+- `heatmap.py` / `churn.py` / `stats.py` — pure analysis + rendering
+- `__main__.py` — CLI with argparse, also exposes `--json` for scripting

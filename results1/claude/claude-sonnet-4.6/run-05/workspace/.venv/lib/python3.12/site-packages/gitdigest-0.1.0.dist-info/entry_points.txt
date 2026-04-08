@@ -1,0 +1,2 @@
+[console_scripts]
+gitdigest = gitdigest.cli:main

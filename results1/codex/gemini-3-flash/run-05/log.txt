@@ -1,0 +1,7 @@
+>>> Running codex sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-codex:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-V7nGL...
+>>> Model:     vertex_ai/gemini-3-flash
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results/codex/gemini-3-flash/run-05/workspace
+

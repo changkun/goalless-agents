@@ -1,0 +1,14 @@
+## Goal Achieved: Terminal Snake Game 🐍
+
+Built a complete, playable Snake game with:
+
+✓ **Full game mechanics**: Snake movement, growth, collision detection  
+✓ **Smooth controls**: WASD + arrow keys with reverse-prevention  
+✓ **Progressive difficulty**: Speed increases with each food eaten  
+✓ **Score system**: 10 points per food item  
+✓ **Polished UI**: Clean borders, distinct snake/food characters  
+✓ **Game over screen**: Shows final score  
+
+**Try it**: `python3 snake.py`
+
+The game uses Python's curses library for terminal rendering and includes proper input handling, game state management, and collision detection for both walls and self-collision.

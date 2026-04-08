@@ -1,0 +1,25 @@
+The workspace is empty. I'll propose building something practical and useful:
+
+## Goal: Build a local URL shortener service with REST API
+
+**What it'll do:**
+- Simple HTTP API that converts long URLs into short identifiers (e.g., `/api/shorten` → returns `http://localhost:8000/abc123`)
+- Store mappings persistently (JSON file or SQLite)
+- Redirect endpoint that resolves short codes back to original URLs
+- Handle collisions gracefully
+- Basic stats (view count per URL)
+
+**Why this is good:**
+- Demonstrates full-stack thinking: API design, storage, error handling
+- Useful tool you can actually use
+- Teaches collision resolution, URL validation, HTTP concepts
+- Easy to extend (expiration, custom codes, analytics, etc.)
+
+**Tech stack:** Python + FastAPI (fast, modern, built-in validation)
+
+**Starting with:** 
+1. Basic FastAPI app with `/shorten` and `/<code>` endpoints
+2. In-memory storage with file persistence
+3. Simple random code generation
+
+Ready to implement this? I'll build it incrementally with tests and clean design.

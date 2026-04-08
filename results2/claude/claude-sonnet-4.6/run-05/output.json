@@ -1,0 +1,16 @@
+**Goal achieved: `pomodoro.py` — a terminal Pomodoro timer with session tracking.**
+
+```
+python3 pomodoro.py work          # 25-min work session
+python3 pomodoro.py break         # 5-min short break
+python3 pomodoro.py longbreak     # 15-min long break
+python3 pomodoro.py work -m 45   # custom duration
+python3 pomodoro.py stats         # productivity stats
+```
+
+What it does:
+- **Live countdown** with a progress bar (`████░░░░  18:42 remaining`)
+- **Terminal bell** + completion message when done
+- **Graceful Ctrl+C** — records partial sessions, shows time remaining
+- **Logs every session** to `~/.pomodoro_sessions.json`
+- **Stats view** shows today/week/all-time totals, current streak, and a 7-day visual breakdown

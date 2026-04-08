@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# flux — run from anywhere: bash flux [args]
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$DIR/.venv/bin/python" "$DIR/flux.py" "$@"

@@ -1,0 +1,19 @@
+**Goal implemented: Conway's Game of Life** (`/workspace/life.py`)
+
+Run it with:
+```
+python3 life.py
+```
+
+**Controls:**
+
+| Key | Action |
+|-----|--------|
+| `Space` | Pause / Resume |
+| `r` | Random reset (30% density) |
+| `p` | Cycle through preset patterns |
+| `+` / `-` | Speed up / slow down (1–60 fps) |
+| `c` | Clear grid |
+| `q` / `Esc` | Quit |
+
+**8 built-in presets:** Glider, Blinker, Beacon, Toad, Glider Gun, Pulsar, R-pentomino, LWSS. The grid wraps toroidally (cells at the edge connect to the opposite side). Logic is verified — blinker oscillation period-2 confirmed.

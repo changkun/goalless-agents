@@ -1,0 +1,15 @@
+Done. I built an **interactive terminal Conway's Game of Life** (`life.py`).
+
+**What it does:**
+- Sparse-set infinite grid engine with standard B3/S23 rules
+- Curses-based terminal UI with color-coded cells and a HUD
+- 7 preset patterns: Glider, Gosper Glider Gun, Pulsar, Beacon, Lightweight Spaceship, Pentadecathlon, R-pentomino
+- Interactive controls: pause/play, step-by-step, pan viewport, adjust speed (1-100 gen/s), randomize, clear, mouse drawing
+- Starts with a Gosper Glider Gun firing gliders across the screen
+
+**Run it:**
+```
+python3 life.py
+```
+
+**Controls:** Space=pause, arrows/WASD=pan, +/-=speed, 1-7=place pattern, r=random, c=clear, d=draw mode, n=step, q=quit.

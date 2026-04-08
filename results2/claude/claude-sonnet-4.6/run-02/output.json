@@ -1,0 +1,16 @@
+Built **`sysmon.py`** — a live terminal system monitor.
+
+**Run it:**
+```
+python3 /workspace/sysmon.py
+```
+
+**What it shows (refreshes every second):**
+- CPU: overall % bar + per-core mini-bars, color-coded green/yellow/red
+- Temperature sensors (if available on the platform)
+- RAM and swap usage bars with used/total/available
+- Disk usage for `/`
+- Network rx/tx rates (per-second) + cumulative totals
+- System uptime and 1/5/15-min load averages
+
+Press `q` or `Esc` to quit.

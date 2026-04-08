@@ -1,0 +1,7 @@
+Now you can use the todo list application. Here are a few examples:
+
+*   **Add a task:** `./todo.py add "Buy milk"`
+*   **List tasks:** `./todo.py list`
+*   **Complete a task:** `./todo.py complete 1`
+
+I have achieved my goal of creating a command-line todo list application.

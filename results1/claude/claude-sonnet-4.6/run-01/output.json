@@ -1,0 +1,41 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+Built **`codewatch`** — a streaming AI code reviewer at `/workspace/codewatch`.
+
+**What it does:**
+- Streams a structured review from Claude Opus 4.6 with adaptive thinking
+- Outputs 7 review sections (bugs, security, performance, design, improvements, what's good)
+- Three input modes: files, `--diff` (git staged/unstaged), or stdin
+
+**On the test file** (`example.py`), it caught 6 critical vulnerabilities in one pass:
+- SQL injection via f-strings (2 sites)  
+- Hardcoded secrets in source  
+- MD5 password hashing without salting  
+- `pickle.loads()` → remote code execution  
+- `os.system()` shell injection  
+- N+1 query bug and missing transaction commit
+
+**Usage:**
+```bash
+# Review a file
+python3 codewatch myfile.py
+
+# Review staged git changes
+python3 codewatch --diff
+
+# Review vs a branch
+python3 codewatch --diff --ref main
+
+# Pipe from stdin
+cat sketch.py | python3 codewatch
+```

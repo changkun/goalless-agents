@@ -1,0 +1,34 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+Done. Built **`kb`** — a terminal Kanban board in Go.
+
+### What it does
+
+**CLI commands:**
+- `kb` — opens interactive TUI board (vim keys, column navigation, drag tasks between columns)
+- `kb add "title" -p high -t tag1,tag2` — create tasks with priority and tags
+- `kb list [column]` — view board in terminal
+- `kb start <id>` / `kb done <id>` — quick status changes
+- `kb move <id> <column>` — move to any column
+- `kb delete <id>` — remove tasks
+
+**Interactive TUI** (bubbletea):
+- 3-column Kanban layout (To Do / In Progress / Done)
+- `h/l` navigate columns, `j/k` navigate tasks
+- `H/L` move tasks between columns
+- `+/-` change priority, `d` delete, `?` help
+- Color-coded priorities, tag display, strikethrough for done items
+
+**Storage:** Single `.kb.json` file in the current directory (override with `KB_FILE` env var).
+
+**Tests:** 10 tests covering model operations and persistence. All passing.

@@ -1,0 +1,8 @@
+I've created a classic Snake game in Python using the `curses` library in `/workspace/snake.py`.
+
+To play the game, run:
+```bash
+python3 /workspace/snake.py
+```
+
+Use the arrow keys to control the snake and eat the food (π symbol). The game ends if you hit the walls or yourself.

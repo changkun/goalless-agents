@@ -1,0 +1,21 @@
+Done. Here's what was built:
+
+---
+
+**`/workspace/quiz.py` — Terminal Trivia Quiz powered by Claude**
+
+```
+python3 quiz.py "ancient Rome" --questions 7
+python3 quiz.py                              # defaults: general knowledge, 5 questions
+```
+
+**What it does:**
+1. Streams AI-generated multiple-choice questions (A–D) on any topic
+2. Asks questions interactively, tracks your score
+3. Shows a grade + full review of every wrong answer with explanations
+
+**Implementation highlights:**
+- Claude (`claude-sonnet-4.6`) generates all questions as structured JSON
+- Adaptive streaming with progress dots during generation
+- Graceful error handling for API/parsing failures
+- `--questions N` flag accepts 3–15 questions

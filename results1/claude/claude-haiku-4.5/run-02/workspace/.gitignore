@@ -1,0 +1,17 @@
+# Binary
+code-analyzer
+
+# Go
+*.test
+*.prof
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store

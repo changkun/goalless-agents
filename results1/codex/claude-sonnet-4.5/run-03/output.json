@@ -1,0 +1,9 @@
+
+RTK configured for Codex CLI.
+
+  RTK.md:    /home/codex/.codex/RTK.md
+  AGENTS.md: @/home/codex/.codex/RTK.md reference added
+
+  Codex global instructions path: /home/codex/.codex/AGENTS.md
+{"type":"thread.started","thread_id":"019d6a96-b7a1-7ee0-9f1e-465e7777a07b"}
+{"type":"turn.started"}

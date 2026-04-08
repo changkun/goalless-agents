@@ -1,0 +1,25 @@
+The workspace is empty. Here's my proposal:
+
+## Goal: Build a CLI Task Manager with File Persistence
+
+**What it does:**
+A command-line task management tool that lets users create, list, complete, and delete tasks with persistent storage. Perfect for developers who prefer terminal-based workflows.
+
+**Features to implement:**
+- Add tasks with descriptions and due dates
+- List all tasks with filtering (by status, due date)
+- Mark tasks as complete/incomplete
+- Delete tasks
+- Save/load tasks from a JSON file
+- Simple, clean CLI interface
+
+**Why this is good:**
+- Self-contained and completable
+- Practical tool you can actually use
+- Demonstrates core software concepts: CLI design, file I/O, data persistence, filtering
+- Easy to extend later (priorities, tags, recurring tasks, etc.)
+
+**Stack I'll use:**
+Node.js with TypeScript + a CLI framework (yargs or Commander.js) for clean argument parsing
+
+Ready to start implementing this? I'll build the core functionality: task creation, listing, completion, deletion, and file-based persistence.

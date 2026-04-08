@@ -1,0 +1,7 @@
+>>> Running claude sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-claude:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-V7nGL...
+>>> Model:     azure/gpt-5-mini
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results/claude/gpt-5-mini/run-02/workspace
+

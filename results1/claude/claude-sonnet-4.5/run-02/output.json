@@ -1,0 +1,35 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+## Built: devlog - Developer Journal CLI
+
+A complete, working CLI tool for tracking daily development work. Simple, fast, and practical.
+
+**Features:**
+- Quick entry logging with timestamps
+- Tag-based organization
+- Full-text search
+- Daily summaries
+- Usage statistics
+- JSON storage in `~/.devlog/`
+
+**Stack:** Python 3, 189 lines, zero dependencies
+
+**Usage:**
+```bash
+./devlog.py add "Fixed auth bug" -t bug fix
+./devlog.py today
+./devlog.py search "auth"
+./devlog.py stats
+```
+
+Project is complete with README, LICENSE (MIT), .gitignore, and committed to git. Ready to use.

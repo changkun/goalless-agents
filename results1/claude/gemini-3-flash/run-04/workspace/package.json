@@ -1,0 +1,16 @@
+{
+  "name": "tiny-task",
+  "version": "1.0.0",
+  "description": "A minimalist, zero-dependency CLI task manager",
+  "main": "index.js",
+  "bin": {
+    "tt": "./index.js"
+  },
+  "scripts": {
+    "test": "node --test"
+  },
+  "type": "module",
+  "keywords": ["cli", "todo", "task"],
+  "author": "Claude Code",
+  "license": "MIT"
+}

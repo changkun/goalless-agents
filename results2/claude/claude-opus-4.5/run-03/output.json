@@ -1,0 +1,13 @@
+The workspace is empty. I'll build something concrete and useful.
+
+**Goal: Build a CLI note-taking tool with full-text search**
+
+A terminal-based notes manager called `jot` that lets you:
+- Create, edit, and delete markdown notes
+- Search notes with full-text search
+- Organize with tags
+- Store everything locally as plain markdown files
+
+This is practical, self-contained, and demonstrates good CLI design patterns. I'll implement it in Python with no external dependencies beyond the standard library.
+
+Should I proceed with building this?

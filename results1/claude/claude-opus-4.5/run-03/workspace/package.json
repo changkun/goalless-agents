@@ -1,0 +1,15 @@
+{
+  "name": "pomo",
+  "version": "1.0.0",
+  "description": "CLI pomodoro timer with session tracking",
+  "main": "pomo.js",
+  "bin": {
+    "pomo": "./pomo.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": ["pomodoro", "timer", "cli", "productivity"],
+  "license": "MIT"
+}

@@ -1,0 +1,7 @@
+>>> Running claude sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-claude:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-V7nGL...
+>>> Model:     vertex_ai/gemini-2.5-pro
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results/claude/gemini-2.5-pro/run-05/workspace
+

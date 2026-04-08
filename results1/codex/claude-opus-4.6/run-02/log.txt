@@ -1,0 +1,7 @@
+>>> Running codex sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-codex:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-V7nGL...
+>>> Model:     claude-opus-4.6
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results/codex/claude-opus-4.6/run-02/workspace
+

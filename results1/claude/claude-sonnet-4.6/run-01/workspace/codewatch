@@ -1,0 +1,248 @@
+#!/usr/bin/env python3
+"""
+codewatch — streaming AI code reviewer powered by Claude
+
+Usage:
+  codewatch [FILE...]          Review one or more files
+  codewatch --diff [REF]       Review git diff (staged by default, or vs REF)
+  cat file.py | codewatch      Review from stdin
+  codewatch --help             Show this message
+"""
+
+import sys
+import os
+import subprocess
+import click
+import anthropic
+from rich.console import Console
+from rich.markdown import Markdown
+from rich.panel import Panel
+from rich.rule import Rule
+from rich.live import Live
+from rich.text import Text
+from rich import print as rprint
+
+console = Console()
+
+SYSTEM_PROMPT = """\
+You are an expert code reviewer with deep knowledge of software engineering best practices, \
+security, performance, and maintainability. You give precise, actionable feedback.
+
+When reviewing code, structure your response in markdown with these sections (only include \
+sections that have something meaningful to say):
+
+## Summary
+One or two sentences on what the code does and its overall quality.
+
+## 🐛 Bugs & Correctness
+Actual bugs, logic errors, off-by-one errors, race conditions, null/undefined handling issues. \
+If none, omit this section.
+
+## 🔒 Security
+Security vulnerabilities: injection, auth issues, secrets in code, input validation, \
+unsafe deserialization. If none, omit this section.
+
+## ⚡ Performance
+Inefficiencies worth fixing: O(n²) where O(n) is possible, unnecessary allocations, \
+N+1 queries, blocking I/O. Only flag things that actually matter. If none, omit this section.
+
+## 🏗️ Design & Architecture
+Structural issues: god objects, tight coupling, missing abstractions, violation of SOLID. \
+Keep this brief and concrete. If none, omit this section.
+
+## ✨ Improvements
+High-value improvements that aren't bugs: better error messages, missing edge case handling, \
+readability wins. Maximum 3 items. If nothing significant, omit this section.
+
+## ✅ What's Good
+One or two specific things done well (not generic praise).
+
+Be direct and specific. Reference line numbers when relevant. Skip obvious or trivial feedback. \
+If the code is excellent, say so briefly and explain why.\
+"""
+
+
+def get_git_diff(ref: str | None) -> str:
+    """Get git diff — staged changes by default, or vs a ref."""
+    try:
+        if ref:
+            cmd = ["git", "diff", ref]
+        else:
+            cmd = ["git", "diff", "--staged"]
+
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        diff = result.stdout.strip()
+
+        if not diff and not ref:
+            # Fall back to unstaged changes if nothing is staged
+            result = subprocess.run(
+                ["git", "diff"], capture_output=True, text=True, check=True
+            )
+            diff = result.stdout.strip()
+            if diff:
+                console.print(
+                    "[dim]No staged changes found — showing unstaged diff[/dim]"
+                )
+
+        return diff
+    except subprocess.CalledProcessError as e:
+        console.print(f"[red]git error:[/red] {e.stderr.strip()}")
+        sys.exit(1)
+    except FileNotFoundError:
+        console.print("[red]git not found[/red]")
+        sys.exit(1)
+
+
+def read_files(paths: tuple[str, ...]) -> str:
+    """Read and concatenate files with headers."""
+    parts = []
+    for path in paths:
+        try:
+            with open(path) as f:
+                content = f.read()
+            parts.append(f"### {path}\n```\n{content}\n```")
+        except OSError as e:
+            console.print(f"[red]Cannot read {path}:[/red] {e}")
+            sys.exit(1)
+    return "\n\n".join(parts)
+
+
+def read_stdin() -> str:
+    """Read code from stdin."""
+    content = sys.stdin.read().strip()
+    if not content:
+        console.print("[red]No input received on stdin[/red]")
+        sys.exit(1)
+    return f"```\n{content}\n```"
+
+
+def stream_review(code: str, label: str) -> None:
+    """Stream a code review from Claude with live terminal output."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        console.print(
+            "[red]ANTHROPIC_API_KEY not set[/red]\n"
+            "Export it: [bold]export ANTHROPIC_API_KEY=sk-ant-...[/bold]"
+        )
+        sys.exit(1)
+
+    client = anthropic.Anthropic(api_key=api_key)
+    model = os.environ.get("CODEWATCH_MODEL", "claude-opus-4.6")
+
+    console.print()
+    console.print(
+        Panel.fit(
+            f"[bold cyan]{label}[/bold cyan]",
+            subtitle=f"[dim]{model} · adaptive thinking · streaming[/dim]",
+            border_style="cyan",
+        )
+    )
+    console.print()
+
+    user_message = f"Please review this code:\n\n{code}"
+
+    # Collect streamed text, then render as markdown
+    accumulated = ""
+
+    final_message = None
+
+    with console.status("[cyan]Thinking...[/cyan]", spinner="dots") as status:
+        with client.messages.stream(
+            model=model,
+            max_tokens=4096,
+            thinking={"type": "adaptive"},
+            system=SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": user_message}],
+        ) as stream:
+            thinking_done = False
+            for event in stream:
+                if event.type == "content_block_start":
+                    if event.content_block.type == "thinking" and not thinking_done:
+                        status.update("[cyan]Analyzing...[/cyan]")
+                    elif event.content_block.type == "text":
+                        if not thinking_done:
+                            status.stop()
+                            thinking_done = True
+
+                elif event.type == "content_block_delta":
+                    if event.delta.type == "text_delta":
+                        accumulated += event.delta.text
+
+            final_message = stream.get_final_message()
+
+    # Render the complete markdown response
+    console.print(Markdown(accumulated))
+    console.print()
+    console.print(Rule(style="dim"))
+
+    # Show token usage
+    if final_message:
+        usage = final_message.usage
+        thinking_tokens = getattr(usage, "thinking_tokens", 0) or 0
+        console.print(
+            f"[dim]tokens: {usage.input_tokens} in · "
+            f"{usage.output_tokens} out"
+            + (f" · {thinking_tokens} thinking" if thinking_tokens else "")
+            + "[/dim]"
+        )
+    console.print()
+
+
+@click.command(context_settings={"help_option_names": ["-h", "--help"]})
+@click.argument("files", nargs=-1, type=click.Path(exists=True))
+@click.option(
+    "--diff",
+    "use_diff",
+    is_flag=True,
+    help="Review git diff (staged changes by default)",
+)
+@click.option(
+    "--ref",
+    default=None,
+    metavar="REF",
+    help="Git ref to diff against (e.g. HEAD, main, abc1234)",
+)
+def main(files: tuple[str, ...], use_diff: bool, ref: str | None) -> None:
+    """
+    Stream an AI code review powered by Claude.
+
+    \b
+    Examples:
+      codewatch main.py
+      codewatch src/auth.py src/models.py
+      codewatch --diff
+      codewatch --diff --ref main
+      git diff HEAD | codewatch
+      cat sketch.py | codewatch
+    """
+    # Priority: explicit flags/files first, then stdin, then help
+    if (use_diff or ref) and files:
+        console.print("[red]Use either --diff or file arguments, not both[/red]")
+        sys.exit(1)
+
+    if use_diff or ref:
+        code = get_git_diff(ref)
+        if not code:
+            console.print("[yellow]No changes to review[/yellow]")
+            sys.exit(0)
+        label = "Git diff" + (f" vs {ref}" if ref else " (staged)")
+        stream_review(code, label)
+
+    elif files:
+        code = read_files(files)
+        label = files[0] if len(files) == 1 else f"{len(files)} files"
+        stream_review(code, label)
+
+    elif not sys.stdin.isatty():
+        # Only read stdin when no positional args were given
+        code = read_stdin()
+        stream_review(code, "stdin")
+
+    else:
+        ctx = click.get_current_context()
+        click.echo(ctx.get_help())
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()

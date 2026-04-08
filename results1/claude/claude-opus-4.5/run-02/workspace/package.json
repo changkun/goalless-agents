@@ -1,0 +1,15 @@
+{
+  "name": "mdcheck",
+  "version": "1.0.0",
+  "description": "Fast markdown link checker CLI",
+  "type": "module",
+  "bin": {
+    "mdcheck": "./bin/mdcheck.js"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": ["markdown", "link-checker", "cli"],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,7 @@
+>>> Running claude sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-claude:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-V7nGL...
+>>> Model:     claude-sonnet-4.6
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results2/claude/claude-sonnet-4.6/run-05/workspace
+

@@ -1,0 +1,7 @@
+Write a function that basically is designed to essentially determine and figure out if a number is prime.
+
+Due to the fact that we need to check divisibility, we should iterate through potential factors. At this point in time, we should check from 2 up to the square root of the number, which is very helpful.
+
+In the event that we find any divisor, the number is not prime. At the end of the day, this approach has the ability to be quite efficient.
+
+Well, apparently this algorithm is somewhat straightforward and seemingly effective for most practical purposes.

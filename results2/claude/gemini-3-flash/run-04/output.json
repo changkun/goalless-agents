@@ -1,0 +1,14 @@
+I have initialized a new project called **gokv**, a high-performance, thread-safe key-value store in Go.
+
+### Accomplishments:
+- **Core Engine**: Implemented a concurrent-safe key-value store using `sync.RWMutex` for efficient read/write operations.
+- **TTL Support**: Added time-to-live functionality allowing entries to expire automatically.
+- **Background Eviction**: Integrated a background routine that periodically cleans up expired items to manage memory usage.
+- **Testing**: Verified the implementation with unit tests covering basic operations (Set/Get), deletion, and expiration logic.
+
+### File Structure:
+- `kv.go`: Core logic for the key-value store and background eviction loop.
+- `kv_test.go`: Comprehensive test suite for the store.
+- `main.go`: Entry point for the module.
+
+All tests are currently passing.

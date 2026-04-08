@@ -1,0 +1,31 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+Done. Built **`hx`** — a fast TUI hex viewer and editor in Rust. 773K stripped binary.
+
+**Features:**
+- **Hex + ASCII view** with offset column, colored column headers
+- **Vim-style navigation** — `h/j/k/l`, arrow keys, `PageUp/Down`, `Home/End`
+- **Edit mode** (`i`) — type hex digits to modify bytes, changes highlighted in red
+- **Search** (`/`) — hex patterns (`FF 00 AB`) or ASCII strings, with `n`/`N` to cycle results (highlighted in yellow)
+- **Go to offset** (`g`) — decimal or `0x` hex input
+- **Save** (`s`) and **Undo** (`u` — reverts to last save)
+- **Read-only mode** (`-r` flag)
+- **Configurable columns** (`-c 32` for 32 bytes per row)
+- **Help overlay** (`?`)
+- Handles terminal resize, alternate screen, clean exit
+
+**Usage:**
+```
+./target/release/hx <file>
+./target/release/hx -r -c 32 /usr/bin/ls
+```

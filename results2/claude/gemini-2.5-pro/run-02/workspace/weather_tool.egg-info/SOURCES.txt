@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+weather_tool/cli.py
+weather_tool.egg-info/PKG-INFO
+weather_tool.egg-info/SOURCES.txt
+weather_tool.egg-info/dependency_links.txt
+weather_tool.egg-info/entry_points.txt
+weather_tool.egg-info/top_level.txt

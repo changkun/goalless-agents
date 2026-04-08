@@ -1,0 +1,7 @@
+>>> Running codex sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-codex:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-V7nGL...
+>>> Model:     azure/gpt-5-mini
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results/codex/gpt-5-mini/run-03/workspace
+

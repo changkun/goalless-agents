@@ -1,0 +1,16 @@
+Done! Built a **terminal-based habit tracker CLI** (`habits.py`).
+
+**Features:**
+- `habits add "name"` - Add habits to track
+- `habits done "name"` - Mark complete for today (with streak notification)
+- `habits list` - View all habits with streaks, 7-day history, daily progress bar
+- `habits stats [name]` - Detailed statistics with 30-day visualization, completion rates
+- `habits remove "name"` - Delete a habit
+
+**Highlights:**
+- Persistent JSON storage in `~/.habits.json`
+- Streak calculation (continues if you complete today or yesterday)
+- Visual progress with block characters (█░) and emoji status
+- Clean box-drawing terminal UI
+
+Run with: `python3 habits.py` or `./habits.py`

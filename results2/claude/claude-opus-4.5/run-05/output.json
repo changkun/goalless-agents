@@ -1,0 +1,13 @@
+Done. Built **`habits.py`** - a terminal habit tracker with:
+
+| Command | Description |
+|---------|-------------|
+| `habits add <name>` | Add a new habit |
+| `habits remove <name>` | Delete a habit |
+| `habits check <name>` | Check off for today |
+| `habits check <name> -d YYYY-MM-DD` | Check off for past date |
+| `habits list` | Show all habits with streaks |
+| `habits stats` | Completion rates over 30 days |
+| `habits calendar <name>` | Visual grid of completions |
+
+Data persists in SQLite at `~/.habits.db`. The streak logic handles gaps correctly - you keep your streak if you complete yesterday or today.

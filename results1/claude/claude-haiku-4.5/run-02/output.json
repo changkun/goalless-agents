@@ -1,0 +1,42 @@
+
+RTK hook already up to date (global).
+
+  Hook:      /home/claude/.claude/hooks/rtk-rewrite.sh
+  RTK.md:    /home/claude/.claude/RTK.md (10 lines)
+  CLAUDE.md: @RTK.md reference added
+
+  settings.json: hook already present
+  Restart Claude Code. Test with: git status
+  filters:   /home/claude/.config/rtk/filters.toml (template, edit to add user-global filters)
+
+
+## ✅ Built: Code Analyzer
+
+A production-ready CLI tool for analyzing source code statistics in Go.
+
+**What it does:**
+- Scans directories and extracts metrics (lines of code, comments, functions, imports)
+- Supports 15+ programming languages
+- Intelligently skips vendor files, hidden directories, and binaries
+- Outputs human-readable tables or JSON for integration with other tools
+
+**Project structure:**
+- `main.go` (274 lines) — Core analyzer engine with multi-language support
+- `README.md` — Comprehensive documentation with examples
+- `Makefile` — Build targets and utilities
+- `go.mod` — Go module definition
+- `code-analyzer` — Compiled binary (ready to use)
+
+**Features:**
+- Fast single-pass file scanning
+- Detects block and single-line comments across languages
+- Counts functions and imports for code complexity estimation
+- Dual output formats (table + JSON)
+- Excludes vendor/, node_modules/, .git/ by default
+
+**Quick test:**
+```bash
+./code-analyzer /workspace
+```
+
+The tool is self-contained, zero-dependency, and ready to integrate with CI/CD pipelines or use standalone for quick codebase audits.

@@ -1,0 +1,21 @@
+The workspace is empty. I'll build something practical and useful.
+
+## Proposed Goal: **CLI Note Management System with Search & Tags**
+
+Build a Python CLI tool for managing text notes with the following features:
+- **Create, read, update, delete** notes (stored as JSON)
+- **List** all notes with metadata
+- **Full-text search** across note contents
+- **Tag system** for organizing notes (e.g., `#todo`, `#project`)
+- **Filter** by tags
+- **Quick commands** like `note new "title"` to start editing
+
+This is a practical tool that demonstrates:
+- CLI design and user experience
+- File I/O and data persistence
+- Search algorithms
+- Python best practices
+
+**Let's start with a working MVP in 15-20 minutes**, then expand if needed.
+
+Should I proceed with building this?

@@ -1,0 +1,14 @@
+{
+  "name": "task-cli",
+  "version": "1.0.0",
+  "description": "A simple CLI task manager",
+  "main": "index.js",
+  "bin": {
+    "task": "./index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,20 @@
+I've built **GoTask**, a lightweight CLI-based task manager written in Go.
+
+### Accomplishments
+- **Goal Achieved**: Implemented a functional CLI tool for managing personal tasks.
+- **Persistent Storage**: Tasks are saved to a `tasks.json` file in the project root.
+- **Core Commands**:
+  - `add "task content"`: Creates a new task with a unique ID.
+  - `list`: Displays all tasks in a formatted table with their status (○ for pending, ✓ for done).
+  - `done <id>`: Marks a specific task as completed.
+  - `rm <id>`: Deletes a task from the list.
+
+### Usage
+To use the tool, you can run the compiled binary:
+```bash
+./gotask add "My first task"
+./gotask list
+./gotask done 1
+```
+
+The project is now initialized with `go.mod` and a robust `main.go` entry point.

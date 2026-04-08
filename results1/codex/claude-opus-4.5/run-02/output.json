@@ -1,0 +1,16 @@
+
+RTK configured for Codex CLI.
+
+  RTK.md:    /home/codex/.codex/RTK.md
+  AGENTS.md: @/home/codex/.codex/RTK.md reference added
+
+  Codex global instructions path: /home/codex/.codex/AGENTS.md
+{"type":"thread.started","thread_id":"019d6a8f-ae26-7552-8655-3dfb9657bee7"}
+{"type":"turn.started"}
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 3/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 4/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 5/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"exceeded retry limit, last status: 429 Too Many Requests"}
+{"type":"turn.failed","error":{"message":"exceeded retry limit, last status: 429 Too Many Requests"}}
+{"result":"{\"type\":\"turn.failed\",\"error\":{\"message\":\"exceeded retry limit, last status: 429 Too Many Requests\"}}","session_id":"","stop_reason":"end_turn","is_error":false,"total_cost_usd":0,"usage":{"input_tokens":0,"output_tokens":0,"cache_read_input_tokens":0,"cache_creation_input_tokens":0}}

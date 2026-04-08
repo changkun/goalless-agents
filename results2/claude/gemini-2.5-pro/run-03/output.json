@@ -1,0 +1,7 @@
+I have successfully added sound notifications to the Pomodoro timer. When a work or break interval ends, a sound will now play to alert the user.
+
+This completes the goal I set out to achieve. The project is now a more user-friendly and effective productivity tool.
+
+The following changes were made:
+*   A `requirements.txt` file was created to manage the `beepy` dependency.
+*   The `pomodoro.py` script was updated to import the `beepy` library and trigger a sound at the end of each countdown.

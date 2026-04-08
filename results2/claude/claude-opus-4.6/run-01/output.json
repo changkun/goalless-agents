@@ -1,0 +1,3 @@
+**Goal: Build an interactive terminal Conway's Game of Life in Python.**
+
+Single file, zero dependencies (just stdlib `curses`), with keyboard controls, classic patterns, and a status bar. Ready to implement when you approve.

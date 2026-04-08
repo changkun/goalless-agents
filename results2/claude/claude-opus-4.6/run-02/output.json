@@ -1,0 +1,16 @@
+Done. I built an **interactive terminal Conway's Game of Life** in a single file: `/workspace/life.py`.
+
+**Run it with:**
+```
+python3 life.py
+```
+
+**What it includes:**
+
+- **Sparse infinite grid** — no fixed boundaries, efficient even with large populations
+- **Full TUI** with curses — colored cells, cursor, status bar, flash messages
+- **13 classic patterns** — Glider, LWSS, Pulsar, Gosper Glider Gun, R-pentomino, Diehard, Acorn, and more
+- **Pattern browser** — press Tab to open an overlay, browse patterns, and place them at cursor
+- **Interactive controls** — pause/resume, single-step, speed adjustment (8 levels), pan, cell toggle, randomize, clear, fit-to-population
+- **Mouse support** — click to toggle cells
+- All core logic verified with tests (blinker oscillation, block still life, glider conservation, pattern loading)

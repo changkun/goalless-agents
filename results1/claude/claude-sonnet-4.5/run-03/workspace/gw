@@ -1,0 +1,308 @@
+#!/usr/bin/env python3
+"""
+Git Workflow (gw) - Intelligent git workflow automation
+"""
+
+import sys
+import subprocess
+import json
+import os
+from pathlib import Path
+from datetime import datetime
+
+VERSION = "0.1.0"
+
+def run(cmd, capture=True, check=True):
+    """Run a shell command"""
+    if capture:
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        if check and result.returncode != 0:
+            print(f"❌ Command failed: {cmd}", file=sys.stderr)
+            print(result.stderr, file=sys.stderr)
+            sys.exit(1)
+        return result.stdout.strip()
+    else:
+        result = subprocess.run(cmd, shell=True)
+        if check and result.returncode != 0:
+            sys.exit(1)
+        return result.returncode == 0
+
+def is_git_repo():
+    """Check if current directory is a git repo"""
+    return run("git rev-parse --git-dir 2>/dev/null", check=False) != ""
+
+def get_current_branch():
+    """Get the current git branch"""
+    return run("git branch --show-current")
+
+def get_default_branch():
+    """Get the default branch (main or master)"""
+    branches = run("git branch -l main master").split('\n')
+    for branch in branches:
+        branch = branch.strip('* ').strip()
+        if branch in ['main', 'master']:
+            return branch
+    return 'main'
+
+def get_staged_files():
+    """Get list of staged files"""
+    return run("git diff --cached --name-only").split('\n') if run("git diff --cached --name-only") else []
+
+def get_unstaged_changes():
+    """Check if there are unstaged changes"""
+    return run("git diff --name-only") != ""
+
+def has_changes():
+    """Check if there are any changes"""
+    return run("git status --porcelain") != ""
+
+def smart_commit():
+    """Smart commit with generated message"""
+    if not get_staged_files():
+        print("❌ No staged files. Use 'gw add' or 'git add' first.")
+        sys.exit(1)
+
+    # Generate commit message based on staged files
+    files = get_staged_files()
+    if len(files) == 1:
+        msg = f"Update {files[0]}"
+    elif len(files) <= 3:
+        msg = f"Update {', '.join(files)}"
+    else:
+        msg = f"Update {len(files)} files"
+
+    print(f"📝 Committing: {msg}")
+    run(f'git commit -m "{msg}"', capture=False)
+    print("✅ Committed")
+
+def smart_add():
+    """Smart add - stage modified and new files"""
+    status = run("git status --porcelain")
+    if not status:
+        print("✅ No changes to add")
+        return
+
+    print("📦 Staging changes...")
+    run("git add -A", capture=False)
+
+    files = get_staged_files()
+    print(f"✅ Staged {len(files)} file(s)")
+
+def quick_save():
+    """Quick save - add all and commit with timestamp"""
+    if not has_changes():
+        print("✅ No changes to save")
+        return
+
+    smart_add()
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    msg = f"Quick save: {timestamp}"
+    print(f"💾 {msg}")
+    run(f'git commit -m "{msg}"', capture=False)
+    print("✅ Saved")
+
+def sync_branch():
+    """Sync with remote - pull and push"""
+    current = get_current_branch()
+    if not current:
+        print("❌ Not on a branch")
+        sys.exit(1)
+
+    print(f"🔄 Syncing branch '{current}'...")
+
+    # Check if remote exists
+    has_remote = run("git remote", check=False) != ""
+    if not has_remote:
+        print("⚠️  No remote configured")
+        return
+
+    # Pull
+    print("⬇️  Pulling...")
+    if not run(f"git pull origin {current}", check=False):
+        print("⚠️  Pull had conflicts or failed, resolve manually")
+        return
+
+    # Push
+    print("⬆️  Pushing...")
+    run(f"git push origin {current}", capture=False)
+    print("✅ Synced")
+
+def new_branch(name):
+    """Create and switch to a new branch"""
+    if not name:
+        print("❌ Branch name required")
+        sys.exit(1)
+
+    print(f"🌿 Creating branch '{name}'...")
+    run(f"git checkout -b {name}", capture=False)
+    print("✅ Created and switched")
+
+def switch_branch(name=None):
+    """Switch to a branch"""
+    if not name:
+        # Show interactive list
+        branches = run("git branch --format='%(refname:short)'").split('\n')
+        print("Available branches:")
+        for i, branch in enumerate(branches, 1):
+            marker = "→" if branch == get_current_branch() else " "
+            print(f"  {marker} {branch}")
+        return
+
+    print(f"🔀 Switching to '{name}'...")
+    run(f"git checkout {name}", capture=False)
+    print("✅ Switched")
+
+def cleanup_branches():
+    """Delete merged branches"""
+    default = get_default_branch()
+    current = get_current_branch()
+
+    if current != default:
+        print(f"⚠️  Switch to '{default}' branch first")
+        print(f"   Run: gw to {default}")
+        sys.exit(1)
+
+    merged = run(f"git branch --merged {default}").split('\n')
+    to_delete = [b.strip() for b in merged if b.strip() and b.strip() not in [default, f"* {default}"]]
+
+    if not to_delete:
+        print("✅ No merged branches to clean up")
+        return
+
+    print(f"🧹 Cleaning up {len(to_delete)} merged branch(es):")
+    for branch in to_delete:
+        print(f"   Deleting {branch}")
+        run(f"git branch -d {branch}")
+    print("✅ Cleaned up")
+
+def show_status():
+    """Show enhanced status"""
+    if not is_git_repo():
+        print("❌ Not a git repository")
+        sys.exit(1)
+
+    branch = get_current_branch()
+    print(f"🌿 Branch: {branch}")
+
+    # Check if there are changes
+    if not has_changes():
+        print("✅ Working tree clean")
+    else:
+        print("\n📝 Changes:")
+        run("git status --short", capture=False)
+
+    # Show recent commits
+    commits = run("git log --oneline -5 2>/dev/null", check=False)
+    if commits:
+        print("\n📜 Recent commits:")
+        for line in commits.split('\n')[:5]:
+            print(f"   {line}")
+
+def init_repo():
+    """Initialize a new git repository"""
+    if is_git_repo():
+        print("⚠️  Already a git repository")
+        return
+
+    print("🎬 Initializing git repository...")
+    run("git init", capture=False)
+
+    # Create initial gitignore
+    gitignore = Path(".gitignore")
+    if not gitignore.exists():
+        gitignore.write_text("""# Common ignores
+.DS_Store
+*.log
+*.tmp
+.env
+.venv/
+__pycache__/
+node_modules/
+*.pyc
+""")
+        print("📝 Created .gitignore")
+
+    print("✅ Repository initialized")
+
+def show_help():
+    """Show help message"""
+    help_text = """
+🚀 Git Workflow (gw) - Intelligent git workflow automation
+
+Usage: gw <command> [args]
+
+Commands:
+  (no args)          Show status with recent commits
+  add               Smart add - stage all changes
+  save              Quick save - add all and commit with timestamp
+  commit            Smart commit with generated message
+  sync              Sync with remote - pull and push
+
+  new <name>        Create and switch to new branch
+  to [name]         Switch to branch (shows list if no name)
+  cleanup           Delete merged branches
+
+  init              Initialize a new git repository
+  help              Show this help message
+  version           Show version
+
+Examples:
+  gw                # Show status
+  gw save           # Quick save with timestamp
+  gw add            # Stage all changes
+  gw commit         # Commit with smart message
+  gw sync           # Pull and push
+  gw new feat-x     # Create feature branch
+  gw to main        # Switch to main
+  gw cleanup        # Delete merged branches
+
+Version: {VERSION}
+""".format(VERSION=VERSION)
+    print(help_text)
+
+def main():
+    if len(sys.argv) == 1:
+        show_status()
+        return
+
+    cmd = sys.argv[1]
+    args = sys.argv[2:] if len(sys.argv) > 2 else []
+
+    # Commands that don't require git repo
+    if cmd in ['help', '--help', '-h']:
+        show_help()
+        return
+    elif cmd in ['version', '--version', '-v']:
+        print(f"gw version {VERSION}")
+        return
+    elif cmd == 'init':
+        init_repo()
+        return
+
+    # Check if git repo for other commands
+    if not is_git_repo():
+        print("❌ Not a git repository. Use 'gw init' to create one.")
+        sys.exit(1)
+
+    # Commands
+    if cmd == 'add':
+        smart_add()
+    elif cmd == 'commit':
+        smart_commit()
+    elif cmd == 'save':
+        quick_save()
+    elif cmd == 'sync':
+        sync_branch()
+    elif cmd == 'new':
+        new_branch(args[0] if args else None)
+    elif cmd == 'to':
+        switch_branch(args[0] if args else None)
+    elif cmd == 'cleanup':
+        cleanup_branches()
+    else:
+        print(f"❌ Unknown command: {cmd}")
+        print("Run 'gw help' for usage")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()
