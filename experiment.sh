@@ -111,10 +111,7 @@ fi
 
 # --- Resolve backends ---
 is_claude_model() {
-    local model="$1"
-    for m in "${CLAUDE_MODELS[@]}"; do
-        [[ "$m" == "$model" ]] && return 0
-    done
+    [[ "$1" == anthropic/* || "$1" == claude-* ]] && return 0
     return 1
 }
 
@@ -150,7 +147,7 @@ COMBOS=${#MATRIX_BACKENDS[@]}
 TOTAL_JOBS=$((COMBOS * RUNS))
 
 # Folder name: strip provider prefix
-folder_name() { echo "$1" | sed 's|^vertex_ai/||; s|^azure/||'; }
+folder_name() { echo "$1" | sed 's|^[^/]*/||'; }
 
 echo "=== Experiment ==="
 echo "Prompt:      $(head -1 <<< "$PROMPT")..."

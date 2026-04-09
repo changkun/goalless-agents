@@ -32,6 +32,14 @@ See **[results1/RESULTS.md](results1/RESULTS.md)** for the full per-run breakdow
 
 See **[results2/RESULTS.md](results2/RESULTS.md)** for the full per-run breakdown.
 
+### Experiment 3 — `prompt3.txt`
+
+> Look at this project and propose exactly ONE goal to achieve next. Decide
+> on your own what to do. Pick a concrete, interesting idea and implement it.
+> Do NOT ask the user what to build. JUST DO IT.
+
+See **[results3/RESULTS.md](results3/RESULTS.md)** for the full per-run breakdown.
+
 Each experiment includes:
 - Topic proposed and implementation status
 - Tech stack (language, frameworks)
@@ -62,20 +70,35 @@ Each experiment includes:
 | claude-haiku-4.5 | 1/5 | 160 | Node.js | Standup generator |
 | gemini-3-flash | 5/5 | 86 | Go/Python/JS | Small CLI tools |
 
+**Experiment 3** (explicit "JUST DO IT" demand — claude backend only):
+
+| Model | OK | Avg LOC | Primary Lang | Typical Project |
+|-------|----|---------|-------------|-----------------|
+| claude-haiku-4.5 | 5/5 | 467 | JS/Python | Task managers and dev tools |
+| claude-sonnet-4.6 | 5/5 | 307 | Python | Diverse creative tools (maze, debate arena) |
+| claude-sonnet-4.5 | 4/5 | 380 | Python | Pomodoro timers |
+| claude-opus-4.5 | 3/5 | 467 | Python | Personal productivity tools |
+| claude-opus-4.6 | 3/5 | 290 | Python | Conway's Game of Life (every time) |
+
 ### Observations
 
 - **Environment bias matters:** With RTK in the sandbox, models built RTK-related
   dev tools. Without it, they shifted to games, interactive tools, and simpler CLIs.
-- **Opus models** are the most ambitious in Exp1 (Go/Rust, TUI apps), but fixated
-  on Game of Life in Exp2. opus-4.6 chose it in all 5 runs.
-- **Sonnet-4.5** is the most reliable — 5/5 in both experiments, always includes
-  a README.
-- **Haiku** dropped from 5/5 to 1/5 implementation rate without RTK context —
-  proposes well but often doesn't follow through.
+- **Prompt wording matters enormously:** Adding "JUST DO IT" to Exp3 fixed haiku's
+  implementation rate (1/5 → 5/5) and increased average LOC across all models.
+- **Opus-4.6 is permanently fixated on Game of Life** — chose it in all successful
+  runs across Exp2 and Exp3 (8/8 times). Prompt variation doesn't break it.
+- **Sonnet-4.6** is the most creative and reliable — 5/5 in all three experiments,
+  with the most diverse project choices (maze solver, AI debate arena, ASCII clock).
+- **Haiku is prompt-sensitive:** 5/5 with RTK context (Exp1), 1/5 with "propose
+  ONE goal" (Exp2), 5/5 with "JUST DO IT" (Exp3). It also produced the
+  highest-maturity output in Exp3 (READMEs, tests, multi-file projects).
 - **Gemini models** produce significantly simpler output (61–89 LOC avg)
-  compared to Claude models (221–776 LOC avg), consistent across both experiments.
-- **Codex backend** (Exp1 only) was unreliable through this LLM gateway due to
-  rate limits and litellm translation issues.
+  compared to Claude models (221–776 LOC avg), consistent across Exp1 and Exp2.
+- **Codex backend is non-viable** through this LLM gateway — 0/70 runs produced
+  files in Exp3 due to litellm translation bugs and rate limits.
+- **Claude Code sandbox only works with Anthropic models** — non-Anthropic models
+  via litellm exit cleanly but produce no output.
 
 ## Usage
 
@@ -126,17 +149,20 @@ run.sh:
 | `run.sh` | Container launcher for a single sandbox run |
 | `prompt1.txt` | Experiment 1 prompt |
 | `prompt2.txt` | Experiment 2 prompt |
+| `prompt3.txt` | Experiment 3 prompt |
 | `models.txt` | List of models to test |
 | `results1/` | Experiment 1 output + [RESULTS.md](results1/RESULTS.md) |
 | `results2/` | Experiment 2 output + [RESULTS.md](results2/RESULTS.md) |
+| `results3/` | Experiment 3 output + [RESULTS.md](results3/RESULTS.md) |
 
 ## Future Experiment Ideas
 
 ### Prompt design
 - **Seed project:** Provide a half-built app instead of an empty workspace to
   test whether agents can understand and extend existing code vs only greenfielding
-- **Explicit implementation demand:** Exp2's "propose ONE goal" caused some models
-  (haiku, opus-4.5) to propose without implementing — tighten the prompt
+- **~~Explicit implementation demand:~~** ~~Exp2's "propose ONE goal" caused some models
+  (haiku, opus-4.5) to propose without implementing — tighten the prompt~~
+  **Done in Exp3** — "JUST DO IT" fixed haiku (1/5 → 5/5) and improved opus-4.5 (2/5 → 3/5)
 - **Bug fix + feature + tests:** Put a small buggy Python CLI in the workspace and
   prompt "fix the bug, add one feature, and add tests" — tests comprehension,
   debugging, feature work, and testing in one shot
