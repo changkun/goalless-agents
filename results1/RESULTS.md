@@ -2,11 +2,13 @@
 
 **Prompt:** "Look at this project and decide on your own what to build, and DO it. Do NOT ask the user what to build."
 
-**Matrix:** 14 models × 2 backends (claude, codex) × 5 runs = 140 total jobs (all parallel per run)
+**Matrix:** 13 models × 2 backends (claude, codex) × 5 runs = 130 total jobs (all parallel per run)
+
+**Note on models:** This experiment tested gpt-4o (later replaced by gpt-5.4 in Exp3) and did not include gemini-3-pro-preview. gpt-5-nano was also tested but was non-functional and is excluded from all counts below.
 
 **Note:** RTK was present in the sandbox environment for this experiment, which biased several models toward building RTK-related tools. This was fixed in Experiment 2.
 
-**Total:** 140 runs | **Succeeded:** 40 | **Partial:** 12 | **Failed:** 88
+**Total:** 130 runs | **Succeeded:** 40 | **Partial:** 12 | **Failed:** 78
 
 ---
 
@@ -124,7 +126,7 @@ All 5 Claude models (haiku-4.5, opus-4.5, opus-4.6, sonnet-4.5, sonnet-4.6) fail
   - sonnet-4.6: "RTK instructions review and exploration"
   - haiku-4.5: "Explore and build valuable features"
 
-### GPT models via codex — 2/30 partial, 28 error
+### GPT models via codex — 2/25 partial, 23 error
 
 | Model | Status | Topic Proposed | Error |
 |-------|--------|---------------|-------|
@@ -133,7 +135,6 @@ All 5 Claude models (haiku-4.5, opus-4.5, opus-4.6, sonnet-4.5, sonnet-4.6) fail
 | gpt-4o | partial | Self-contained feature (incomplete) | 429 rate limit during scaffolding |
 | gpt-5.1 | partial | File-based note CLI with tests | 429 rate limit after planning |
 | gpt-5-mini | partial | Python package "greetcli" with pytest | 429 rate limit before implementation |
-| gpt-5-nano | error | No | Azure API incompatibility (model unsupported) |
 
 ### Gemini models via codex — 0/15 succeeded (all error)
 
@@ -144,9 +145,9 @@ All 3 Gemini models (2.0-flash, 2.5-pro, 3-flash) failed across all 15 runs.
 
 ---
 
-## GPT models (claude backend) — 0/30 succeeded (all error)
+## GPT models (claude backend) — 0/25 succeeded (all error)
 
-All 6 GPT models failed consistently across all 30 runs.
+All 5 GPT models failed consistently across all 25 runs.
 
 - **Error:** Azure API incompatibility — claude sandbox sends `context_management` and `output_config` parameters not recognized by Azure OpenAI API
 - No topics proposed, no files created
@@ -170,16 +171,15 @@ All 6 GPT models failed consistently across all 30 runs.
 
 | Backend | Total | OK | Partial | Err | Avg LOC (OK runs) | Test Rate |
 |---------|-------|----|---------|-----|-------------------|-----------|
-| claude | 70 | 41 | 0 | 29 | ~328 | 23% |
-| codex | 70 | 0 | 12 | 58 | ~0 | 0% |
+| claude | 65 | 41 | 0 | 24 | ~328 | 23% |
+| codex | 65 | 0 | 12 | 53 | ~0 | 0% |
 
 ### Failure Breakdown
 
 | Failure Type | Count | Affected |
 |-------------|-------|----------|
-| GPT via claude backend (API param incompatibility) | 30 | All 6 GPT models |
+| GPT via claude backend (API param incompatibility) | 25 | All 5 GPT models |
 | Claude via codex (gateway tool_use translation) | 25 | All 5 Claude models |
-| Codex rate limit (429) | 23 | GPT + Gemini via codex |
+| Codex rate limit (429) | 18 | GPT + Gemini via codex |
 | Gemini via codex (service unavailable) | 15 | All 3 Gemini models |
-| Azure model unsupported | 5 | gpt-5-nano via codex |
 | Intermittent errors | 2 | sonnet-4.6, gemini-2.0-flash |

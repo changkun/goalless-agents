@@ -87,6 +87,7 @@ Each experiment includes:
 | Model | OK | Avg LOC | Primary Lang | Typical Project |
 |-------|----|---------|-------------|-----------------|
 | gpt-5-mini | 5/5 | 121 | Python | CLI tools with tests + CI |
+| gpt-4.1-mini | 4/5 | 8 | Python | Hello World stubs |
 | gpt-4.1 | 2/5 | 31 | Python | Todo CLI |
 | gpt-5.4 | 1/5 | 7 | Python | Stub only |
 | gpt-5.1 | 0/5 | — | — | No output |
@@ -101,7 +102,7 @@ Each experiment includes:
 | gpt-5-mini | 4/5 | 40 | Python | Greeting utilities |
 | gpt-4.1-mini | 4/5 | 8 | Python | Hello World |
 
-*Gemini models were near-non-functional on both backends (1/25 runs produced files).*
+*Gemini models were near-non-functional on both backends (1/20 runs on claude backend produced files).*
 
 ### Observations
 
@@ -125,7 +126,7 @@ Each experiment includes:
   but bwrap isolation prevented file persistence. Anthropic/Gemini models failed
   (litellm translation bugs, rate limits).
 - **Gemini models near-non-functional** on both backends — 1 file produced across
-  25 total Gemini runs on claude backend. gemini-2.0-flash fails instantly every time.
+  20 total Gemini runs on claude backend. gemini-2.0-flash fails instantly every time.
 
 ## Usage
 

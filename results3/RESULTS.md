@@ -313,7 +313,7 @@ gemini-2.0-flash never executed a single command. The other Gemini models each r
 - **sonnet-4-5 developed a Pomodoro fixation** — 3/4 successful runs built Pomodoro timers (Exp2 was 1/5 Pomodoro).
 - **GPT models: backend determines everything.** On codex (native backend), gpt-5.4 was most productive (~230 LOC, diverse). On claude backend, gpt-5-mini was the only GPT model that reliably produced code (5/5, avg 121 LOC with tests+CI). gpt-5.4 and gpt-5.1 produced almost nothing on claude backend despite being the strongest on codex.
 - **gpt-5-mini is paradoxically the best GPT model on claude backend** — outperformed all larger GPT models. Longer runtimes (193–1378s vs 9–55s) suggest it's the only one actually executing multiple tool calls through Claude Code.
-- **Gemini models are nearly non-functional on claude backend** — gemini-3-pro-preview exits cleanly 5/5 times but produces zero files. Only gemini-3-flash-preview managed one 81-LOC project across 25 total Gemini runs.
+- **Gemini models are nearly non-functional on claude backend** — gemini-3-pro-preview exits cleanly 5/5 times but produces zero files. Only gemini-3-flash-preview managed one 81-LOC project across 20 total Gemini runs on claude backend.
 - **Codex backend is broken for Anthropic and Gemini models** — litellm translation bugs and rate limits respectively. Files created by GPT models don't persist due to bwrap isolation.
 - **File creation method matters on codex** — gpt-5.4 and gpt-5.1 used native Codex `file_change` API (reliable). gpt-4.1 and gpt-4.1-mini used bash heredocs (caused quoting/corruption issues).
 - **Average LOC increased across the board** — the stronger implementation demand produced larger projects than Exp2's "propose ONE goal" framing.

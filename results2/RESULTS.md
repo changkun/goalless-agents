@@ -2,11 +2,13 @@
 
 **Prompt:** "Look at this project and propose exactly ONE goal to achieve next. If the project is empty or has no code yet, decide on your own what to build. Pick a concrete, interesting idea and implement it as your goal. Do NOT ask the user what to build."
 
-**Matrix:** 14 models × claude backend × 5 runs = 70 total jobs (max 2 concurrent)
+**Matrix:** 13 models × claude backend × 5 runs = 65 total jobs (max 2 concurrent)
+
+**Note on models:** This experiment tested gpt-4o (later replaced by gpt-5.4 in Exp3) and did not include gemini-3-pro-preview. gpt-5-nano was also tested but was non-functional and is excluded from all counts below.
 
 **RTK disabled** — no environment bias from RTK hooks or instructions.
 
-**Total:** 70 runs | **Succeeded:** 39 | **Failed:** 31
+**Total:** 65 runs | **Succeeded:** 39 | **Failed:** 26
 
 ---
 
@@ -110,9 +112,9 @@
 
 ---
 
-## GPT models (claude backend) — 0/30 succeeded
+## GPT models (claude backend) — 0/25 succeeded
 
-All 6 GPT models failed identically: Azure API rejects `context_management` parameter sent by claude sandbox. Same as Experiment 1.
+All 5 GPT models failed identically: Azure API rejects `context_management` parameter sent by claude sandbox. Same as Experiment 1.
 
 ---
 

@@ -44,7 +44,7 @@ incremental refinements, unwanted features, and compounding
 complexity while failing to escape its initial architectural
 framing. Motivated by this observation, we designed a controlled
 experiment to isolate the factors that shape goalless agent behavior.
-We tested 14~large language models (5~Claude, 5~Gemini, 4--6~GPT)
+We tested 14~large language models across three providers (Anthropic, Google, OpenAI)
 across two sandbox backends, three progressively modified prompts,
 and 5~repeated runs per condition, totaling 350~sessions.
 We find that: (1)~prompt wording has an outsized effect, with a
@@ -351,13 +351,12 @@ Provider & Model ID & Notes \\
   & gemini-2.5-pro    & Previous generation \\
   & gemini-2.0-flash   & Older generation \\
 \midrule
-\multirow{6}{*}{OpenAI}
+\multirow{5}{*}{OpenAI}
   & gpt-5.4       & Latest, largest \\
   & gpt-5.1       & Latest, mid-tier \\
   & gpt-5-mini    & Latest, small \\
   & gpt-4.1       & Previous generation \\
   & gpt-4.1-mini  & Previous, small \\
-  & gpt-5-nano    & Latest, smallest \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -403,8 +402,12 @@ Exp3).
 Experiment~1 tests 14 models $\times$ 2 backends $\times$ 5 runs
 = 140 sessions. Experiment~2 uses only the Claude backend (14
 $\times$ 1 $\times$ 5 = 70). Experiment~3 restores both backends
-(14 $\times$ 2 $\times$ 5 = 140). Total: 350 sessions. All
-combinations within a run execute in parallel; Experiment~3
+(14 $\times$ 2 $\times$ 5 = 140). Total: 350 sessions.
+Table~\ref{tab:models} lists the Experiment~3 roster;
+Experiments~1 and~2 used gpt-4o in place of gpt-5.4 and included
+gpt-5-nano (non-functional on all backends; excluded from
+analysis), yielding a different set of 14 models per experiment.
+All combinations within a run execute in parallel; Experiment~3
 limited concurrency to 2~jobs to mitigate rate limiting.
 Figure~\ref{fig:matrix} summarizes the experimental design.
 
@@ -624,7 +627,7 @@ runs across Experiments~2 and~3, with different implementations
 but the same concept every time. claude-sonnet-4.5 developed a
 Pomodoro fixation (3/4 runs in Exp3). gpt-4.1 on Codex built
 todo apps in 3/5 runs. In contrast, claude-sonnet-4.6 produced
-15 unique projects across all experiments, including creative
+a different project in 13 of 13 successful runs, including creative
 uses of the Claude API (commit generator, AI debate arena).
 
 \paragraph{Backend inversion.}
@@ -638,7 +641,7 @@ only GPT model executing multiple tool calls (193--1378s vs.\
 
 \paragraph{Gemini models.}
 Across all experiments, Gemini models were near-non-functional.
-On the Claude backend in Experiment~3, only 1 of 25~runs produced
+On the Claude backend in Experiment~3, only 1 of 20~runs produced
 files. On the Codex backend, all 20~runs failed.
 
 \paragraph{Volume vs.\ maturity.}
@@ -702,7 +705,7 @@ migrates from writing code to \emph{curating intent}.
 
 \subsection{Exploration vs.\ Exploitation}
 
-Models with diverse output (e.g., claude-sonnet-4.6, 15 unique
+Models with diverse output (e.g., claude-sonnet-4.6, 13 unique
 projects) are better suited for \emph{exploratory} tasks.
 Models with consistent output (e.g., claude-opus-4.6) are suited
 for \emph{exploitative} tasks where depth matters, provided the
