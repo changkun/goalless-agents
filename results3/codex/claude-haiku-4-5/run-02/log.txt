@@ -1,0 +1,7 @@
+>>> Running codex sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-codex:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-jshja...
+>>> Model:     anthropic/claude-haiku-4-5
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results3/codex/claude-haiku-4-5/run-02/workspace
+

@@ -1,0 +1,21 @@
+{
+  "name": "claude-code-reviewer",
+  "version": "1.0.0",
+  "description": "AI-powered code review assistant using Claude API",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "reviewer": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "test": "node --test test/**/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

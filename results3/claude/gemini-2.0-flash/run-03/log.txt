@@ -1,0 +1,7 @@
+>>> Running claude sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-claude:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-jshja...
+>>> Model:     gemini/gemini-2.0-flash
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results3/claude/gemini-2.0-flash/run-03/workspace
+

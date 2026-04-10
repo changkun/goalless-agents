@@ -1,0 +1,256 @@
+:root {
+  --bg: #f3efe4;
+  --panel: rgba(255, 250, 240, 0.72);
+  --ink: #1d2433;
+  --muted: #5c6270;
+  --accent: #d95d39;
+  --accent-2: #2f6c5e;
+  --line: rgba(29, 36, 51, 0.12);
+  --shadow: 0 24px 60px rgba(72, 48, 17, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Space Grotesk", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(217, 93, 57, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(47, 108, 94, 0.18), transparent 24%),
+    linear-gradient(180deg, #f7f2e8 0%, var(--bg) 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(29, 36, 51, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 36, 51, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 90%);
+}
+
+.shell {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.hero {
+  padding: 32px 8px 20px;
+  animation: rise 700ms ease-out both;
+}
+
+.eyebrow,
+label,
+.badge {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.76rem;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Fraunces", serif;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(3rem, 9vw, 6rem);
+  line-height: 0.94;
+  max-width: 10ch;
+}
+
+.intro {
+  max-width: 58ch;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  padding: 24px;
+  align-items: end;
+  animation: rise 850ms ease-out both;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+select,
+input[type="range"],
+button {
+  width: 100%;
+}
+
+select,
+button {
+  font: inherit;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--ink);
+}
+
+input[type="range"] {
+  accent-color: var(--accent);
+}
+
+.generate {
+  background: linear-gradient(135deg, var(--accent), #f09b5d);
+  color: white;
+  border: 0;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.generate:hover,
+.generate:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(217, 93, 57, 0.25);
+}
+
+.result,
+.library {
+  margin-top: 20px;
+  padding: 24px;
+}
+
+.result {
+  animation: rise 1s ease-out both;
+}
+
+.result-topline,
+.library-header {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(47, 108, 94, 0.11);
+  color: var(--accent-2);
+}
+
+.badge.muted {
+  background: rgba(29, 36, 51, 0.07);
+  color: var(--muted);
+}
+
+#goal-title {
+  margin-top: 18px;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+}
+
+#goal-summary,
+.goal-card p {
+  color: var(--muted);
+}
+
+.detail-grid,
+.goal-list {
+  display: grid;
+  gap: 16px;
+}
+
+.detail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.detail-grid article,
+.goal-card {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.goal-list {
+  margin-top: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.goal-card {
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.goal-card.active {
+  transform: translateY(-4px);
+  border-color: rgba(217, 93, 57, 0.45);
+  background: rgba(255, 247, 240, 0.92);
+}
+
+.goal-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 860px) {
+  .controls,
+  .detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .controls > :last-child,
+  .detail-grid > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 620px) {
+  .shell {
+    width: min(100% - 20px, 1100px);
+    padding-top: 18px;
+  }
+
+  .controls,
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    border-radius: 22px;
+  }
+}

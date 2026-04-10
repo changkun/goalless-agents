@@ -1,0 +1,14 @@
+{"type":"thread.started","thread_id":"019d70aa-ca4d-71b0-a644-8dc7e476a917"}
+{"type":"turn.started"}
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 3/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 4/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 5/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 1/5 (stream disconnected before completion: stream closed before response.completed)"}
+{"type":"error","message":"Reconnecting... 2/5 (stream disconnected before completion: stream closed before response.completed)"}
+{"type":"error","message":"Reconnecting... 3/5 (stream disconnected before completion: stream closed before response.completed)"}
+{"type":"error","message":"Reconnecting... 4/5 (stream disconnected before completion: stream closed before response.completed)"}
+{"type":"error","message":"Reconnecting... 5/5 (stream disconnected before completion: stream closed before response.completed)"}
+{"type":"error","message":"stream disconnected before completion: stream closed before response.completed"}
+{"type":"turn.failed","error":{"message":"stream disconnected before completion: stream closed before response.completed"}}
+{"result":"{\"type\":\"turn.failed\",\"error\":{\"message\":\"stream disconnected before completion: stream closed before response.completed\"}}","session_id":"","stop_reason":"end_turn","is_error":false,"total_cost_usd":0,"usage":{"input_tokens":0,"output_tokens":0,"cache_read_input_tokens":0,"cache_creation_input_tokens":0}}

@@ -1,0 +1,7 @@
+Collecting plyer
+  Downloading plyer-2.1.0-py2.py3-none-any.whl.metadata (61 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.2/61.2 kB 5.3 MB/s eta 0:00:00
+Downloading plyer-2.1.0-py2.py3-none-any.whl (142 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 142.3/142.3 kB 1.6 MB/s eta 0:00:00
+Installing collected packages: plyer
+Successfully installed plyer-2.1.0

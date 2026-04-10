@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decision Journal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Decision Journal</p>
+        <h1>Keep a record of why you chose something, not just what happened.</h1>
+        <p class="hero-copy">
+          Capture tradeoffs, confidence, and later outcomes. Everything stays in
+          your browser.
+        </p>
+      </header>
+
+      <main class="layout">
+        <section class="panel form-panel">
+          <div class="panel-heading">
+            <h2>New entry</h2>
+            <p>Log one meaningful decision with enough context to learn from it later.</p>
+          </div>
+
+          <form id="decision-form">
+            <label>
+              Title
+              <input id="title" name="title" type="text" maxlength="80" required />
+            </label>
+
+            <label>
+              Context
+              <textarea
+                id="context"
+                name="context"
+                rows="3"
+                maxlength="280"
+                placeholder="What situation forced the choice?"
+                required
+              ></textarea>
+            </label>
+
+            <label>
+              Chosen option
+              <input
+                id="choice"
+                name="choice"
+                type="text"
+                maxlength="120"
+                placeholder="What did you decide to do?"
+                required
+              />
+            </label>
+
+            <label>
+              Alternatives
+              <input
+                id="alternatives"
+                name="alternatives"
+                type="text"
+                maxlength="160"
+                placeholder="Comma-separated options you considered"
+              />
+            </label>
+
+            <div class="field-row">
+              <label>
+                Confidence
+                <input id="confidence" name="confidence" type="range" min="1" max="10" value="6" />
+                <span id="confidence-value" class="range-value">6 / 10</span>
+              </label>
+
+              <label>
+                Review by
+                <input id="reviewDate" name="reviewDate" type="date" />
+              </label>
+            </div>
+
+            <button class="primary-button" type="submit">Save decision</button>
+          </form>
+        </section>
+
+        <section class="panel dashboard-panel">
+          <div class="panel-heading dashboard-heading">
+            <div>
+              <h2>Journal</h2>
+              <p>Filter by learning state and update outcomes when reality catches up.</p>
+            </div>
+            <label class="compact-filter">
+              View
+              <select id="status-filter">
+                <option value="all">All entries</option>
+                <option value="open">Open reviews</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="wins">Positive outcomes</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="stats-grid" id="stats-grid">
+            <article class="stat-card">
+              <span>Total</span>
+              <strong id="stat-total">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Open</span>
+              <strong id="stat-open">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Reviewed</span>
+              <strong id="stat-reviewed">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Avg confidence</span>
+              <strong id="stat-confidence">0.0</strong>
+            </article>
+          </div>
+
+          <div id="empty-state" class="empty-state" hidden>
+            No decisions match the current filter yet.
+          </div>
+
+          <div id="entry-list" class="entry-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="entry-template">
+      <article class="entry-card">
+        <div class="entry-topline">
+          <div>
+            <h3 class="entry-title"></h3>
+            <p class="entry-meta"></p>
+          </div>
+          <span class="entry-badge"></span>
+        </div>
+
+        <p class="entry-context"></p>
+
+        <div class="entry-section">
+          <span class="section-label">Chosen option</span>
+          <p class="entry-choice"></p>
+        </div>
+
+        <div class="entry-section">
+          <span class="section-label">Alternatives</span>
+          <p class="entry-alternatives"></p>
+        </div>
+
+        <div class="entry-footer">
+          <label>
+            Outcome
+            <select class="outcome-select">
+              <option value="pending">Pending</option>
+              <option value="positive">Positive</option>
+              <option value="mixed">Mixed</option>
+              <option value="negative">Negative</option>
+            </select>
+          </label>
+
+          <button class="ghost-button delete-button" type="button">Delete</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

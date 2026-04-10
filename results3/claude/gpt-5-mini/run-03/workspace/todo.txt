@@ -1,0 +1,3 @@
+Implement simple greeting CLI with version and caps flags
+Run tests
+Add CI workflow

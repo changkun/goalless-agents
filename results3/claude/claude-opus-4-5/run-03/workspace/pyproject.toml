@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "snip"
+version = "1.0.0"
+description = "A CLI code snippet manager"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = []
+
+[project.optional-dependencies]
+highlight = ["pygments>=2.0"]
+
+[project.scripts]
+snip = "snip.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["snip"]

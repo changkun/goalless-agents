@@ -1,0 +1,20 @@
+[project]
+name = "commitlint-lite"
+version = "0.1.0"
+description = "Tiny Conventional Commits-style commit message linter CLI."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Codex CLI", email = "dev@example.com" }]
+dependencies = []
+
+[project.scripts]
+commitlint-lite = "commitlint.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+

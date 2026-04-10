@@ -1,0 +1,1 @@
+- [User role](.claude/projects/-workspace/memory/user_role.md) — user prefers concise, direct interactions and asked the assistant to pick and implement a single concrete task.

@@ -1,0 +1,17 @@
+{
+  "name": "taskly",
+  "version": "1.0.0",
+  "description": "A lightweight CLI task manager with priorities and due dates",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "taskly": "src/index.js"
+  },
+  "scripts": {
+    "test": "node --test src/tests.js",
+    "start": "node src/index.js"
+  },
+  "keywords": ["tasks", "cli", "productivity"],
+  "author": "",
+  "license": "MIT"
+}

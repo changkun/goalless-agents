@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Next Move Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Offline project direction generator</p>
+        <h1>Find the next move worth shipping.</h1>
+        <p class="intro">
+          This repo was empty, so the first useful step is a tool that turns vague
+          ambition into a concrete next goal with visible tradeoffs.
+        </p>
+      </section>
+
+      <section class="panel controls">
+        <div>
+          <label for="theme">Project mode</label>
+          <select id="theme"></select>
+        </div>
+        <div>
+          <label for="impact">Impact bias</label>
+          <input id="impact" type="range" min="1" max="5" value="4" />
+        </div>
+        <div>
+          <label for="speed">Speed bias</label>
+          <input id="speed" type="range" min="1" max="5" value="3" />
+        </div>
+        <div>
+          <label for="novelty">Novelty bias</label>
+          <input id="novelty" type="range" min="1" max="5" value="3" />
+        </div>
+        <button id="generate" class="generate">Generate goal</button>
+      </section>
+
+      <section class="panel result" aria-live="polite">
+        <div class="result-topline">
+          <span class="badge" id="goal-score">Score 0</span>
+          <span class="badge muted" id="goal-theme">No mode selected</span>
+        </div>
+        <h2 id="goal-title">Press generate to get a concrete next goal.</h2>
+        <p id="goal-summary">
+          The app proposes a target, why it matters, and the first build slice to
+          keep momentum high.
+        </p>
+        <div class="detail-grid">
+          <article>
+            <h3>Why now</h3>
+            <p id="goal-why">Waiting for a generated recommendation.</p>
+          </article>
+          <article>
+            <h3>First slice</h3>
+            <p id="goal-slice">Waiting for a generated recommendation.</p>
+          </article>
+          <article>
+            <h3>Risk check</h3>
+            <p id="goal-risk">Waiting for a generated recommendation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel library">
+        <div class="library-header">
+          <h2>Candidate directions</h2>
+          <p>Each goal is scored against the current bias sliders.</p>
+        </div>
+        <div id="goal-list" class="goal-list"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

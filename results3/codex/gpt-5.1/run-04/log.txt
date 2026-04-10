@@ -1,0 +1,7 @@
+>>> Running codex sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-codex:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-jshja...
+>>> Model:     openai/gpt-5.1
+>>> Workspace: /Users/changkun/dev/changkun.de/agent-trust/results3/codex/gpt-5.1/run-04/workspace
+

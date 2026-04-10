@@ -1,0 +1,9 @@
+[project]
+name = "focus-timer-cli"
+version = "0.1.0"
+description = "A tiny CLI Pomodoro-style focus timer."
+requires-python = ">=3.9"
+
+[project.scripts]
+focus-timer = "src.focus_timer:main"
+

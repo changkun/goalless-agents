@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "greet-cli"
+version = "0.1.0"
+description = "A tiny CLI that greets people."
+authors = [{name = "Claude Code"}]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[project.scripts]
+greet = "src.cli:main"
+
+[tool.flake8]
+max-line-length = 88

@@ -1,0 +1,17 @@
+{"type":"thread.started","thread_id":"019d70aa-c875-7f31-bc86-e8d21abd0a81"}
+{"type":"turn.started"}
+{"type":"error","message":"Reconnecting... 2/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 3/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 4/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"error","message":"Reconnecting... 5/5 (unexpected status 403 Forbidden: Unknown error, url: wss://llm.changkun.de/v1/responses)"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Right, I'll assess the project and then tackle one specific goal. First step: understand the project by listing the files."}}
+{"type":"item.started","item":{"id":"item_1","type":"command_execution","command":"/bin/bash -lc 'ls -l'","aggregated_output":"","exit_code":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"command_execution","command":"/bin/bash -lc 'ls -l'","aggregated_output":"total 0\n","exit_code":0,"status":"completed"}}
+{"type":"error","message":"Reconnecting... 1/5 (We're currently experiencing high demand, which may cause temporary errors.)"}
+{"type":"error","message":"Reconnecting... 2/5 (We're currently experiencing high demand, which may cause temporary errors.)"}
+{"type":"error","message":"Reconnecting... 3/5 (We're currently experiencing high demand, which may cause temporary errors.)"}
+{"type":"error","message":"Reconnecting... 4/5 (We're currently experiencing high demand, which may cause temporary errors.)"}
+{"type":"error","message":"Reconnecting... 5/5 (We're currently experiencing high demand, which may cause temporary errors.)"}
+{"type":"error","message":"We're currently experiencing high demand, which may cause temporary errors."}
+{"type":"turn.failed","error":{"message":"We're currently experiencing high demand, which may cause temporary errors."}}
+{"result":"{\"type\":\"turn.failed\",\"error\":{\"message\":\"We're currently experiencing high demand, which may cause temporary errors.\"}}","session_id":"","stop_reason":"end_turn","is_error":false,"total_cost_usd":0,"usage":{"input_tokens":0,"output_tokens":0,"cache_read_input_tokens":0,"cache_creation_input_tokens":0}}
