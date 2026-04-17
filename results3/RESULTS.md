@@ -21,17 +21,17 @@
 
 ## Claude Backend — Anthropic Models
 
-### claude-opus-4-6 — 3/5 implemented, 2 failed
+### claude-opus-4-6 — 4/5 implemented, 1 failed
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
 | 01 | Conway's Game of Life with patterns | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~356 LOC, ~2 funcs | 1322s |
-| 02 | *(failed — exit 1, no files)* | — | — | — | 321s |
-| 03 | *(failed — exit 1, no files)* | — | — | — | 265s |
-| 04 | Conway's Game of Life with presets | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~288 LOC, ~2 funcs | 682s |
-| 05 | Conway's Game of Life | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~226 LOC, ~7 funcs | 79s |
+| 02 | Conway's Game of Life | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~269 LOC | 86s |
+| 03 | Conway's Game of Life | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~337 LOC | 132s |
+| 04 | Conway's Game of Life with presets | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~324 LOC | 112s |
+| 05 | *(failed — exit 1, 3s; partial Game of Life file left)* | Python 3 | — | 1 file, ~226 LOC | 3s |
 
-**Pattern:** Still fixated on Game of Life — chose it in all 3 successful runs (consistent with Exp2). Single-file Python, avg ~290 LOC. No maturity features. Extremely variable duration (79s–1322s).
+**Pattern:** Completely fixated on Game of Life — chose it in all 5 runs including the failed one (consistent with Exp2). Single-file Python, avg ~322 LOC (successful runs). No maturity features.
 
 ### claude-opus-4-5 — 3/5 implemented, 2 failed
 

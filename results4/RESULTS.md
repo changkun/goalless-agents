@@ -40,9 +40,9 @@
 
 All are **simulation/visualization** projects — there is a clear thematic preference for animated terminal graphics, but no single-topic fixation.
 
-**Higher complexity.** Avg 538 LOC vs Opus 4.6's ~290 LOC in Exp3 (1.9× more). The maze generator (run-04) was the most complex at 762 LOC with 26 passing tests.
+**Higher complexity.** Avg 538 LOC vs Opus 4.6's ~322 LOC in Exp3 (1.7× more). The maze generator (run-04) was the most complex at 762 LOC with 26 passing tests.
 
-**100% implementation rate.** 5/5 runs succeeded, up from Opus 4.6's 3/5 in Exp3.
+**100% implementation rate.** 5/5 runs succeeded, up from Opus 4.6's 4/5 in Exp3.
 
 **Testing.** 2/5 runs included tests (run-01: smoke + PTY end-to-end tests; run-04: 26 unit tests). Opus 4.6 never wrote tests in Exp2/Exp3.
 
@@ -54,8 +54,8 @@ All are **simulation/visualization** projects — there is a clear thematic pref
 
 | Metric | Opus 4.6 (Exp3) | Opus 4.7 (Exp4) |
 |--------|-----------------|-----------------|
-| Success rate | 3/5 | **5/5** |
-| Avg LOC | ~290 | **~538** |
+| Success rate | 4/5 | **5/5** |
+| Avg LOC | ~322 | **~538** |
 | Topic diversity | 1 topic (Game of Life ×3) | **5 distinct topics** |
 | Tests written | 0/3 | **2/5** |
 | Primary lang | Python | Python |

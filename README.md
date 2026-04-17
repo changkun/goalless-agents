@@ -86,7 +86,7 @@ Each experiment includes:
 | claude-sonnet-4.6 | 5/5 | 307 | Python | Diverse creative tools (maze, debate arena) |
 | claude-sonnet-4.5 | 4/5 | 380 | Python | Pomodoro timers |
 | claude-opus-4.5 | 3/5 | 467 | Python | Personal productivity tools |
-| claude-opus-4.6 | 3/5 | 290 | Python | Conway's Game of Life (every time) |
+| claude-opus-4.6 | 4/5 | 322 | Python | Conway's Game of Life (every time) |
 
 *Claude backend — GPT models (via litellm):*
 
@@ -125,7 +125,7 @@ Each experiment includes:
 - **Opus-4.6 Game of Life fixation is gone in 4.7:** Opus 4.6 chose Game of Life
   in all successful runs across Exp2 and Exp3 (8/8 times). Opus 4.7 chose it only
   1/5 times, producing 5 distinct projects with higher avg LOC (538 vs 290) and
-  100% success rate (5/5 vs 3/5).
+  100% success rate (5/5 vs 4/5).
 - **Sonnet-4.6** is the most creative and reliable — 5/5 in all three experiments,
   with the most diverse project choices (maze solver, AI debate arena, ASCII clock).
 - **Haiku is prompt-sensitive:** 5/5 with RTK context (Exp1), 1/5 with "propose
