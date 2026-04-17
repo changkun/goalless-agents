@@ -60,6 +60,54 @@ Each experiment includes:
 - Engineering maturity (tests, docs, build config, CI)
 - Complexity metrics (files, LOC, functions)
 
+### Experiment Design
+
+```mermaid
+flowchart LR
+    E1["<b>Exp 1</b><br/>prompt1 · RTK in · 14 models<br/>CC ~2.1 · claude+codex"]
+    E2["<b>Exp 2</b><br/>prompt2 · RTK out · 14 models<br/>CC ~2.1 · claude"]
+    E3["<b>Exp 3</b><br/>prompt3 · RTK out · 14 models<br/>CC 2.1.109 · claude+codex"]
+    E4["<b>Exp 4</b><br/>prompt3 · RTK out · opus-4.7<br/>CC 2.1.109 · claude"]
+    E5["<b>Exp 5</b><br/>prompt3 · RTK out · opus-4.6+4.7<br/>CC 2.1.112 · claude"]
+
+    E1 -->|"remove RTK<br/>dev tools → games"| E2
+    E2 -->|"change prompt<br/>haiku 1/5 → 5/5"| E3
+    E3 -->|"add opus-4.7<br/>GoL fixation broken, 2× LOC"| E4
+    E3 & E4 -->|"upgrade harness<br/>fixation rates shift"| E5
+```
+
+**Pairwise comparisons** (one variable changed, rest held constant):
+
+| Comparison | Variable | Invariant | Key Finding |
+|------------|----------|-----------|-------------|
+| Exp1 → Exp2 | Environment (RTK removed) | Models, runs | Models shifted from dev tools to games/interactive projects |
+| Exp2 → Exp3 | Prompt ("JUST DO IT" added) | Environment, models | Haiku 1/5 → 5/5; avg LOC increased across all models |
+| Exp3 → Exp4 | Model (opus-4.7 added) | Prompt, harness, environment | GoL fixation broken; 5 distinct topics; ~2× LOC |
+| Exp3/4 → Exp5 | Harness (2.1.109 → 2.1.112) | Prompt, environment | Opus-4.6 GoL fixation 100% → 60%; opus-4.7 gained boids fixation, lower LOC |
+
+**Per-experiment output profile:**
+
+| | Exp1 | Exp2 | Exp3 | Exp4 | Exp5 |
+|---|---|---|---|---|---|
+| Dominant lang | Python/Go/Rust | Python | Python | Python | Python/Go |
+| Project type | Dev tools, TUIs | Games, interactive | Games, CLI tools | Simulations, GoL | Simulations, GoL |
+| Avg LOC (Claude) | 221–776 | 160–408 | 290–467 | 538 | 262–387 |
+| Typical files | 1–2 | 1 | 1–6 | 1–3 | 1–4 |
+| Tests written | Rare | None | Haiku only | 2/5 runs | None |
+| Fixation observed | None | Opus-4.6 → GoL | Opus-4.6 → GoL | GoL 1/5 only | Both models |
+| External deps | Occasional | None | Rare | None | Rare (tcell) |
+
+**Invariants across all experiments:** every model defaults to terminal output (no web apps, no GUIs, no databases). Single-file projects dominate. No model ever chooses to extend or modify existing code — they always greenfield.
+
+**What changes behavior:**
+
+| Factor | Evidence | Effect size |
+|--------|----------|-------------|
+| Environment context | Exp1 vs Exp2 | Large: entirely different project categories |
+| Prompt wording | Exp2 vs Exp3 | Large: haiku success 1/5 → 5/5, LOC increase |
+| Model version | Exp3 vs Exp4 | Large: fixation broken, 2× complexity |
+| Harness version | Exp3/4 vs Exp5 | Moderate: fixation rates shift, complexity changes |
+
 ### Key Findings
 
 **Experiment 1** (RTK present in sandbox — biased toward dev tooling):
@@ -131,35 +179,43 @@ Each experiment includes:
 | claude-opus-4.6 | 5/5 | 387 | Python/Go | Game of Life (3/5), ray tracer, typing test |
 | claude-opus-4-7 | 5/5 | 262 | Python | Boids (3/5), dungeon gen, maze solver |
 
+### Model Personalities
+
+Each Claude model shows a consistent thematic identity across experiments:
+
+| Model | Thematic profile | Fixation | Reliability | Maturity |
+|-------|-----------------|----------|-------------|----------|
+| **sonnet-4.6** | The creative generalist. Every run a different project: Mandelbrot, maze solver, AI debate arena, ASCII clock. Only model to use the Claude API creatively. | None | 5/5 in all experiments | Low (no tests, no READMEs) |
+| **sonnet-4.5** | The productivity builder. Pomodoro timers (3/4 in Exp3), task managers, Snake games. Gravitates toward time management. | Pomodoro (Exp3) | High (4–5/5) | Medium (always README) |
+| **opus-4.6** | The canonical CS mind. Game of Life 9/9 times on harness 2.1.109. When it breaks free (Exp5): ray tracer, typing test — still classical, self-referential artifacts. | GoL (strong) | Improved over time | Low |
+| **opus-4.7** | The emergence explorer. Boids flocking, reaction-diffusion, procedural dungeons, maze generation. Drawn to systems where structure emerges from simple spatial rules. | Boids (Exp5) | 5/5 always | Medium (tests in Exp4) |
+| **opus-4.5** | The personal tools craftsman. Habit trackers, snippet managers, pomodoro timers. Aims high but often fails to ship. | Habit trackers | Low (2–3/5) | Medium (READMEs, config) |
+| **haiku-4.5** | The diligent engineer. Task managers every time, but ships them with READMEs, tests, config, multi-file structure. Highest engineering maturity of any model. | Task managers | Prompt-dependent (1/5 → 5/5) | High (tests, READMEs, config) |
+| **gpt-5-mini** | The disciplined shipper. Small but complete: tests, CI, pyproject.toml every time. Only productive GPT model on claude backend. | None | 5/5 (claude) | Highest (tests + CI always) |
+| **gpt-5.4** | Backend-dependent. On codex (native): diverse, 230 LOC avg, web apps + CLI tools. On claude backend: near-silent (1/5, stub only). | None | Backend-dependent | Low–Medium |
+| **gpt-4.1** | The minimalist. Todo list apps on codex, occasional stub on claude. Functional but unambitious. | Todo apps | Backend-dependent | Low |
+| **gemini-**** | Non-functional. 1 file across 20 runs on claude backend. gemini-2.0-flash fails instantly every time. | N/A | Near-zero | N/A |
+
+**Opus 4.6 vs 4.7 thematic contrast:** Opus 4.6 gravitates toward canonical, self-contained CS artifacts (Game of Life, ray tracing) — systems that compute or display their own state. Opus 4.7 gravitates toward spatial emergence and procedural generation (boids, reaction-diffusion, dungeons, mazes) — systems where complex structure arises from simple agent interactions or algorithms.
+
 ### Observations
 
-- **Environment bias matters:** With RTK in the sandbox, models built RTK-related
+**What changes behavior:**
+- **Environment context matters:** With RTK in the sandbox, models built RTK-related
   dev tools. Without it, they shifted to games, interactive tools, and simpler CLIs.
 - **Prompt wording matters enormously:** Adding "JUST DO IT" to Exp3 fixed haiku's
   implementation rate (1/5 → 5/5) and increased average LOC across all models.
-- **Opus-4.6 Game of Life fixation weakened in newer harness:** Opus 4.6 chose
-  Game of Life in all runs across Exp2 and Exp3 on harness 2.1.109 (9/9). On
-  harness 2.1.112 (Exp5), fixation dropped to 3/5 — a ray tracer and typing test
-  broke through. Opus 4.7 has no GoL fixation but developed a boids fixation on
-  2.1.112 (3/5 in Exp5, 0/5 in Exp4 on 2.1.109).
-- **Harness version affects output complexity:** Opus 4.7 on harness 2.1.109
-  (Exp4) averaged 538 LOC with tests in 2/5 runs. On 2.1.112 (Exp5), it averaged
-  262 LOC with no tests — suggesting the newer harness may encourage brevity.
-- **Sonnet-4.6** is the most creative and reliable — 5/5 in all three experiments,
-  with the most diverse project choices (maze solver, AI debate arena, ASCII clock).
-- **Haiku is prompt-sensitive:** 5/5 with RTK context (Exp1), 1/5 with "propose
-  ONE goal" (Exp2), 5/5 with "JUST DO IT" (Exp3). It also produced the
-  highest-maturity output in Exp3 (READMEs, tests, multi-file projects).
-- **Gemini models** produce significantly simpler output (61–89 LOC avg)
-  compared to Claude models (221–776 LOC avg), consistent across Exp1 and Exp2.
+- **Harness version shifts fixation and complexity:** Opus 4.6's GoL fixation
+  dropped from 100% (harness 2.1.109) to 60% (2.1.112). Opus 4.7 gained a boids
+  fixation on 2.1.112 (3/5) that wasn't present on 2.1.109 (0/5), with lower
+  avg LOC (262 vs 538) and no tests.
+
+**Cross-model patterns:**
 - **Backend determines GPT ranking:** On codex (native), gpt-5.4 is best (~230 LOC,
   diverse). On claude backend, gpt-5-mini is paradoxically the only productive GPT
   model (5/5, 121 avg LOC with tests+CI). Larger GPT models produce almost nothing.
-- **Codex backend: GPT works, rest broken.** GPT models built real projects on codex
-  but bwrap isolation prevented file persistence. Anthropic/Gemini models failed
-  (litellm translation bugs, rate limits).
 - **Gemini models near-non-functional** on both backends — 1 file produced across
-  20 total Gemini runs on claude backend. gemini-2.0-flash fails instantly every time.
+  20 total Gemini runs on claude backend.
 
 ## Usage
 
