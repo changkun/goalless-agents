@@ -81,7 +81,7 @@ flowchart LR
 | Comparison | Variable | Invariant | Key Finding |
 |------------|----------|-----------|-------------|
 | Exp1 → Exp2 | Environment (RTK removed) | Models, runs | Models shifted from dev tools to games/interactive projects |
-| Exp2 → Exp3 | Prompt ("JUST DO IT" added) | Environment, models | Haiku 1/5 → 5/5; avg LOC increased across all models |
+| Exp2 → Exp3 | Prompt ("JUST DO IT" added) | Environment, models | Haiku: proposed only → fully implemented; avg LOC increased |
 | Exp3 → Exp4 | Model (opus-4.7 added) | Prompt, harness, environment | GoL fixation broken; 5 distinct topics; ~2× LOC |
 | Exp3/4 → Exp5 | Harness (2.1.109 → 2.1.112) | Prompt, environment | Opus-4.6 GoL fixation 100% → 60%; opus-4.7 gained boids fixation, lower LOC |
 
@@ -110,91 +110,93 @@ flowchart LR
 
 ### Key Findings
 
+*N = runs without technical errors (exit 0). Avg LOC computed over these runs only. Runs with exit errors often still contain partial output revealing the model's topic choice — these are included in fixation/topic analysis but excluded from complexity metrics. Runs where the model succeeded but chose not to implement (proposed only) are behavioral data and retained.*
+
 **Experiment 1** (RTK present in sandbox — biased toward dev tooling):
 
-| Model | OK | Avg LOC | Primary Lang | Typical Project |
-|-------|----|---------|-------------|-----------------|
-| claude-sonnet-4.5 | 5/5 | 776 | Python | Dev workflow tools (commit gen, code analysis) |
-| claude-opus-4.6 | 5/5 | 607 | Go/Rust | TUI apps (hex viewer, kanban boards) |
-| claude-sonnet-4.6 | 3/5 | 506 | Python | Git/dev tools (code reviewer, analytics) |
-| claude-haiku-4.5 | 5/5 | 233 | Python/Go/TS | Developer tools (task mgr, snippet mgr) |
-| claude-opus-4.5 | 5/5 | 221 | Go/JS/Python | CLI utilities (tree, link checker, pomodoro) |
-| gemini-3-flash | 5/5 | 61 | JS/Go/Python | Small utilities (file finder, log parser) |
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| claude-sonnet-4.5 | 5 | 776 | Python | Dev workflow tools (commit gen, code analysis) |
+| claude-opus-4.6 | 5 | 607 | Go/Rust | TUI apps (hex viewer, kanban boards) |
+| claude-sonnet-4.6 | 5 | 506 | Python | Git/dev tools (code reviewer, analytics) |
+| claude-haiku-4.5 | 5 | 233 | Python/Go/TS | Developer tools (task mgr, snippet mgr) |
+| claude-opus-4.5 | 5 | 221 | Go/JS/Python | CLI utilities (tree, link checker, pomodoro) |
+| gemini-3-flash | 5 | 61 | JS/Go/Python | Small utilities (file finder, log parser) |
 
 **Experiment 2** (RTK removed — no environment bias):
 
-| Model | OK | Avg LOC | Primary Lang | Typical Project |
-|-------|----|---------|-------------|-----------------|
-| claude-opus-4.6 | 4/5 | 408 | Python | Conway's Game of Life (every time) |
-| claude-opus-4.5 | 2/5 | 291 | Python | Habit trackers |
-| claude-sonnet-4.5 | 5/5 | 234 | Python | Games + task managers |
-| claude-sonnet-4.6 | 5/5 | 204 | Python | Diverse interactive tools |
-| claude-haiku-4.5 | 1/5 | 160 | Node.js | Standup generator |
-| gemini-3-flash | 5/5 | 86 | Go/Python/JS | Small CLI tools |
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| claude-opus-4.6 | 4 | 408 | Python | Conway's Game of Life (every time) |
+| claude-opus-4.5 | 5 | 291 | Python | Habit trackers (2 implemented, 3 proposed only) |
+| claude-sonnet-4.5 | 5 | 234 | Python | Games + task managers |
+| claude-sonnet-4.6 | 5 | 204 | Python | Diverse interactive tools |
+| claude-haiku-4.5 | 5 | 160 | Node.js | Standup generator (1 implemented, 4 proposed only) |
+| gemini-3-flash | 5 | 86 | Go/Python/JS | Small CLI tools |
 
 **Experiment 3** (explicit "JUST DO IT" demand):
 
 *Claude backend — Anthropic models:*
 
-| Model | OK | Avg LOC | Primary Lang | Typical Project |
-|-------|----|---------|-------------|-----------------|
-| claude-haiku-4.5 | 5/5 | 467 | JS/Python | Task managers and dev tools |
-| claude-sonnet-4.6 | 5/5 | 307 | Python | Diverse creative tools (maze, debate arena) |
-| claude-sonnet-4.5 | 4/5 | 380 | Python | Pomodoro timers |
-| claude-opus-4.5 | 3/5 | 467 | Python | Personal productivity tools |
-| claude-opus-4.6 | 4/5 | 322 | Python | Conway's Game of Life (every time) |
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| claude-haiku-4.5 | 5 | 467 | JS/Python | Task managers and dev tools |
+| claude-sonnet-4.6 | 5 | 307 | Python | Diverse creative tools (maze, debate arena) |
+| claude-sonnet-4.5 | 3 | 380 | Python | Pomodoro timers |
+| claude-opus-4.5 | 3 | 467 | Python | Personal productivity tools |
+| claude-opus-4.6 | 4 | 322 | Python | Conway's Game of Life (every time) |
 
 *Claude backend — GPT models (via litellm):*
 
-| Model | OK | Avg LOC | Primary Lang | Typical Project |
-|-------|----|---------|-------------|-----------------|
-| gpt-5-mini | 5/5 | 121 | Python | CLI tools with tests + CI |
-| gpt-4.1-mini | 4/5 | 8 | Python | Hello World stubs |
-| gpt-4.1 | 2/5 | 31 | Python | Todo CLI |
-| gpt-5.4 | 1/5 | 7 | Python | Stub only |
-| gpt-5.1 | 0/5 | — | — | No output |
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| gpt-5-mini | 5 | 121 | Python | CLI tools with tests + CI |
+| gpt-4.1-mini | 4 | 8 | Python | Hello World stubs |
+| gpt-4.1 | 2 | 31 | Python | Todo CLI |
+| gpt-5.4 | 1 | 7 | Python | Stub only |
+| gpt-5.1 | 0 | — | — | No output |
 
 *Codex backend — GPT models (files in sandbox, not persisted to host):*
 
-| Model | OK | Avg LOC | Primary Lang | Typical Project |
-|-------|----|---------|-------------|-----------------|
-| gpt-5.4 | 5/5 | 230 | Python/HTML+JS | Diverse — web apps, CLI tools |
-| gpt-5.1 | 5/5 | 98 | Python | CLI utilities with packaging |
-| gpt-4.1 | 5/5 | 56 | Python | Todo list apps |
-| gpt-5-mini | 4/5 | 40 | Python | Greeting utilities |
-| gpt-4.1-mini | 4/5 | 8 | Python | Hello World |
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| gpt-5.4 | 5 | 230 | Python/HTML+JS | Diverse — web apps, CLI tools |
+| gpt-5.1 | 5 | 98 | Python | CLI utilities with packaging |
+| gpt-4.1 | 5 | 56 | Python | Todo list apps |
+| gpt-5-mini | 4 | 40 | Python | Greeting utilities |
+| gpt-4.1-mini | 4 | 8 | Python | Hello World |
 
 *Gemini models were near-non-functional on both backends (1/20 runs on claude backend produced files).*
 
 **Experiment 4** (Opus 4.7 — same prompt as Exp3):
 
-| Model | OK | Avg LOC | Primary Lang | Typical Project |
-|-------|----|---------|-------------|-----------------|
-| claude-opus-4-7 | 5/5 | 538 | Python | Diverse simulations (reaction-diffusion, boids, maze, dungeon) |
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| claude-opus-4-7 | 5 | 538 | Python | Diverse simulations (reaction-diffusion, boids, maze, dungeon) |
 
 **Experiment 5** (harness 2.1.112 — same prompt as Exp3/4):
 
-| Model | OK | Avg LOC | Primary Lang | Typical Project |
-|-------|----|---------|-------------|-----------------|
-| claude-opus-4.6 | 5/5 | 387 | Python/Go | Game of Life (3/5), ray tracer, typing test |
-| claude-opus-4-7 | 5/5 | 262 | Python | Boids (3/5), dungeon gen, maze solver |
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| claude-opus-4.6 | 5 | 387 | Python/Go | Game of Life (3/5), ray tracer, typing test |
+| claude-opus-4-7 | 5 | 262 | Python | Boids (3/5), dungeon gen, maze solver |
 
 ### Model Personalities
 
-Each Claude model shows a consistent thematic identity across experiments:
+Each model shows a consistent thematic identity across experiments (topic analysis includes partial output from error runs):
 
-| Model | Thematic profile | Fixation | Reliability | Maturity |
-|-------|-----------------|----------|-------------|----------|
-| **sonnet-4.6** | The creative generalist. Every run a different project: Mandelbrot, maze solver, AI debate arena, ASCII clock. Only model to use the Claude API creatively. | None | 5/5 in all experiments | Low (no tests, no READMEs) |
-| **sonnet-4.5** | The productivity builder. Pomodoro timers (3/4 in Exp3), task managers, Snake games. Gravitates toward time management. | Pomodoro (Exp3) | High (4–5/5) | Medium (always README) |
-| **opus-4.6** | The canonical CS mind. Game of Life 9/9 times on harness 2.1.109. When it breaks free (Exp5): ray tracer, typing test — still classical, self-referential artifacts. | GoL (strong) | Improved over time | Low |
-| **opus-4.7** | The emergence explorer. Boids flocking, reaction-diffusion, procedural dungeons, maze generation. Drawn to systems where structure emerges from simple spatial rules. | Boids (Exp5) | 5/5 always | Medium (tests in Exp4) |
-| **opus-4.5** | The personal tools craftsman. Habit trackers, snippet managers, pomodoro timers. Aims high but often fails to ship. | Habit trackers | Low (2–3/5) | Medium (READMEs, config) |
-| **haiku-4.5** | The diligent engineer. Task managers every time, but ships them with READMEs, tests, config, multi-file structure. Highest engineering maturity of any model. | Task managers | Prompt-dependent (1/5 → 5/5) | High (tests, READMEs, config) |
-| **gpt-5-mini** | The disciplined shipper. Small but complete: tests, CI, pyproject.toml every time. Only productive GPT model on claude backend. | None | 5/5 (claude) | Highest (tests + CI always) |
-| **gpt-5.4** | Backend-dependent. On codex (native): diverse, 230 LOC avg, web apps + CLI tools. On claude backend: near-silent (1/5, stub only). | None | Backend-dependent | Low–Medium |
-| **gpt-4.1** | The minimalist. Todo list apps on codex, occasional stub on claude. Functional but unambitious. | Todo apps | Backend-dependent | Low |
-| **gemini-**** | Non-functional. 1 file across 20 runs on claude backend. gemini-2.0-flash fails instantly every time. | N/A | Near-zero | N/A |
+| Model | Thematic profile | Fixation | Maturity |
+|-------|-----------------|----------|----------|
+| **sonnet-4.6** | The creative generalist. Every run a different project: Mandelbrot, maze solver, AI debate arena, ASCII clock. Only model to use the Claude API creatively. | None | Low (no tests, no READMEs) |
+| **sonnet-4.5** | The productivity builder. Pomodoro timers (4/5 in Exp3 incl. error runs), task managers, Snake games. Gravitates toward time management. | Pomodoro (Exp3) | Medium (always README) |
+| **opus-4.6** | The canonical CS mind. Game of Life in 10/10 runs on harness 2.1.109 (incl. error runs with partial files). When it breaks free (Exp5): ray tracer, typing test — still classical, self-referential artifacts. | GoL (strong) | Low |
+| **opus-4.7** | The emergence explorer. Boids flocking, reaction-diffusion, procedural dungeons, maze generation. Drawn to systems where structure emerges from simple spatial rules. | Boids (Exp5) | Medium (tests in Exp4) |
+| **opus-4.5** | The personal tools craftsman. Habit trackers, snippet managers, pomodoro timers — consistent across error and successful runs alike. | Habit trackers | Medium (READMEs, config) |
+| **haiku-4.5** | The diligent engineer. Task managers every time, but ships them with READMEs, tests, config, multi-file structure. Highest engineering maturity of any model. Proposed without implementing in Exp2 (4/5), fully implemented in Exp3 (5/5). | Task managers | High (tests, READMEs, config) |
+| **gpt-5-mini** | The disciplined shipper. Small but complete: tests, CI, pyproject.toml every time. Only productive GPT model on claude backend. | None | Highest (tests + CI always) |
+| **gpt-5.4** | Backend-dependent. On codex (native): diverse, 230 LOC avg, web apps + CLI tools. On claude backend: near-silent. | None | Low–Medium |
+| **gpt-4.1** | The minimalist. Todo list apps on codex, occasional stub on claude. Functional but unambitious. | Todo apps | Low |
+| **gemini-**** | Non-functional on both backends. 1 file across 20 runs on claude backend. | N/A | N/A |
 
 **Opus 4.6 vs 4.7 thematic contrast:** Opus 4.6 gravitates toward canonical, self-contained CS artifacts (Game of Life, ray tracing) — systems that compute or display their own state. Opus 4.7 gravitates toward spatial emergence and procedural generation (boids, reaction-diffusion, dungeons, mazes) — systems where complex structure arises from simple agent interactions or algorithms.
 
@@ -203,12 +205,13 @@ Each Claude model shows a consistent thematic identity across experiments:
 **What changes behavior:**
 - **Environment context matters:** With RTK in the sandbox, models built RTK-related
   dev tools. Without it, they shifted to games, interactive tools, and simpler CLIs.
-- **Prompt wording matters enormously:** Adding "JUST DO IT" to Exp3 fixed haiku's
-  implementation rate (1/5 → 5/5) and increased average LOC across all models.
+- **Prompt wording matters enormously:** Adding "JUST DO IT" to Exp3 changed haiku
+  from proposing without implementing (Exp2: 4/5 proposed only) to fully shipping
+  every run (Exp3: 5/5 implemented). Avg LOC increased across all models.
 - **Harness version shifts fixation and complexity:** Opus 4.6's GoL fixation
-  dropped from 100% (harness 2.1.109) to 60% (2.1.112). Opus 4.7 gained a boids
-  fixation on 2.1.112 (3/5) that wasn't present on 2.1.109 (0/5), with lower
-  avg LOC (262 vs 538) and no tests.
+  dropped from 10/10 runs (harness 2.1.109, incl. error runs) to 3/5 (2.1.112).
+  Opus 4.7 gained a boids fixation on 2.1.112 (3/5) that wasn't present on
+  2.1.109 (0/5), with lower avg LOC (262 vs 538) and no tests.
 
 **Cross-model patterns:**
 - **Backend determines GPT ranking:** On codex (native), gpt-5.4 is best (~230 LOC,
