@@ -43,8 +43,16 @@ See **[results3/RESULTS.md](results3/RESULTS.md)** for the full per-run breakdow
 ### Experiment 4 — `prompt3.txt` (new model: claude-opus-4-7)
 
 > Same prompt as Experiment 3. Testing Opus 4.7 against Opus 4.6's Game of Life fixation.
+> Harness: Claude Code 2.1.109.
 
 See **[results4/RESULTS.md](results4/RESULTS.md)** for the full per-run breakdown.
+
+### Experiment 5 — `prompt3.txt` (harness version as variable)
+
+> Same prompt as Experiments 3/4. Testing whether harness version (Claude Code
+> 2.1.112 vs 2.1.109) affects output. Both opus-4.6 and opus-4.7 run on 2.1.112.
+
+See **[results5/RESULTS.md](results5/RESULTS.md)** for the full per-run breakdown.
 
 Each experiment includes:
 - Topic proposed and implementation status
@@ -116,16 +124,27 @@ Each experiment includes:
 |-------|----|---------|-------------|-----------------|
 | claude-opus-4-7 | 5/5 | 538 | Python | Diverse simulations (reaction-diffusion, boids, maze, dungeon) |
 
+**Experiment 5** (harness 2.1.112 — same prompt as Exp3/4):
+
+| Model | OK | Avg LOC | Primary Lang | Typical Project |
+|-------|----|---------|-------------|-----------------|
+| claude-opus-4.6 | 5/5 | 387 | Python/Go | Game of Life (3/5), ray tracer, typing test |
+| claude-opus-4-7 | 5/5 | 262 | Python | Boids (3/5), dungeon gen, maze solver |
+
 ### Observations
 
 - **Environment bias matters:** With RTK in the sandbox, models built RTK-related
   dev tools. Without it, they shifted to games, interactive tools, and simpler CLIs.
 - **Prompt wording matters enormously:** Adding "JUST DO IT" to Exp3 fixed haiku's
   implementation rate (1/5 → 5/5) and increased average LOC across all models.
-- **Opus-4.6 Game of Life fixation is gone in 4.7:** Opus 4.6 chose Game of Life
-  in all successful runs across Exp2 and Exp3 (8/8 times). Opus 4.7 chose it only
-  1/5 times, producing 5 distinct projects with higher avg LOC (538 vs 290) and
-  100% success rate (5/5 vs 4/5).
+- **Opus-4.6 Game of Life fixation weakened in newer harness:** Opus 4.6 chose
+  Game of Life in all runs across Exp2 and Exp3 on harness 2.1.109 (9/9). On
+  harness 2.1.112 (Exp5), fixation dropped to 3/5 — a ray tracer and typing test
+  broke through. Opus 4.7 has no GoL fixation but developed a boids fixation on
+  2.1.112 (3/5 in Exp5, 0/5 in Exp4 on 2.1.109).
+- **Harness version affects output complexity:** Opus 4.7 on harness 2.1.109
+  (Exp4) averaged 538 LOC with tests in 2/5 runs. On 2.1.112 (Exp5), it averaged
+  262 LOC with no tests — suggesting the newer harness may encourage brevity.
 - **Sonnet-4.6** is the most creative and reliable — 5/5 in all three experiments,
   with the most diverse project choices (maze solver, AI debate arena, ASCII clock).
 - **Haiku is prompt-sensitive:** 5/5 with RTK context (Exp1), 1/5 with "propose
@@ -197,6 +216,7 @@ run.sh:
 | `results2/` | Experiment 2 output + [RESULTS.md](results2/RESULTS.md) |
 | `results3/` | Experiment 3 output + [RESULTS.md](results3/RESULTS.md) |
 | `results4/` | Experiment 4 output + [RESULTS.md](results4/RESULTS.md) |
+| `results5/` | Experiment 5 output + [RESULTS.md](results5/RESULTS.md) |
 
 ## Future Experiment Ideas
 
