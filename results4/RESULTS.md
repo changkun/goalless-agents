@@ -8,11 +8,13 @@
 
 **Same prompt as Experiment 3** — testing new model `claude-opus-4-7` (Opus 4.7).
 
+> **Note on N:** N = runs without technical errors (exit ≠ 0). Avg LOC computed over these runs only. Runs with exit errors may still contain partial output revealing topic choice — included in fixation/topic analysis but excluded from complexity metrics.
+
 ---
 
 ## Claude Backend — claude-opus-4-7
 
-### claude-opus-4-7 — 5/5 implemented
+### claude-opus-4-7 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -29,7 +31,7 @@
 
 ### Analysis
 
-**Fixation broken.** Opus 4.6 chose Conway's Game of Life in every successful run across Exp2 and Exp3 (8/8 times). Opus 4.7 chose it only once (run-03, 1/5) and produced 4 other distinct projects. The Game of Life fixation that was a defining characteristic of Opus 4.6 is no longer present.
+**Fixation broken.** Opus 4.6 chose Conway's Game of Life in every run across Exp2 and Exp3 (8/8 times). Opus 4.7 chose it only once (run-03) and produced 4 other distinct projects. The Game of Life fixation that was a defining characteristic of Opus 4.6 is no longer present.
 
 **Topic diversity.** All 5 runs produced different projects:
 1. Reaction-diffusion (Gray-Scott PDE simulation)
@@ -42,9 +44,9 @@ All are **simulation/visualization** projects — there is a clear thematic pref
 
 **Higher complexity.** Avg 538 LOC vs Opus 4.6's ~322 LOC in Exp3 (1.7× more). The maze generator (run-04) was the most complex at 762 LOC with 26 passing tests.
 
-**100% implementation rate.** 5/5 runs succeeded, up from Opus 4.6's 4/5 in Exp3.
+**No technical errors.** All 5 runs completed without exit errors, compared to 1 exit error in Opus 4.6's Exp3 runs.
 
-**Testing.** 2/5 runs included tests (run-01: smoke + PTY end-to-end tests; run-04: 26 unit tests). Opus 4.6 never wrote tests in Exp2/Exp3.
+**Testing.** 2 of 5 runs included tests (run-01: smoke + PTY end-to-end tests; run-04: 26 unit tests). Opus 4.6 never wrote tests in Exp2/Exp3.
 
 **Pure stdlib.** Every run used only Python standard library — no external dependencies.
 
@@ -54,10 +56,10 @@ All are **simulation/visualization** projects — there is a clear thematic pref
 
 | Metric | Opus 4.6 (Exp3) | Opus 4.7 (Exp4) |
 |--------|-----------------|-----------------|
-| Success rate | 4/5 | **5/5** |
+| N (error-free runs) | 4 | **5** |
 | Avg LOC | ~322 | **~538** |
 | Topic diversity | 1 topic (Game of Life ×3) | **5 distinct topics** |
-| Tests written | 0/3 | **2/5** |
+| Tests written | 0 of 4 | **2 of 5** |
 | Primary lang | Python | Python |
 | External deps | None | None |
-| Avg duration | ~361s (successful only) | **~242s** |
+| Avg duration | ~361s (N = 4) | **~242s** |

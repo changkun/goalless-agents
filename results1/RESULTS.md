@@ -8,13 +8,15 @@
 
 **Note:** RTK was present in the sandbox environment for this experiment, which biased several models toward building RTK-related tools. This was fixed in Experiment 2.
 
-**Total:** 130 runs | **Succeeded:** 40 | **Partial:** 12 | **Failed:** 78
+**N = runs without technical errors (exit ≠ 0). Avg LOC computed over these runs only. Runs with exit errors may still contain partial output revealing topic choice — included in fixation/topic analysis but excluded from complexity metrics.**
+
+**Total:** 130 runs | 40 completed without error | 12 partial | 78 with technical errors
 
 ---
 
 ## Claude Backend Results
 
-### claude-opus-4.6 — 5/5 implemented
+### claude-opus-4.6 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -26,7 +28,7 @@
 
 **Pattern:** Ambitious TUI/terminal tools. Alternates Go and Rust. 40% test rate. High complexity (avg ~607 LOC).
 
-### claude-opus-4.5 — 5/5 implemented
+### claude-opus-4.5 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -38,7 +40,7 @@
 
 **Pattern:** Practical CLI utilities. Polyglot (Go, JS, Python). 40% test rate. Always has build config. Moderate complexity (avg ~221 LOC).
 
-### claude-sonnet-4.6 — 3/5 implemented, 2 error
+### claude-sonnet-4.6 — N = 3
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -50,7 +52,7 @@
 
 **Pattern:** Developer/git tooling. Always Python. 0% test rate. Moderate-high complexity when successful (avg ~506 LOC).
 
-### claude-sonnet-4.5 — 5/5 implemented
+### claude-sonnet-4.5 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -62,7 +64,7 @@
 
 **Pattern:** Developer workflow tools. Always Python. Always README. 20% test rate. High complexity (avg ~776 LOC).
 
-### claude-haiku-4.5 — 5/5 implemented
+### claude-haiku-4.5 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -74,7 +76,7 @@
 
 **Pattern:** Practical developer tools. Polyglot (Python, Go, TypeScript). Always README. 20% test rate. Moderate complexity (avg ~233 LOC).
 
-### gemini-3-flash — 5/5 implemented
+### gemini-3-flash — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -86,7 +88,7 @@
 
 **Pattern:** Small, focused utilities. Polyglot. Low complexity (avg ~61 LOC). Minimal maturity.
 
-### gemini-2.5-pro — 5/5 implemented
+### gemini-2.5-pro — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -98,7 +100,7 @@
 
 **Pattern:** Very simple projects. Always Python. Low ambition (avg ~64 LOC). High variance.
 
-### gemini-2.0-flash — 3/5 implemented, 2 error
+### gemini-2.0-flash — N = 3
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -114,7 +116,7 @@
 
 ## Codex Backend Results
 
-### Claude models via codex — 0/25 succeeded (all error)
+### Claude models via codex — N = 0 (all technical errors)
 
 All 5 Claude models (haiku-4.5, opus-4.5, opus-4.6, sonnet-4.5, sonnet-4.6) failed consistently across all 25 runs.
 
@@ -126,7 +128,7 @@ All 5 Claude models (haiku-4.5, opus-4.5, opus-4.6, sonnet-4.5, sonnet-4.6) fail
   - sonnet-4.6: "RTK instructions review and exploration"
   - haiku-4.5: "Explore and build valuable features"
 
-### GPT models via codex — 2/25 partial, 23 error
+### GPT models via codex — N = 0 (all technical errors; partial output from 2 runs used for topic analysis only)
 
 | Model | Status | Topic Proposed | Error |
 |-------|--------|---------------|-------|
@@ -136,7 +138,7 @@ All 5 Claude models (haiku-4.5, opus-4.5, opus-4.6, sonnet-4.5, sonnet-4.6) fail
 | gpt-5.1 | partial | File-based note CLI with tests | 429 rate limit after planning |
 | gpt-5-mini | partial | Python package "greetcli" with pytest | 429 rate limit before implementation |
 
-### Gemini models via codex — 0/15 succeeded (all error)
+### Gemini models via codex — N = 0 (all technical errors)
 
 All 3 Gemini models (2.0-flash, 2.5-pro, 3-flash) failed across all 15 runs.
 
@@ -145,7 +147,7 @@ All 3 Gemini models (2.0-flash, 2.5-pro, 3-flash) failed across all 15 runs.
 
 ---
 
-## GPT models (claude backend) — 0/25 succeeded (all error)
+## GPT models (claude backend) — N = 0 (all technical errors)
 
 All 5 GPT models failed consistently across all 25 runs.
 
@@ -156,28 +158,28 @@ All 5 GPT models failed consistently across all 25 runs.
 
 ## Summary by Model (successful runs only)
 
-| Model | Backend | OK/Total | Avg LOC | Primary Lang | Test Rate | README Rate | Typical Project |
-|-------|---------|----------|---------|-------------|-----------|-------------|-----------------|
-| claude-opus-4.6 | claude | 5/5 | 607 | Go/Rust | 40% | 20% | TUI apps (hex viewer, kanban) |
-| claude-opus-4.5 | claude | 5/5 | 221 | Go/JS/Python | 40% | 20% | CLI utilities (tree, link checker) |
-| claude-sonnet-4.6 | claude | 3/5 | 506 | Python | 0% | 33% | Git/dev tools (code reviewer, analytics) |
-| claude-sonnet-4.5 | claude | 5/5 | 776 | Python | 20% | 100% | Dev workflow (commit gen, code analysis) |
-| claude-haiku-4.5 | claude | 5/5 | 233 | Python/Go/TS | 20% | 100% | Developer tools (task mgr, snippet mgr) |
-| gemini-3-flash | claude | 5/5 | 61 | JS/Go/Python | 20% | 40% | Small utilities (file finder, log parser) |
-| gemini-2.5-pro | claude | 5/5 | 64 | Python | 20% | 20% | Simple scripts (hello world, chatbot) |
-| gemini-2.0-flash | claude | 3/5 | 89 | Python | 0% | 0% | Minimal scripts |
+| Model | Backend | N | Avg LOC | Primary Lang | Test Rate | README Rate | Typical Project |
+|-------|---------|---|---------|-------------|-----------|-------------|-----------------|
+| claude-opus-4.6 | claude | 5 | 607 | Go/Rust | 40% | 20% | TUI apps (hex viewer, kanban) |
+| claude-opus-4.5 | claude | 5 | 221 | Go/JS/Python | 40% | 20% | CLI utilities (tree, link checker) |
+| claude-sonnet-4.6 | claude | 3 | 506 | Python | 0% | 33% | Git/dev tools (code reviewer, analytics) |
+| claude-sonnet-4.5 | claude | 5 | 776 | Python | 20% | 100% | Dev workflow (commit gen, code analysis) |
+| claude-haiku-4.5 | claude | 5 | 233 | Python/Go/TS | 20% | 100% | Developer tools (task mgr, snippet mgr) |
+| gemini-3-flash | claude | 5 | 61 | JS/Go/Python | 20% | 40% | Small utilities (file finder, log parser) |
+| gemini-2.5-pro | claude | 5 | 64 | Python | 20% | 20% | Simple scripts (hello world, chatbot) |
+| gemini-2.0-flash | claude | 3 | 89 | Python | 0% | 0% | Minimal scripts |
 
 ## Backend Comparison
 
-| Backend | Total | OK | Partial | Err | Avg LOC (OK runs) | Test Rate |
-|---------|-------|----|---------|-----|-------------------|-----------|
+| Backend | Total Runs | N (no error) | Partial | Technical Errors | Avg LOC (N runs) | Test Rate |
+|---------|------------|--------------|---------|------------------|------------------|-----------|
 | claude | 65 | 41 | 0 | 24 | ~328 | 23% |
-| codex | 65 | 0 | 12 | 53 | ~0 | 0% |
+| codex | 65 | 0 | 12 | 53 | — | — |
 
-### Failure Breakdown
+### Technical Error Breakdown
 
-| Failure Type | Count | Affected |
-|-------------|-------|----------|
+| Error Type | Count | Affected |
+|------------|-------|----------|
 | GPT via claude backend (API param incompatibility) | 25 | All 5 GPT models |
 | Claude via codex (gateway tool_use translation) | 25 | All 5 Claude models |
 | Codex rate limit (429) | 18 | GPT + Gemini via codex |

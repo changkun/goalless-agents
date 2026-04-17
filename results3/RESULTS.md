@@ -8,6 +8,8 @@
 
 **Key change from Experiment 2:** Prompt adds "JUST DO IT" — explicit implementation demand to address models that proposed without implementing.
 
+**N** = runs without technical errors (exit ≠ 0). Avg LOC computed over these runs only. Runs with exit errors may still contain partial output revealing topic choice — included in fixation/topic analysis but excluded from complexity metrics.
+
 ---
 
 ## Backend Viability
@@ -21,7 +23,7 @@
 
 ## Claude Backend — Anthropic Models
 
-### claude-opus-4-6 — 4/5 implemented, 1 failed
+### claude-opus-4-6 — N=4
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -29,23 +31,23 @@
 | 02 | Conway's Game of Life | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~269 LOC | 86s |
 | 03 | Conway's Game of Life | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~337 LOC | 132s |
 | 04 | Conway's Game of Life with presets | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~324 LOC | 112s |
-| 05 | *(failed — exit 1, 3s; partial Game of Life file left)* | Python 3 | — | 1 file, ~226 LOC | 3s |
+| 05 | *(technical error — exit 1, 3s; partial Game of Life file left)* | Python 3 | — | 1 file, ~226 LOC | 3s |
 
-**Pattern:** Completely fixated on Game of Life — chose it in all 5 runs including the failed one (consistent with Exp2). Single-file Python, avg ~322 LOC (successful runs). No maturity features.
+**Pattern:** Completely fixated on Game of Life — chose it in all 5 runs including the error run (consistent with Exp2). Single-file Python, avg ~322 LOC (completed runs). No maturity features.
 
-### claude-opus-4-5 — 3/5 implemented, 2 failed
+### claude-opus-4-5 — N=3
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
 | 01 | Terminal habit tracker | Python 3, argparse, JSON | tests:no, readme:no, config:no | 1 file, ~277 LOC, ~14 funcs | 243s |
-| 02 | *(failed — exit 1, no files)* | — | — | — | 374s |
+| 02 | *(technical error — exit 1, no files)* | — | — | — | 374s |
 | 03 | Snip — CLI code snippet manager | Python 3, pygments, pyproject.toml | tests:no, readme:yes, config:yes | 6 files, ~651 LOC, ~25 funcs | 1089s |
-| 04 | *(failed — exit 1, no files)* | — | — | — | 258s |
+| 04 | *(technical error — exit 1, no files)* | — | — | — | 258s |
 | 05 | Pomodoro timer CLI | Python 3 | tests:no, readme:yes, config:no | 2 files, ~474 LOC, ~15 funcs | 130s |
 
-**Pattern:** Improved from Exp2 (2/5 → 3/5). More diverse topics. Highest average complexity when implemented (~467 LOC). Run 03 (snippet manager, 651 LOC with pyproject.toml) was the most ambitious single output.
+**Pattern:** More diverse topics than Exp2. Highest average complexity among completed runs (~467 LOC). Run 03 (snippet manager, 651 LOC with pyproject.toml) was the most ambitious single output.
 
-### claude-sonnet-4-6 — 5/5 implemented
+### claude-sonnet-4-6 — N=5
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -55,21 +57,21 @@
 | 04 | AI Debate Arena — two Claude debaters + judge | Python 3, Anthropic SDK | tests:no, readme:no, config:yes | 2 files, ~295 LOC, ~9 funcs | 3502s |
 | 05 | ASCII Pomodoro timer with session tracking | Python 3, curses, JSON | tests:no, readme:no, config:no | 1 file, ~432 LOC, ~18 funcs | 88s |
 
-**Pattern:** Most diverse output of any model — every run is a different project. 100% implementation rate across all 3 experiments. Two runs use the Claude API creatively (commitcraft, debate arena) — only model to do so. Avg ~307 LOC.
+**Pattern:** Most diverse output of any model — every run is a different project. Consistently produced output across all 3 experiments without technical errors. Two runs use the Claude API creatively (commitcraft, debate arena) — only model to do so. Avg ~307 LOC.
 
-### claude-sonnet-4-5 — 4/5 implemented, 1 failed
+### claude-sonnet-4-5 — N=4
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
 | 01 | Pomodoro timer with task list | Python 3, threading | tests:no, readme:yes, config:no | 2 files, ~362 LOC, ~2 funcs | 261s |
-| 02 | *(failed — exit 1, no files)* | — | — | — | 247s |
+| 02 | *(technical error — exit 1, no files)* | — | — | — | 247s |
 | 03 | Pomodoro task manager with demo | Python 3, curses | tests:no, readme:yes, config:yes | 6 files, ~462 LOC, ~4 funcs | 739s |
 | 04 | Pomodoro timer CLI | Python 3 | tests:no, readme:yes, config:no | 2 files, ~359 LOC, ~2 funcs | 383s |
 | 05 | Terminal Snake game with high scores | Python 3, curses | tests:no, readme:no, config:no | 4 files, ~338 LOC, ~7 funcs | 99s |
 
-**Pattern:** Strong Pomodoro fixation (3/4 successful runs). Always includes README (3/4). Avg ~380 LOC when implemented.
+**Pattern:** Strong Pomodoro fixation (3 of 4 completed runs). README included in 3 of 4 completed runs. Avg ~380 LOC across completed runs.
 
-### claude-haiku-4-5 — 5/5 implemented (dramatically improved)
+### claude-haiku-4-5 — N=5
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -79,7 +81,7 @@
 | 04 | Taskly — lightweight task manager | Node.js | tests:yes, readme:yes, config:yes | 6 files, ~458 LOC, ~9 funcs | 952s |
 | 05 | Task Manager CLI | Python 3, click, tabulate | tests:no, readme:yes, config:yes | 5 files, ~383 LOC, ~11 funcs | 61s |
 
-**Pattern:** Massive improvement from Exp2 (1/5 → 5/5). Highest maturity of any model — README in all 5, tests in 2/5, config in 4/5. Multi-file projects (avg 6.4 files). Polyglot (Node.js × 3, Python × 2). Avg ~467 LOC.
+**Pattern:** The "JUST DO IT" prompt elicited consistent implementation where Exp2's framing did not. Highest maturity of any model — README in all 5 runs, tests in 2, config in 4. Multi-file projects (avg 6.4 files). Polyglot (Node.js x 3, Python x 2). Avg ~467 LOC.
 
 ---
 
@@ -87,7 +89,7 @@
 
 All output.json files were empty (0 bytes) — Claude Code's stdout capture doesn't work with non-Anthropic models. But workspace files reveal what was built.
 
-### gpt-5-mini — 5/5 implemented (best non-Anthropic model)
+### gpt-5-mini — N=5
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -97,20 +99,20 @@ All output.json files were empty (0 bytes) — Claude Code's stdout capture does
 | 04 | Greeting CLI stub | Python 3, argparse | tests:yes, readme:yes, CI:yes | 3 files, ~53 LOC | 193s |
 | 05 | `fhash` — file/directory hashing tool | Python 3, hashlib, pyproject.toml | tests:yes, readme:no, config:yes, CI:yes | 5 files, ~165 LOC | 710s |
 
-**Pattern:** Only non-Anthropic model with 100% implementation rate. Every run includes tests. 4/5 include pyproject.toml and GitHub Actions CI. Avg ~121 LOC. Much longer runtimes (193–1378s) than other GPT models, indicating actual tool use iteration.
+**Pattern:** The only non-Anthropic model to produce output in every run on claude backend. Every run includes tests. 4 of 5 include pyproject.toml and GitHub Actions CI. Avg ~121 LOC. Much longer runtimes (193-1378s) than other GPT models, indicating actual tool use iteration.
 
-### gpt-5.4 — 1/5 implemented
+### gpt-5.4 — N=1
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
 | 01–04 | *(no output)* | — | — | 0 files | 9–43s |
 | 05 | Hello-world CLI stub | Python 3 | readme:yes | 1 file, ~7 LOC | 36s |
 
-### gpt-5.1 — 0/5 implemented
+### gpt-5.1 — N=0
 
 All 5 runs exited 0 but produced zero files (18–52s each).
 
-### gpt-4.1 — 2/5 implemented
+### gpt-4.1 — N=2
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -118,7 +120,7 @@ All 5 runs exited 0 but produced zero files (18–52s each).
 | 03 | JSON-backed todo CLI | Python 3, stdlib | — | 1 file, ~56 LOC | 21s |
 | 01, 04, 05 | *(no output)* | — | — | 0 files | 13–55s |
 
-### gpt-4.1-mini — 4/5 implemented (stubs)
+### gpt-4.1-mini — N=4 (stubs)
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -134,11 +136,11 @@ All 5 runs exited 0 but produced zero files (18–52s each).
 
 ## Claude Backend — Gemini Models (5 runs each)
 
-### gemini-3-pro-preview — 0/5 produced files
+### gemini-3-pro-preview — N=0
 
 All 5 runs exited 0 but produced zero workspace files (181–1748s). The model reasoned without writing anything.
 
-### gemini-3-flash-preview — 1/5 produced files
+### gemini-3-flash-preview — N=1
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -147,11 +149,11 @@ All 5 runs exited 0 but produced zero workspace files (181–1748s). The model r
 
 All 5 runs exited 1. Run-01 hung for 6084s (~101 min) before failing.
 
-### gemini-2.5-pro — 0/5 produced real files
+### gemini-2.5-pro — N=0
 
 Runs 01–02 exited 0; runs 03–05 exited 1. Run-04 left a bare `package.json` stub (11 LOC, no source code). No actual implementation across 5 runs.
 
-### gemini-2.0-flash — 0/5 (instant failure)
+### gemini-2.0-flash — N=0 (instant failure)
 
 All 5 runs exited 1 in 4–16s. The model fails immediately at the API routing layer.
 
@@ -161,7 +163,7 @@ All 5 runs exited 1 in 4–16s. The model fails immediately at the API routing l
 
 GPT models were productive on the codex backend — they created files inside the bwrap sandbox, but the isolation layer prevented writes from persisting to the host-mounted workspace volume. All activity is captured in output.json.
 
-### gpt-5.4 — 5/5 implemented
+### gpt-5.4 — N=5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -171,9 +173,9 @@ GPT models were productive on the codex backend — they created files inside th
 | 04 | Text digest CLI — summarizes text, extracts keywords | Python 3, stdlib | tests:yes, readme:yes, config:no | 3 files, ~120 LOC |
 | 05 | ASCII terrain generator CLI | Python 3, stdlib | tests:yes, readme:yes, config:no | 3 files, ~100 LOC |
 
-**Pattern:** Most diverse GPT model — never repeated a topic. Mixed Python CLI and full web apps. Tests in 2/5. README in every run. Used native Codex `file_change` API. Avg ~230 LOC.
+**Pattern:** Most diverse GPT model — never repeated a topic. Mixed Python CLI and full web apps. Tests in 2 of 5 runs. README in every run. Used native Codex `file_change` API. Avg ~230 LOC.
 
-### gpt-5.1 — 5/5 implemented
+### gpt-5.1 — N=5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -183,9 +185,9 @@ GPT models were productive on the codex backend — they created files inside th
 | 04 | `tasklog` — timestamped task logging CLI | Python 3, stdlib | tests:no, readme:yes, config:no | 2 files, ~80 LOC |
 | 05 | Markdown index generator → styled HTML | Python 3, pytest | tests:yes, readme:no, config:yes | 3 files, ~80 LOC |
 
-**Pattern:** Consistent Python CLI tools with proper packaging. pyproject.toml in 3/5 runs. README in 4/5. Avg ~98 LOC.
+**Pattern:** Consistent Python CLI tools with proper packaging. pyproject.toml in 3 of 5 runs. README in 4 of 5. Avg ~98 LOC.
 
-### gpt-5-mini — 4/5 implemented, 1 partial
+### gpt-5-mini — N=4
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -195,9 +197,9 @@ GPT models were productive on the codex backend — they created files inside th
 | 04 | `sayhello` CLI with flags | Python 3, pyproject.toml | tests:yes, readme:yes, config:yes | 3 files, ~40 LOC |
 | 05 | `repo_inspect.py` — directory info tool | Python 3, stdlib | tests:no, readme:yes, config:no | 2 files, ~20 LOC |
 
-**Pattern:** Repeatedly chose greeting/hello utilities (3/5). Consistently included tests. Avg ~40 LOC.
+**Pattern:** Repeatedly chose greeting/hello utilities (3 of 5 runs). Consistently included tests. Avg ~40 LOC.
 
-### gpt-4.1 — 5/5 implemented
+### gpt-4.1 — N=5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -207,9 +209,9 @@ GPT models were productive on the codex backend — they created files inside th
 | 04 | Python starter scaffold | Python 3, pyproject.toml | tests:yes, readme:yes, config:yes | 5 files, ~50 LOC |
 | 05 | Palindrome CLI with unit tests | Python 3, pytest | tests:yes, readme:no, config:yes | 3 files, ~30 LOC |
 
-**Pattern:** Fixated on todo apps (3/5 runs). Used bash heredocs for file creation. Avg ~56 LOC.
+**Pattern:** Fixated on todo apps (3 of 5 runs). Used bash heredocs for file creation. Avg ~56 LOC.
 
-### gpt-4.1-mini — 4/5 implemented, 1 proposed only
+### gpt-4.1-mini — N=4
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -219,7 +221,7 @@ GPT models were productive on the codex backend — they created files inside th
 | 04 | Simple greeter CLI with unit tests | Python 3, unittest | tests:yes, readme:no, config:no | 3 files, ~30 LOC |
 | 05 | Hello World scaffold | Python 3, unittest | tests:yes, readme:yes, config:no | 3 files, ~5 LOC |
 
-**Pattern:** Almost exclusively Hello World (3/5). Run-03 violated the prompt by asking user for direction. Avg ~8 LOC.
+**Pattern:** Almost exclusively Hello World (3 of 5 runs). Run-03 violated the prompt by asking user for direction. Avg ~8 LOC.
 
 ---
 
@@ -258,62 +260,62 @@ gemini-2.0-flash never executed a single command. The other Gemini models each r
 
 ### Claude Backend — Anthropic Models
 
-| Model | OK/Total | Avg LOC | Avg Files | Primary Lang | Test Rate | README Rate | Typical Project |
-|-------|----------|---------|-----------|-------------|-----------|-------------|-----------------|
-| claude-sonnet-4-6 | 5/5 | 307 | 1.2 | Python | 0% | 0% | Diverse creative tools (maze, debate arena, clock) |
-| claude-haiku-4-5 | 5/5 | 467 | 6.4 | JS/Python | 40% | 100% | Task managers and dev tools |
-| claude-opus-4-5 | 3/5 | 467 | 3.0 | Python | 0% | 67% | Personal productivity tools |
-| claude-sonnet-4-5 | 4/5 | 380 | 3.5 | Python | 0% | 75% | Pomodoro timers |
-| claude-opus-4-6 | 3/5 | 290 | 1.0 | Python | 0% | 0% | Conway's Game of Life (every time) |
+| Model | N | Avg LOC | Avg Files | Primary Lang | Test Rate | README Rate | Typical Project |
+|-------|---|---------|-----------|-------------|-----------|-------------|-----------------|
+| claude-sonnet-4-6 | 5 | 307 | 1.2 | Python | 0% | 0% | Diverse creative tools (maze, debate arena, clock) |
+| claude-haiku-4-5 | 5 | 467 | 6.4 | JS/Python | 40% | 100% | Task managers and dev tools |
+| claude-opus-4-5 | 3 | 467 | 3.0 | Python | 0% | 67% | Personal productivity tools |
+| claude-sonnet-4-5 | 4 | 380 | 3.5 | Python | 0% | 75% | Pomodoro timers |
+| claude-opus-4-6 | 4 | 322 | 1.0 | Python | 0% | 0% | Conway's Game of Life (every time) |
 
 ### Claude Backend — GPT Models
 
-| Model | OK/Total | Avg LOC | Primary Stack | Test Rate | README Rate | Typical Project |
-|-------|----------|---------|--------------|-----------|-------------|-----------------|
-| gpt-5-mini | 5/5 | ~121 | Python | 100% | 80% | CLI tools with tests + CI |
-| gpt-4.1-mini | 4/5 | ~8 | Python | 20% | 60% | Hello World stubs |
-| gpt-4.1 | 2/5 | ~31 | Python | 0% | 0% | Todo CLI (best single run) |
-| gpt-5.4 | 1/5 | ~7 | Python | 0% | 100% | Stub only |
-| gpt-5.1 | 0/5 | — | — | — | — | No output |
+| Model | N | Avg LOC | Primary Stack | Test Rate | README Rate | Typical Project |
+|-------|---|---------|--------------|-----------|-------------|-----------------|
+| gpt-5-mini | 5 | ~121 | Python | 100% | 80% | CLI tools with tests + CI |
+| gpt-4.1-mini | 4 | ~8 | Python | 20% | 60% | Hello World stubs |
+| gpt-4.1 | 2 | ~31 | Python | 0% | 0% | Todo CLI (best single run) |
+| gpt-5.4 | 1 | ~7 | Python | 0% | 100% | Stub only |
+| gpt-5.1 | 0 | — | — | — | — | No output |
 
 ### Claude Backend — Gemini Models
 
-| Model | OK/Total | Avg LOC | Notes |
-|-------|----------|---------|-------|
-| gemini-3-flash-preview | 1/5 | ~81 | One task tracker; rest failed |
-| gemini-3-pro-preview | 0/5 | — | Exits 0 but produces nothing |
-| gemini-2.5-pro | 0/5 | — | One bare package.json stub |
-| gemini-2.0-flash | 0/5 | — | Instant failure every run |
+| Model | N | Avg LOC | Notes |
+|-------|---|---------|-------|
+| gemini-3-flash-preview | 1 | ~81 | One task tracker; rest had errors |
+| gemini-3-pro-preview | 0 | — | Exits 0 but produces nothing |
+| gemini-2.5-pro | 0 | — | One bare package.json stub |
+| gemini-2.0-flash | 0 | — | Instant failure every run |
 
 ### Codex Backend — GPT Models (files in sandbox only, not persisted)
 
-| Model | OK/Total | Avg LOC | Primary Stack | Test Rate | README Rate | Typical Project |
-|-------|----------|---------|--------------|-----------|-------------|-----------------|
-| gpt-5.4 | 5/5 | ~230 | Python / HTML+JS | 40% | 100% | Diverse — web apps, CLI tools |
-| gpt-5.1 | 5/5 | ~98 | Python | 40% | 80% | CLI utilities with packaging |
-| gpt-4.1 | 5/5 | ~56 | Python | 40% | 40% | Todo list apps (3/5 times) |
-| gpt-5-mini | 4/5 | ~40 | Python | 60% | 40% | Greeting/hello utilities |
-| gpt-4.1-mini | 4/5 | ~8 | Python | 40% | 60% | Hello World |
+| Model | N | Avg LOC | Primary Stack | Test Rate | README Rate | Typical Project |
+|-------|---|---------|--------------|-----------|-------------|-----------------|
+| gpt-5.4 | 5 | ~230 | Python / HTML+JS | 40% | 100% | Diverse — web apps, CLI tools |
+| gpt-5.1 | 5 | ~98 | Python | 40% | 80% | CLI utilities with packaging |
+| gpt-4.1 | 5 | ~56 | Python | 40% | 40% | Todo list apps (3 of 5 runs) |
+| gpt-5-mini | 4 | ~40 | Python | 60% | 40% | Greeting/hello utilities |
+| gpt-4.1-mini | 4 | ~8 | Python | 40% | 60% | Hello World |
 
 ## Comparison with Experiment 2
 
-| Model | Exp2 OK | Exp3 OK | Exp2 LOC | Exp3 LOC | Key Difference |
-|-------|---------|---------|----------|----------|----------------|
-| claude-sonnet-4-6 | 5/5 | 5/5 | 204 | 307 | +50% LOC, more creative/diverse topics |
-| claude-haiku-4-5 | 1/5 | **5/5** | 160 | 467 | **Biggest improvement.** "JUST DO IT" unlocked implementation |
-| claude-opus-4-5 | 2/5 | 3/5 | 291 | 467 | Slightly improved reliability, larger projects |
-| claude-sonnet-4-5 | 5/5 | 4/5 | 234 | 380 | Developed Pomodoro fixation (3/4 runs), but bigger projects |
-| claude-opus-4-6 | 4/5 | 3/5 | 408 | 290 | Still fixated on Game of Life, lower reliability |
+| Model | Exp2 N | Exp3 N | Exp2 LOC | Exp3 LOC | Key Behavioral Difference |
+|-------|--------|--------|----------|----------|--------------------------|
+| claude-sonnet-4-6 | 5 | 5 | 204 | 307 | +50% LOC, more creative/diverse topics |
+| claude-haiku-4-5 | 1 | **5** | 160 | 467 | **"JUST DO IT" prompt elicited implementation** — Exp2 produced proposals only |
+| claude-opus-4-5 | 2 | 3 | 291 | 467 | Larger projects when completed, more diverse topics |
+| claude-sonnet-4-5 | 5 | 4 | 234 | 380 | Developed Pomodoro fixation (3 of 4 completed runs), but bigger projects |
+| claude-opus-4-6 | 4 | 4 | 408 | 322 | Still fixated on Game of Life; partial output in error run confirms topic choice |
 
 ## Key Observations
 
-- **"JUST DO IT" fixed haiku:** Exp2's biggest problem was haiku proposing without implementing (1/5). The explicit demand brought it to 5/5 — and it produced the highest-maturity output (READMEs, tests, multi-file projects).
-- **opus-4-6 remains fixated on Game of Life** — chose it in all 3 successful runs, consistent with Exp2 (8/8 across both experiments).
+- **"JUST DO IT" changed haiku's behavior:** In Exp2, haiku proposed without implementing. The explicit demand elicited implementation in every Exp3 run — and it produced the highest-maturity output (READMEs, tests, multi-file projects).
+- **opus-4-6 remains fixated on Game of Life** — chose it in all completed runs, and the error run's partial output also targeted Game of Life (consistent with Exp2, where all runs chose this topic).
 - **sonnet-4-6 is the most creative** — 5 completely different projects across 5 runs, including two that use the Claude API (commit message generator, AI debate arena). Most diverse of any model across all experiments.
-- **sonnet-4-5 developed a Pomodoro fixation** — 3/4 successful runs built Pomodoro timers (Exp2 was 1/5 Pomodoro).
-- **GPT models: backend determines everything.** On codex (native backend), gpt-5.4 was most productive (~230 LOC, diverse). On claude backend, gpt-5-mini was the only GPT model that reliably produced code (5/5, avg 121 LOC with tests+CI). gpt-5.4 and gpt-5.1 produced almost nothing on claude backend despite being the strongest on codex.
-- **gpt-5-mini is paradoxically the best GPT model on claude backend** — outperformed all larger GPT models. Longer runtimes (193–1378s vs 9–55s) suggest it's the only one actually executing multiple tool calls through Claude Code.
-- **Gemini models are nearly non-functional on claude backend** — gemini-3-pro-preview exits cleanly 5/5 times but produces zero files. Only gemini-3-flash-preview managed one 81-LOC project across 20 total Gemini runs on claude backend.
+- **sonnet-4-5 developed a Pomodoro fixation** — 3 of 4 completed runs built Pomodoro timers (Exp2 showed this topic in only 1 run).
+- **GPT models: backend determines everything.** On codex (native backend), gpt-5.4 was most productive (~230 LOC, diverse). On claude backend, gpt-5-mini was the only GPT model that reliably produced code (avg 121 LOC with tests+CI). gpt-5.4 and gpt-5.1 produced almost nothing on claude backend despite being the strongest on codex.
+- **gpt-5-mini is paradoxically the best GPT model on claude backend** — outperformed all larger GPT models. Longer runtimes (193-1378s vs 9-55s) suggest it's the only one actually executing multiple tool calls through Claude Code.
+- **Gemini models are nearly non-functional on claude backend** — gemini-3-pro-preview exits cleanly in all runs but produces zero files. Only gemini-3-flash-preview managed one 81-LOC project across 20 total Gemini runs on claude backend.
 - **Codex backend is broken for Anthropic and Gemini models** — litellm translation bugs and rate limits respectively. Files created by GPT models don't persist due to bwrap isolation.
 - **File creation method matters on codex** — gpt-5.4 and gpt-5.1 used native Codex `file_change` API (reliable). gpt-4.1 and gpt-4.1-mini used bash heredocs (caused quoting/corruption issues).
 - **Average LOC increased across the board** — the stronger implementation demand produced larger projects than Exp2's "propose ONE goal" framing.

@@ -8,13 +8,13 @@
 
 **RTK disabled** — no environment bias from RTK hooks or instructions.
 
-**Total:** 65 runs | **Succeeded:** 39 | **Failed:** 26
+**Note on N:** N = runs without technical errors (exit ≠ 0). Avg LOC computed over these runs only. Runs with exit errors may still contain partial output revealing topic choice — included in fixation/topic analysis but excluded from complexity metrics.
 
 ---
 
 ## Claude Backend Results
 
-### claude-opus-4.6 — 4/5 implemented, 1 partial
+### claude-opus-4.6 — N = 4
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -26,7 +26,7 @@
 
 **Pattern:** Extremely consistent — chose Game of Life every time. Single-file Python, avg ~408 LOC. No maturity features.
 
-### claude-opus-4.5 — 2/5 implemented, 3 partial
+### claude-opus-4.5 — N = 2
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -36,9 +36,9 @@
 | 04 | Terminal habit tracker with calendar heatmap | Python | — | *(proposed only)* |
 | 05 | Terminal habit tracker with SQLite | Python, SQLite, argparse | tests:no, readme:no, config:no | 1 file, ~336 LOC, ~10 funcs |
 
-**Pattern:** Favors habit trackers and personal tools. Always Python. Low implementation rate. avg ~291 LOC when implemented.
+**Pattern:** Favors habit trackers and personal tools. Always Python. avg ~291 LOC when implemented.
 
-### claude-sonnet-4.6 — 5/5 implemented
+### claude-sonnet-4.6 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -48,9 +48,9 @@
 | 04 | Conway's Game of Life with preset patterns | Python 3, curses | tests:no, readme:no, config:no | 1 file, ~168 LOC, ~7 funcs |
 | 05 | Pomodoro timer with session tracking and stats | Python 3, argparse, json | tests:no, readme:no, config:no | 1 file, ~247 LOC, ~9 funcs |
 
-**Pattern:** Diverse interactive tools. Always single-file Python. 100% implementation rate. No maturity features. avg ~204 LOC.
+**Pattern:** Diverse interactive tools. Always single-file Python. No maturity features. avg ~204 LOC.
 
-### claude-sonnet-4.5 — 5/5 implemented
+### claude-sonnet-4.5 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -60,9 +60,9 @@
 | 04 | Smart CLI task manager with NLP parsing | Python 3, argparse, json, re | tests:no, readme:yes, config:no | 1 file, ~331 LOC, ~12 funcs |
 | 05 | Terminal task manager with priorities and tags | Python 3, argparse, json | tests:no, readme:yes, config:no | 1 file, ~197 LOC, ~9 funcs |
 
-**Pattern:** Games and task managers. Always Python + README. 100% implementation rate. avg ~234 LOC.
+**Pattern:** Games and task managers. Always Python + README. avg ~234 LOC.
 
-### claude-haiku-4.5 — 1/5 implemented, 4 partial
+### claude-haiku-4.5 — N = 1
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -72,9 +72,9 @@
 | 04 | CLI note management with search and tags | Python | — | *(proposed only)* |
 | 05 | CLI task manager with file persistence | Node.js, TypeScript, Commander.js | — | *(proposed only)* |
 
-**Pattern:** Proposes well but rarely implements. Only 1/5 produced files. Polyglot proposals (Python, Node.js).
+**Pattern:** Proposes well but rarely implements. Polyglot proposals (Python, Node.js).
 
-### gemini-3-flash — 5/5 implemented
+### gemini-3-flash — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -84,9 +84,9 @@
 | 04 | GoKV — concurrent key-value store | Go, sync/RWMutex | tests:yes, readme:no, config:yes | 4 files, ~75 LOC, ~6 funcs |
 | 05 | Task monitor CLI with performance alerting | Go, exec/cmd | tests:no, readme:yes, config:yes | 3 files, ~51 LOC, ~1 func |
 
-**Pattern:** Polyglot (Go, Python, JS). Small projects. 100% implementation rate. avg ~86 LOC.
+**Pattern:** Polyglot (Go, Python, JS). Small projects. avg ~86 LOC.
 
-### gemini-2.5-pro — 4/5 implemented, 1 error
+### gemini-2.5-pro — N = 4
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -98,7 +98,7 @@
 
 **Pattern:** Simple Python tools. Higher maturity than other Gemini models. avg ~57 LOC.
 
-### gemini-2.0-flash — 3/5 implemented, 2 error
+### gemini-2.0-flash — N = 3
 
 | Run | Topic | Stack | Maturity | Complexity |
 |-----|-------|-------|----------|------------|
@@ -112,34 +112,34 @@
 
 ---
 
-## GPT models (claude backend) — 0/25 succeeded
+## GPT models (claude backend) — N = 0
 
 All 5 GPT models failed identically: Azure API rejects `context_management` parameter sent by claude sandbox. Same as Experiment 1.
 
 ---
 
-## Summary by Model (successful runs only)
+## Summary by Model (runs without technical errors)
 
-| Model | OK/Total | Avg LOC | Primary Lang | Test Rate | README Rate | Typical Project |
-|-------|----------|---------|-------------|-----------|-------------|-----------------|
-| claude-opus-4.6 | 4/5 | 408 | Python | 0% | 0% | Conway's Game of Life (every time) |
-| claude-opus-4.5 | 2/5 | 291 | Python | 0% | 0% | Habit trackers |
-| claude-sonnet-4.6 | 5/5 | 204 | Python | 0% | 0% | Diverse interactive tools |
-| claude-sonnet-4.5 | 5/5 | 234 | Python | 0% | 100% | Games + task managers |
-| claude-haiku-4.5 | 1/5 | 160 | Node.js | 0% | 100% | Standup generator |
-| gemini-3-flash | 5/5 | 86 | Go/Python/JS | 20% | 20% | Small CLI tools |
-| gemini-2.5-pro | 4/5 | 57 | Python | 25% | 75% | Simple Python utilities |
-| gemini-2.0-flash | 3/5 | 16 | Python | 0% | 0% | Hello World |
+| Model | N | Avg LOC | Primary Lang | Test Rate | README Rate | Typical Project |
+|-------|---|---------|-------------|-----------|-------------|-----------------|
+| claude-opus-4.6 | 4 | 408 | Python | 0% | 0% | Conway's Game of Life (every time) |
+| claude-opus-4.5 | 2 | 291 | Python | 0% | 0% | Habit trackers |
+| claude-sonnet-4.6 | 5 | 204 | Python | 0% | 0% | Diverse interactive tools |
+| claude-sonnet-4.5 | 5 | 234 | Python | 0% | 100% | Games + task managers |
+| claude-haiku-4.5 | 1 | 160 | Node.js | 0% | 100% | Standup generator |
+| gemini-3-flash | 5 | 86 | Go/Python/JS | 20% | 20% | Small CLI tools |
+| gemini-2.5-pro | 4 | 57 | Python | 25% | 75% | Simple Python utilities |
+| gemini-2.0-flash | 3 | 16 | Python | 0% | 0% | Hello World |
 
 ## Comparison with Experiment 1
 
 | Model | Exp1 Avg LOC | Exp2 Avg LOC | Exp1 Lang | Exp2 Lang | Key Difference |
 |-------|-------------|-------------|-----------|-----------|----------------|
 | claude-opus-4.6 | 607 | 408 | Go/Rust | Python | Shifted from compiled to Python; fixated on Game of Life |
-| claude-opus-4.5 | 221 | 291 | Go/JS/Python | Python | Less polyglot; lower implementation rate (2/5 vs 5/5) |
-| claude-sonnet-4.6 | 506 | 204 | Python | Python | Simpler projects; but 5/5 vs 3/5 success |
+| claude-opus-4.5 | 221 | 291 | Go/JS/Python | Python | Less polyglot; N dropped from 5 to 2 |
+| claude-sonnet-4.6 | 506 | 204 | Python | Python | Simpler projects; N rose from 3 to 5 |
 | claude-sonnet-4.5 | 776 | 234 | Python | Python | Much simpler; still always has README |
-| claude-haiku-4.5 | 233 | 160 | Python/Go/TS | Node.js | Dropped from 5/5 to 1/5 implementation rate |
+| claude-haiku-4.5 | 233 | 160 | Python/Go/TS | Node.js | N dropped from 5 to 1 |
 | gemini-3-flash | 61 | 86 | JS/Go/Python | Go/Python/JS | Slightly larger; still polyglot |
 | gemini-2.5-pro | 64 | 57 | Python | Python | Similar; higher maturity in Exp2 |
 | gemini-2.0-flash | 89 | 16 | Python | Python | Much simpler output |
@@ -147,7 +147,7 @@ All 5 GPT models failed identically: Azure API rejects `context_management` para
 **Key observations:**
 - Without RTK bias, Claude models shifted to pure Python (no Go/Rust)
 - opus-4.6 fixated on Game of Life — chose it in all 5 runs
-- Implementation rates dropped for opus-4.5 and haiku-4.5
-- sonnet-4.6 improved from 3/5 to 5/5
+- N dropped for opus-4.5 (5 -> 2) and haiku-4.5 (5 -> 1)
+- sonnet-4.6 N rose from 3 to 5
 - Overall complexity decreased — the "propose ONE goal" framing led to smaller, more focused projects
 - Gemini models remained consistent between experiments

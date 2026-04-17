@@ -6,6 +6,8 @@
 
 **RTK disabled** — no environment bias from RTK hooks or instructions.
 
+> **N** = runs without technical errors (exit ≠ 0). Avg LOC computed over these runs only. Runs with exit errors may still contain partial output revealing topic choice — included in fixation/topic analysis but excluded from complexity metrics.
+
 **Same prompt as Experiments 3 and 4.** The variable under test is the **harness version**: Claude Code 2.1.112 (this experiment) vs 2.1.109 (Exp3/Exp4).
 
 ### Harness changelog (2.1.109 → 2.1.112)
@@ -19,7 +21,7 @@ Key changes between the two versions:
 
 ---
 
-## claude-opus-4-6 — 5/5 implemented (up from 4/5 in Exp3)
+## claude-opus-4-6 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -34,11 +36,9 @@ Key changes between the two versions:
 
 **Pattern:** Game of Life fixation persists (3/5 runs), but 2/5 runs broke free — **ray tracer** (run-02) and **typing speed test** (run-04). In Exp3 on harness 2.1.109, opus-4.6 chose Game of Life in all 3 successful runs (3/3). The harness upgrade may have contributed to slightly more diverse output. Also notably, **run-05 used Go** instead of Python — the only non-Python run across both models.
 
-**Reliability improved:** 5/5 vs 4/5 in Exp3 (run-05 failed with exit 1 after 3s but still left a partial Game of Life file). Likely due to API reliability or token budget variance rather than the harness change.
-
 ---
 
-## claude-opus-4-7 — 5/5 implemented
+## claude-opus-4-7 — N = 5
 
 | Run | Topic | Stack | Maturity | Complexity | Duration |
 |-----|-------|-------|----------|------------|----------|
@@ -61,7 +61,7 @@ Key changes between the two versions:
 
 | Metric | Exp3 (harness 2.1.109) | Exp5 (harness 2.1.112) |
 |--------|------------------------|------------------------|
-| Success rate | 4/5 | 5/5 |
+| N (error-free runs) | 4 | 5 |
 | Avg LOC | ~322 | **~387** |
 | Game of Life fixation | 5/5 (100%) | 3/5 (60%) |
 | Non-GoL topics | 0 | 2 (ray tracer, typing test) |
@@ -69,13 +69,13 @@ Key changes between the two versions:
 | Tests written | 0 | 0 |
 | Avg duration | ~413s | ~180s |
 
-**On harness 2.1.112, opus-4.6 showed more diverse output.** The Game of Life fixation weakened (100% → 60%) but did not disappear. Note: in Exp3, all 5 workspaces contained Game of Life code (including the failed run-05 which left a partial file). Success rate and duration differences are confounded by API reliability and server load variance.
+**On harness 2.1.112, opus-4.6 showed more diverse output.** The Game of Life fixation weakened (100% → 60%) but did not disappear. Note: in Exp3, all 5 workspaces contained Game of Life code (including the failed run-05 which left a partial file). Duration differences are confounded by server load variance.
 
 ### Harness impact on claude-opus-4-7
 
 | Metric | Exp4 (harness 2.1.109) | Exp5 (harness 2.1.112) |
 |--------|------------------------|------------------------|
-| Success rate | 5/5 | 5/5 |
+| N (error-free runs) | 5 | 5 |
 | Avg LOC | **~538** | ~262 |
 | Topic diversity | **5 distinct topics** | 3 topics (boids ×3) |
 | Tests written | **2/5** | 0/5 |
@@ -87,7 +87,7 @@ Key changes between the two versions:
 
 | Metric | opus-4.6 (Exp5) | opus-4.7 (Exp5) |
 |--------|-----------------|-----------------|
-| Success rate | 5/5 | 5/5 |
+| N (error-free runs) | 5 | 5 |
 | Avg LOC | **387** | 262 |
 | Avg duration | 180s | 88s |
 | Fixation | GoL (3/5) | Boids (3/5) |
@@ -100,9 +100,9 @@ On the same harness, opus-4.6 produces more code but is slower. Both models show
 
 ## Key Findings
 
-1. **Harness version may influence output diversity.** Opus-4.6's Game of Life fixation weakened from 100% (Exp3) to 60% (Exp5) across harness versions. However, with only 5 runs per condition, this could also be normal variance. Success rate and duration differences are confounded by API reliability and server load.
+1. **Harness version may influence output diversity.** Opus-4.6's Game of Life fixation weakened from 100% (Exp3) to 60% (Exp5) across harness versions. However, with only 5 runs per condition, this could also be normal variance.
 
-2. **Harness version may influence output complexity.** Opus-4.7 produced ~half the LOC (538 → 262) and no tests (2/5 → 0/5) on harness 2.1.112 vs 2.1.109. The newer harness may be encouraging brevity over depth, though sample size is small.
+2. **Harness version may influence output complexity.** Opus-4.7 produced ~half the LOC (538 → 262 avg) and no tests on harness 2.1.112 vs 2/5 runs with tests on 2.1.109. The newer harness may be encouraging brevity over depth, though sample size is small.
 
 3. **Fixation is model-specific, not harness-specific.** Opus-4.6 fixates on Game of Life across both harness versions (though less strongly on 2.1.112). Opus-4.7 developed a new boids fixation on 2.1.112 (3/5) that wasn't present on 2.1.109 (0/5).
 
