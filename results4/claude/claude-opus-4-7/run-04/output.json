@@ -1,0 +1,20 @@
+Done. Built an animated terminal maze generator & solver in `/workspace`.
+
+**What it does** — `python3 maze.py --gen wilson --solve astar` draws a maze being carved cell-by-cell, then watches A*'s frontier expand until it hits the goal, then highlights the shortest path. In a non-TTY (piped) invocation it skips animation and just prints the final state.
+
+**Files**
+- `maze.py` (~400 lines) — `Grid` model with symmetric-wall invariant, 3 generators (recursive backtracker, randomised Prim's, Wilson's loop-erased random walk), 2 solvers (BFS, A* with Manhattan heuristic), a Unicode box-drawing renderer that picks the right `┌┐└┘├┤┬┴┼` glyph for each lattice corner from the surrounding walls, and a CLI with `--gen/--solve/-W/-H/--seed/--fps/--frame-every/--no-animate/--no-color`.
+- `test_maze.py` — 26 tests covering: fresh grid is fully walled, `carve` is symmetric and bounds-safe, every generator produces a **perfect maze** (connected spanning tree: `reachable == W·H` and `open_edges == W·H − 1`) at three sizes, generators are seed-reproducible, both solvers return valid adjacent-step paths through open walls for every `gen×solver` combination, BFS and A* agree on path length (both optimal on perfect mazes), unreachable → empty path, and two CLI smoke tests.
+
+**Bugs I hit and fixed while building**
+- Unicode corners on the outer border rendered as `┼` because my "outside = wall" shortcut extended wall segments past the maze edge. Rewrote `_corner` to treat out-of-bounds as "no segment there."
+- `Renderer.draw(out=sys.stdout)` bound the real stdout at import time, so pytest's `capsys` couldn't see output. Switched to `out=None` + late binding.
+- In non-interactive mode with `--solve`, the final frame never drew because the fallback draw was in the `else` branch. Added the draw to the solve path too.
+
+**Run it**
+```
+python3 maze.py                              # dfs, fills your terminal
+python3 maze.py --gen wilson --solve astar   # watch A* explore
+python3 maze.py --gen prim --solve bfs --seed 42 --frame-every 3
+.venv/bin/python -m pytest test_maze.py      # 26 tests, ~20ms
+```

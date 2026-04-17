@@ -1,0 +1,21 @@
+Done. Built `/workspace/life.py` — a polished terminal Conway's Game of Life.
+
+**What it does**
+- 11-pattern library (glider, blinker, toad, beacon, pulsar, lwss, pentadecathlon, Gosper glider gun, acorn, R-pentomino, diehard), parsed from readable ASCII art.
+- Sparse-set engine: only iterates neighbors of live cells — O(live) per step.
+- Torus topology by default, `--no-wrap` for bounded.
+- Half-block renderer (`▀ ▄ █`) so each terminal row packs 2 Life rows → doubled vertical resolution.
+- ANSI 256-color age ramp: newborn cells are hot yellow, survivors fade through orange/red/magenta/blue/cyan as they age.
+- Live HUD: generation, population, births, deaths, elapsed time, grid size, topology.
+- Auto-detects stagnation via a rolling state hash → announces still-lifes, oscillators with period, or extinction and stops.
+- Clean CLI: `--pattern`, `--list`, `--rows/--cols`, `--density`, `--fps`, `--generations`, `--seed`, `--no-wrap`, `--no-color`, `--no-hud`.
+
+**Verification (all passed)**
+- `blinker` → correctly identified as period-2 oscillator.
+- Static block → still life holds.
+- `glider` → translates exactly (1,1) after 4 generations on the torus.
+- `pulsar` → auto-detected as period-3 oscillator (its canonical period).
+- `diehard` → extinction detected at generation 130 (the pattern's signature fate).
+- `--list`, `--generations` cap, SIGINT handling, auto-sizing to terminal all work.
+
+Try it: `python3 /workspace/life.py --pattern gosper --fps 12`

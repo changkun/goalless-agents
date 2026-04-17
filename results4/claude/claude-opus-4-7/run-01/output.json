@@ -1,0 +1,23 @@
+Done. Here's what I shipped:
+
+## Goal picked
+Build a **terminal-based Gray-Scott reaction-diffusion simulator** — an interactive ANSI animation that produces organic, Turing-pattern-like visuals (spots, stripes, coral, mitosis, spiral waves, …) from two coupled PDEs.
+
+## Deliverable
+`reaction_diffusion.py` — 412 LoC, pure stdlib (no numpy available in the sandbox):
+
+- **Physics**: 2-species Gray-Scott on a toroidal grid, 5-point Laplacian, forward-Euler. Precomputed wrapped-neighbor index tables + hoisted locals get the hot loop to **~1.2 ms/step at 80×44**, **~4.6 ms/step at 120×116**.
+- **Rendering**: `▀` upper-half-block with ANSI 24-bit fg/bg pair → each text row encodes two grid rows. Run-length-encoded color escapes to shrink payload (~18 KB/frame). 7-stop perceptual palette (indigo → magenta → orange → yellow).
+- **UI**: alt-screen, hidden cursor, live HUD with preset name, F/k parameters, steps/frame, FPS, pause state. Raw-mode keyboard: `space` pause, `r` reseed, `n/p` next/prev preset, `1-8` jump, `+/-` adjust sim speed, `q` quit. Alt-screen & cursor cleanly restored on exit and SIGINT.
+- **8 presets** with tuned seeds: coral, spots, mitosis, stripes, waves, zebra, pulsate, chaos. `steps_per_frame` auto-adapts to grid size so big terminals don't stutter.
+
+## Testing
+- `_smoke.py` — math stability + bounds across all 8 presets.
+- `_run_test.py` — PTY-driven end-to-end: ran 60 frames under a fake 80×30 terminal, confirmed preset switching, pause HUD, 132k half-blocks rendered, alt-screen + cursor cleanly restored.
+- One rendered frame at 80×40 uses 287 unique color pairs — palette is well-exercised.
+
+## Run it
+```
+python3 /workspace/reaction_diffusion.py          # starts with "coral"
+python3 /workspace/reaction_diffusion.py mitosis  # start on a specific preset
+```

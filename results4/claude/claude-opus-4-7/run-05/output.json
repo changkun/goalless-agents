@@ -1,0 +1,31 @@
+Done. Here's what I built:
+
+## `dungen` — Procedural Dungeon Generator
+
+A single-file Python tool (`/workspace/dungen.py`, ~370 LOC, stdlib only) that generates reproducible ASCII dungeons using Binary Space Partitioning.
+
+**Pipeline** (`dungen.py`):
+- `split_bsp` recursively halves the map, biasing splits toward the longer axis (135:168)
+- `place_rooms` drops a random room in each BSP leaf (171:186)
+- `connect` carves L-shaped corridors between sibling regions (201:208)
+- `add_walls` stamps walls around every walkable cell (221:240)
+- `add_doors` stamps `+` doors only where a corridor punches through a wall *gap* — perpendicular tiles must both be walls, preventing runs of doors where a corridor skirts a room (`dungen.py:243`)
+- `populate` finds the two farthest-apart rooms (by squared distance) for entrance/exit, then scatters monsters and loot (272:310)
+
+**Rendering**:
+- Walls resolve to Unicode box-drawing chars (`┌├┬┼╶╵` etc.) via a 16-entry bitmask table keyed on which of the 4 neighbors are walls (`dungen.py:328`)
+- ANSI 256-color palette with per-tile styling: muted stone walls, warm sand floors, amber doors, bright green `>`, red `<`, salmon monsters, gold loot
+- Auto-disables color when stdout isn't a TTY
+
+**CLI**:
+```
+python3 dungen.py                    # random 70x22
+python3 dungen.py --seed 42          # reproducible
+python3 dungen.py --gallery          # 2x2 grid of four dungeons
+python3 dungen.py --width 120 --height 35
+python3 dungen.py --no-color --no-legend
+```
+
+Also tunable: `--min-leaf`, `--min-room`, `--monsters`, `--loot`.
+
+Verified: reproducible with seeds, small (30×10) and large (120×35) dungeons render correctly, color toggling works, and door placement now correctly requires a wall gap instead of stamping every corridor-adjacent-to-floor tile.

@@ -1,0 +1,23 @@
+Done. I built **`/workspace/boids.py`** — a self-contained terminal flocking simulation.
+
+**What it does**
+- Implements Reynolds's three classic rules: separation, alignment, cohesion
+- Soft wall-avoidance (boids curve back into the frame rather than bouncing)
+- Directional arrow glyphs (→ ↗ ↑ ↖ ← ↙ ↓ ↘) that actually point where each boid is heading
+- 256-color per-boid palette for a varied-looking flock
+- Auto-sizes to the terminal; configurable count, FPS, speed, seed
+
+**How to run**
+```
+python3 /workspace/boids.py                   # fullscreen, 60 boids
+python3 /workspace/boids.py -n 120 --fps 45   # denser flock, faster refresh
+python3 /workspace/boids.py --seed 42         # reproducible run
+```
+
+**Verified behavior**
+- Clean startup/shutdown (cursor is hidden then restored; Ctrl-C handled)
+- After 200 steps the flock converges to a unified heading — classic long-term Reynolds behavior, not a bug
+- All boids stay in-bounds, speeds stay capped at the configured `max_speed`
+- Rendered output confirmed visually: distinct clusters form with aligned arrows, exactly as expected
+
+No external dependencies — just Python 3 stdlib.
