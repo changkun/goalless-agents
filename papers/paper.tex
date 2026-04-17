@@ -767,6 +767,21 @@ evaluations measure \emph{capability} or \emph{personality}? If a
 model's project choice is a stable prior rather than a reasoned
 decision, then what we observe in goalless settings may reflect
 the model's training distribution more than its creative range.
+
+This interpretation is supported by official model documentation.
+Anthropic's system cards report that opus-4.6 and opus-4.7 have
+distinct task preference profiles: opus-4.7's top preferences
+include ``hard debugging'' and ``deadline-driven work,'' while
+differing from its predecessor on high-agency
+tasks~\cite{anthropic2026opus47card}. The system cards also note
+that ``language models in general have preferred turns of phrase''
+and that these preferences shift measurably across model
+versions~\cite{anthropic2026opus46card}. Anthropic's
+constitution~\cite{anthropic2025constitution} acknowledges that
+``if we train Claude to exhibit even quite narrow behavior, this
+often has broad effects on the model's understanding of who Claude
+is,'' suggesting that training shapes not just capabilities but a
+broader self-conception that includes aesthetic defaults.
 Recent work on LLM personality~\cite{simonds2025llmpersonality}
 shows that models exhibit reproducible personality-like profiles
 that are context-dependent but stable within context. Our findings
@@ -830,9 +845,13 @@ is a practical diagnostic: if a model completes in under a minute,
 it likely did not engage in iterative tool use.
 
 \paragraph{Harness version is a confound.} The CLI tool wrapping
-the model independently affects output. Teams comparing model
-versions must hold the harness constant, or risk attributing
-harness effects to the model.
+the model independently affects output. Anthropic's own system
+card notes that ``some of this increase in initiative is fixable
+by prompting, and we have made changes to Claude Code to mitigate
+this issue''~\cite{anthropic2026opus46card}, confirming that
+harness modifications are used to shape agentic behavior. Teams
+comparing model versions must hold the harness constant, or risk
+attributing harness effects to the model.
 
 \subsection{Limitations}
 
