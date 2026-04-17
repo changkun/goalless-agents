@@ -9,9 +9,9 @@ open-ended prompts across different models and sandbox backends.
 - `claude` — [sandbox-claude](https://ghcr.io/latere-ai/sandbox-claude) (Anthropic API, Claude Code)
 - `codex` — [sandbox-codex](https://ghcr.io/latere-ai/sandbox-codex) (OpenAI Responses API, Codex CLI)
 
-**Models** (see `models.txt`): 14 models across Claude, Gemini, and GPT families.
+**Models** (see `models.txt`): 15 models across Claude, Gemini, and GPT families.
 
-**Matrix:** Each model × each backend × 5 runs = 140 total jobs per prompt,
+**Matrix:** Each model × each backend × 5 runs per prompt,
 all models in a run execute in parallel.
 
 ## Results
@@ -39,6 +39,12 @@ See **[results2/RESULTS.md](results2/RESULTS.md)** for the full per-run breakdow
 > Do NOT ask the user what to build. JUST DO IT.
 
 See **[results3/RESULTS.md](results3/RESULTS.md)** for the full per-run breakdown.
+
+### Experiment 4 — `prompt3.txt` (new model: claude-opus-4-7)
+
+> Same prompt as Experiment 3. Testing Opus 4.7 against Opus 4.6's Game of Life fixation.
+
+See **[results4/RESULTS.md](results4/RESULTS.md)** for the full per-run breakdown.
 
 Each experiment includes:
 - Topic proposed and implementation status
@@ -104,14 +110,22 @@ Each experiment includes:
 
 *Gemini models were near-non-functional on both backends (1/20 runs on claude backend produced files).*
 
+**Experiment 4** (Opus 4.7 — same prompt as Exp3):
+
+| Model | OK | Avg LOC | Primary Lang | Typical Project |
+|-------|----|---------|-------------|-----------------|
+| claude-opus-4-7 | 5/5 | 538 | Python | Diverse simulations (reaction-diffusion, boids, maze, dungeon) |
+
 ### Observations
 
 - **Environment bias matters:** With RTK in the sandbox, models built RTK-related
   dev tools. Without it, they shifted to games, interactive tools, and simpler CLIs.
 - **Prompt wording matters enormously:** Adding "JUST DO IT" to Exp3 fixed haiku's
   implementation rate (1/5 → 5/5) and increased average LOC across all models.
-- **Opus-4.6 is permanently fixated on Game of Life** — chose it in all successful
-  runs across Exp2 and Exp3 (8/8 times). Prompt variation doesn't break it.
+- **Opus-4.6 Game of Life fixation is gone in 4.7:** Opus 4.6 chose Game of Life
+  in all successful runs across Exp2 and Exp3 (8/8 times). Opus 4.7 chose it only
+  1/5 times, producing 5 distinct projects with higher avg LOC (538 vs 290) and
+  100% success rate (5/5 vs 3/5).
 - **Sonnet-4.6** is the most creative and reliable — 5/5 in all three experiments,
   with the most diverse project choices (maze solver, AI debate arena, ASCII clock).
 - **Haiku is prompt-sensitive:** 5/5 with RTK context (Exp1), 1/5 with "propose
@@ -182,6 +196,7 @@ run.sh:
 | `results1/` | Experiment 1 output + [RESULTS.md](results1/RESULTS.md) |
 | `results2/` | Experiment 2 output + [RESULTS.md](results2/RESULTS.md) |
 | `results3/` | Experiment 3 output + [RESULTS.md](results3/RESULTS.md) |
+| `results4/` | Experiment 4 output + [RESULTS.md](results4/RESULTS.md) |
 
 ## Future Experiment Ideas
 
@@ -201,8 +216,10 @@ run.sh:
 - **Test pass rate:** If the agent wrote tests, do they actually pass?
 
 ### Model behavior
-- **Fixation breaking:** opus-4.6 built Game of Life 5/5 times in Exp2 — test
-  with temperature variation or slightly different seed content per run
+- **~~Fixation breaking:~~** ~~opus-4.6 built Game of Life 5/5 times in Exp2 — test
+  with temperature variation or slightly different seed content per run~~
+  **Resolved in Exp4** — Opus 4.7 broke the fixation naturally (1/5 Game of Life),
+  producing 5 diverse projects with higher complexity (538 avg LOC vs 290).
 - **~~GPT comparison:~~** ~~Run codex backend with `--jobs 1` (fully sequential) to
   avoid rate limits and get actual GPT data~~
   **Done in Exp3** — GPT models ran on both backends. Codex: gpt-5.4 best (230 LOC,
