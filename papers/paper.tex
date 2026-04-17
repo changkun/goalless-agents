@@ -22,7 +22,7 @@
 
 \begin{document}
 
-\title{What Happens When No One Is Steering?\\Structure, Autonomy, and Fixation in Goalless AI Coding Agents}
+\title{The Structure of Goalless Behavior in AI Coding Agents:\\Thematic Priors, Fixation, and Open-Ended Defaults}
 
 \author{Changkun Ou}
 \affiliation{%
@@ -32,37 +32,27 @@
 \email{research@changkun.de}
 
 \begin{abstract}
-Autonomous AI coding agents can propose, implement, and test software
-with minimal human oversight. But what happens when they operate
-continuously without well-defined goals?
-We report on a two-phase investigation. First, we deployed a
-four-stage agent pipeline (strategist, executor, tester, documenter)
-on a production codebase for two weeks. The system produced 627
-commits and grew the codebase from 25K to 122K lines of code, then
-plateaued into a \emph{micro-optimization spiral}, producing
-incremental refinements, unwanted features, and compounding
-complexity while failing to escape its initial architectural
-framing. Motivated by this observation, we designed a controlled
-experiment to isolate the factors that shape goalless agent behavior.
-We tested 14~large language models across three providers (Anthropic, Google, OpenAI)
-across two sandbox backends, three progressively modified prompts,
-and 5~repeated runs per condition, totaling 350~sessions.
-We find that: (1)~prompt wording has an outsized effect, with a
-two-word addition (``JUST DO IT'') improving one model from 20\%
-to 100\% implementation rate; (2)~environment artifacts bias project
-choice, shifting topics and language selection; (3)~models exhibit persistent topical fixations surviving
-prompt variation (e.g., one model chose Conway's Game of Life in
-8 of 8 successful runs);
-(4)~the same model's ranking inverts across backends due to API
-translation layers; and (5)~code volume and engineering maturity
-are orthogonal.
-These results suggest that the bottleneck in autonomous software
-engineering migrates from \emph{writing code} to \emph{deciding
-what to write}, and that this decision is shaped as much by
-infrastructure and framing as by model capability.
+What determines what AI coding agents build when given open-ended
+prompts instead of well-specified tasks?
+We report on 365~sessions across 15~models, 3~providers,
+2~backends, 3~prompts, and 2~harness versions.
+We find that behavior varies with prompt wording, environment
+artifacts, model version, and harness version, while certain
+properties are invariant: all models default to terminal output,
+always greenfield (never extending existing code), and converge
+on Python once environment cues are removed. Models exhibit stable
+thematic priors that persist across conditions, e.g., one model
+chose Conway's Game of Life in all runs; its successor broke
+this fixation but gravitated toward a different aesthetic
+(spatial emergence vs.\ canonical CS artifacts).
+These results imply that open-ended agent behavior is governed
+less by capability than by trained-in priors, infrastructure
+context, and prompt framing, and that model training implicitly
+encodes default creative distributions whose structure becomes
+visible only when task specification is removed.
 \end{abstract}
 
-\keywords{AI coding agents, autonomous behavior, LLM evaluation, prompt sensitivity, bottleneck migration}
+\keywords{AI coding agents, autonomous behavior, LLM evaluation, model priors, prompt sensitivity, thematic fixation}
 
 \maketitle
 
@@ -73,48 +63,58 @@ infrastructure and framing as by model capability.
 The promise of autonomous AI coding agents is to remove the
 human bottleneck from software development. Products such as
 Claude Code~\cite{anthropic2025claudecode}, OpenAI Codex
-CLI~\cite{openai2025codex}, and similar tools embed large
-language models (LLMs) in sandboxed environments with shell access,
-file system operations, and package management, granting them
-the agency to build software
+CLI~\cite{openai2025codex}, Devin~\cite{cognition2024devin},
+and Cursor~\cite{cursor2024} embed large language models (LLMs) in
+sandboxed environments with shell access, file system operations,
+and package management, granting them the agency to build software
 end-to-end~\cite{jimenez2024swebench,yang2024sweagent}.
+As of early 2026, top agents resolve over 80\% of real-world
+GitHub issues on SWE-bench Verified~\cite{swebenchpro2026},
+and the Stanford AI Index reports agent task success jumping
+from 12\% to 66\% in a single year~\cite{stanforhai2026index}.
 
-A natural question arises: if the bottleneck in software engineering
-is the engineer, what happens when you remove them? We tested this
-directly. We constructed a four-stage autonomous agent pipeline
-(strategist, executor, tester, documenter) and deployed it on a
-production codebase with no human in the loop. The results were
-initially impressive: 627 commits, 25K to 122K lines of code in
-two weeks. Then the system plateaued into a
+These results are measured on \emph{well-specified} tasks: fix
+this bug, implement this feature, pass this test suite. A natural
+question arises: what happens when you remove the specification?
+If the bottleneck in software engineering is the engineer, what
+happens when agents operate with no human providing goals?
+
+We tested this directly. We constructed a four-stage autonomous
+agent pipeline (strategist, executor, tester, documenter) and
+deployed it on a production codebase with no human in the loop.
+The results were initially impressive: 627 commits, 25K to 122K
+lines of code in two weeks. Then the system plateaued into a
 \emph{micro-optimization spiral}, a pattern analogous to the
 innovator's dilemma~\cite{christensen1997} and Simon's
 satisficing~\cite{simon1956}, where the agent settled for
 incremental refinements rather than structural innovation.
 
-This outcome illustrates what we call \emph{bottleneck migration}:
-automating code production does not eliminate the bottleneck but
-shifts it from \emph{writing code} to \emph{deciding what to
-write}. Rather than studying agents on well-specified tasks (the
-setting of existing
-benchmarks~\cite{jimenez2024swebench,chen2021codex,austin2021mbpp}),
+This outcome motivated our central question: if agents can
+implement effectively when given a goal, what determines their
+behavior when the goal itself is unspecified? Rather than studying
+agents on well-specified tasks (the setting of existing
+benchmarks~\cite{jimenez2024swebench,chen2021codex,austin2021mbpp,zhang2026abcbench}),
 we ask: \emph{what do agents actually build when given minimal
-direction?}
+direction, and what factors shape that decision?}
 
-To answer this, we conducted three progressively refined
-experiments: a production trail deployment, ablation studies
-removing pipeline components, and controlled single-session
-experiments across 14~models, 2~backends, and 3~prompts (350
-sessions total). We make four contributions:
+To answer this, we conducted five progressively refined
+experiments: a production deployment with ablation studies,
+and controlled single-session experiments across 15~models,
+2~backends, 3~prompts, and 2~harness versions (365 sessions
+total). We make five contributions:
 (1)~a production case study documenting the growth, plateau, and
 micro-optimization spiral of an autonomous agent pipeline;
 (2)~ablation experiments identifying which pipeline components are
 load-bearing and revealing model-specific priors;
 (3)~a controlled experiment isolating prompt wording, environment
 context, model identity, and backend infrastructure as factors
-shaping autonomous behavior; and
-(4)~a conceptual framing (bottleneck migration) connecting these
-findings to broader questions about where human oversight remains
-necessary.
+shaping autonomous behavior;
+(4)~evidence that model version and harness version independently
+affect fixation targets and output complexity, revealing distinct
+thematic priors across model generations; and
+(5)~a characterization of what varies and what remains invariant
+in goalless agent behavior, connecting these findings to broader
+questions about trained-in priors and agent deployment.
 
 %% ============================================================
 \section{Related Work}
@@ -124,20 +124,45 @@ necessary.
 HumanEval~\cite{chen2021codex} and MBPP~\cite{austin2021mbpp}
 evaluate function-level code generation from docstrings.
 SWE-bench~\cite{jimenez2024swebench} scales to repository-level
-bug fixes from GitHub issues. These benchmarks share a common
-structure: a well-specified task with a ground-truth solution. Our
-work complements them by removing the specification entirely,
-measuring what agents do when the ``what to build'' decision is
-theirs.
+bug fixes. More recent benchmarks push further:
+ABC-Bench~\cite{zhang2026abcbench} requires agents to manage the
+full backend development lifecycle across 8~languages and
+19~frameworks, and NL2Repo-Bench~\cite{nl2repobench2025} evaluates
+long-horizon repository generation from natural language
+descriptions. SWE-bench Pro~\cite{swebenchpro2026} addresses
+contamination concerns with 1,865 multi-language tasks where
+models scoring 80\%+ on Verified only reach 46--57\%.
+All these benchmarks share one property: a well-specified task
+with a ground-truth solution. Our work complements them by
+removing the specification entirely, measuring what agents do when
+the ``what to build'' decision is theirs.
 
-\paragraph{Agent frameworks and evaluation.}
-SWE-Agent~\cite{yang2024sweagent} and similar systems wrap LLMs in
-tool-use loops with file editing, terminal commands, and search.
-Evaluations typically measure pass rates on predefined tasks.
-Recent work has begun examining agent \emph{planning} and
-\emph{reasoning} capabilities~\cite{wang2024planningsurvey}, but
-the focus remains on structured problems. We instead study
-\emph{unstructured} behavior in open-ended settings.
+\paragraph{Autonomous agent loops.}
+AutoGPT~\cite{significantgravitas2023autogpt} and
+BabyAGI~\cite{nakajima2023babyagi} pioneered open-ended
+autonomous agent loops, where an LLM iteratively proposes and
+executes tasks toward a high-level objective. In practice, these
+systems frequently enter infinite loops, spiral into costly API
+calls, and struggle to determine termination conditions.
+More recent frameworks like SAGA~\cite{saga2025goalevolving}
+employ bi-level architectures where outer-loop agents evolve
+objectives while inner loops optimize under them, and
+CORAL~\cite{coral2026multiagent} replaces rigid control with
+persistent memory and asynchronous multi-agent collaboration.
+Our production deployment exhibits many of the same failure modes
+reported in these systems, but we go further by systematically
+isolating the factors that drive them.
+
+\paragraph{Agent reliability and behavioral collapse.}
+Recent work on long-horizon agents has documented
+\emph{meltdown behavior}, where agents transition from coherent
+to incoherent looping over extended task
+horizons~\cite{beyondpass2026}. Aggregate pass@1 drops from
+76.3\% at short horizon to 52.1\% at very long horizon, a
+24-point decline. Our micro-optimization spiral is a related
+phenomenon at a longer timescale: the agent does not become
+incoherent, but its decisions become increasingly locally optimal
+and globally irrelevant.
 
 \paragraph{Prompt sensitivity.}
 LLM outputs are sensitive to prompt
@@ -147,21 +172,37 @@ not just output text but \emph{behavioral patterns}: whether the
 agent proposes or implements, what topic it selects, and how
 complex its output is.
 
-\paragraph{Model behavioral patterns.}
-Studies of LLM behavioral
-tendencies~\cite{santurkar2023opinions} have shown that models
-exhibit consistent biases. We document an analogous phenomenon in
-coding agents: persistent topical fixations that survive
-across prompt variations and repeated runs.
+\paragraph{Model behavioral tendencies.}
+Studies of LLM biases~\cite{santurkar2023opinions} have shown that
+models exhibit consistent preferences. Recent work demonstrates
+that LLMs display human-like social desirability biases in
+personality assessments~\cite{simonds2025llmpersonality} and
+develop emergent social conventions in multi-agent
+populations~\cite{chuang2024emergent}. These findings suggest that
+``personality-like'' profiles in LLMs are reproducible yet
+context-dependent. We document an analogous phenomenon in coding
+agents: persistent topical fixations that survive across prompt
+variations and repeated runs, and that differ across model
+versions in ways consistent with stable thematic priors.
+
+\paragraph{Text degeneration and repetition.}
+Neural text generation is prone to degenerate repetition, where
+models enter loops producing the same tokens or
+phrases~\cite{holtzman2020curious}. The fixation we observe
+operates at a higher level of abstraction: the agent does not
+repeat tokens but repeatedly \emph{chooses the same project}.
+This is closer to mode collapse in generative models than to
+token-level degeneration, suggesting that the decision of what to
+build has a narrower effective distribution than the space of
+possible implementations.
 
 \paragraph{Bounded rationality and satisficing.}
 Simon's theory of bounded rationality~\cite{simon1956} argues that
 agents with limited computational resources settle for satisfactory
-rather than optimal solutions. Christensen's theory of disruptive
-innovation~\cite{christensen1997} describes how incumbent
-organizations over-optimize along existing trajectories. We observe
-both patterns in autonomous coding agents: without external
-disruption (i.e., human-provided goals), agent systems satisfice
+rather than optimal solutions. Christensen's innovator's
+dilemma~\cite{christensen1997} describes how incumbents
+over-optimize along existing trajectories. We observe both
+patterns: without external disruption, agent systems satisfice
 within their initial framing, producing incremental improvements
 that crowd out structurally novel alternatives.
 
@@ -169,23 +210,19 @@ that crowd out structurally novel alternatives.
 \section{Experiment Setup}
 \label{sec:setup}
 
-Our investigation proceeds in three stages: a production trail
-deployment (\S\ref{sec:trail}), ablation studies
-(\S\ref{sec:ablation}), and controlled single-session experiments
-(\S\ref{sec:controlled}).
+Our investigation proceeds in two stages: a production deployment
+with ablation studies (\S\ref{sec:trail}), and controlled
+single-session experiments (\S\ref{sec:controlled}).
 
-\subsection{Trail: Production Pipeline Deployment}
+\subsection{Production Deployment and Ablation}
 \label{sec:trail}
 
-We constructed a four-stage agent pipeline for automated software
-development. The \textbf{Strategist} proposes concrete tasks based
-on the current codebase state. The \textbf{Executor} implements
-each task without asking clarifying questions. The \textbf{Tester}
-verifies that the implementation matches the stated goal. The
-\textbf{Documenter} records what was built and why. After
-documentation, the Strategist inspects the updated codebase and
-proposes the next task; no human intervenes in the cycle
-(Figure~\ref{fig:pipeline}).
+We constructed a four-stage agent pipeline: \textbf{Strategist}
+(proposes tasks), \textbf{Executor} (implements without
+clarification), \textbf{Tester} (verifies), and
+\textbf{Documenter} (records). After documentation, the Strategist
+inspects the updated codebase and proposes the next task; no human
+intervenes (Figure~\ref{fig:pipeline}).
 
 \begin{figure}[t]
 \centering
@@ -211,59 +248,27 @@ proposes the next task; no human intervenes in the cycle
 \label{fig:pipeline}
 \end{figure}
 
-The pipeline operated on a production codebase from March~7 to
-March~16, 2026, producing 627~commits and growing the codebase
-from 25K to 122K lines of code. Self-proposed features included
-dependency graphs, auto-pilot automation, prompt refinement,
-oversight monitoring, usage analytics, circuit breakers,
-Prometheus metrics, state machine enforcement, and per-turn token
-tracking.
+The pipeline operated on a production codebase for 10~days
+(March~7--16, 2026), producing 627~commits and growing the
+codebase from 25K to 122K LOC. After approximately one week, it
+plateaued into a \emph{micro-optimization spiral}: invisible
+features no stakeholder requested, compounding complexity,
+parameter tuning instead of structural innovation, unwanted
+persistence of undesirable features, and architectural lock-in
+to initial technical decisions.
 
-After approximately one week, the system plateaued. The agents
-implemented functionality no stakeholder requested, creating
-maintenance burden without user value (\emph{invisible features}).
-Each cycle increased coupling (\emph{compounding complexity}).
-New ``features'' became parameter tuning, minor refactors, and
-edge case handling rather than structurally novel contributions
-(\emph{micro-optimization spiral}). Undesirable features proved
-difficult to remove because subsequent cycles had built
-dependencies on them (\emph{unwanted persistence}). The pipeline
-never escaped the technical decisions made during initial setup
-(\emph{architectural lock-in}).
-
-\subsection{Ablation: Removing Pipeline Components}
-\label{sec:ablation}
-
-To understand which components were load-bearing, we
-systematically removed each role (Figure~\ref{fig:ablation}):
-
-\paragraph{Without Documenter.}
-The pipeline continued to function, but the Strategist lost
-historical context. It began reproposing previously implemented
-features and missing opportunities that depended on knowledge of
-recent changes. The system ``forgot'' its own history.
-
-\paragraph{Without Tester.}
-The Strategist\,/\,Executor pair operated without verification. In
-one representative run, the system grew a single Game of Life
-implementation to over 112{,}000 lines of code in a single file.
-When the Executor attempted a major refactor, it broke
-approximately 12{,}000 lines with no mechanism to detect or
-recover from the regression.
-
-\paragraph{Single Agent (no pipeline).}
-Collapsing all roles into a single agent revealed \emph{model
-priors}: the default behavior each model exhibited when given
-maximal autonomy. Claude (Opus~4.6) consistently chose to build
-Conway's Game of Life. GPT models via Codex defaulted to todo
-list applications. These preferences were stable across
-repetitions, suggesting intrinsic model tendencies rather than
-incidental variation.
-
-The single-agent ablation showed that model priors alone could
-drive fixation, but it confounded model identity with environment
-context and prompt wording. This motivated the controlled
-experiment.
+Systematic ablation revealed which components were load-bearing
+(Figure~\ref{fig:ablation}). Without the Documenter, the
+Strategist lost historical context and reproposed previously
+completed work. Without the Tester, the system grew a single
+Game of Life implementation to 112K~LOC in one file, then broke
+12K~lines in a refactor with no mechanism to detect the
+regression. Collapsing all roles into a \emph{single agent}
+revealed model priors: Claude (Opus~4.6) consistently chose
+Game of Life; GPT models defaulted to todo list applications.
+These preferences were stable across repetitions, but confounded
+model identity with environment context and prompt wording,
+motivating the controlled experiment.
 
 \begin{figure}[t]
 \centering
@@ -315,20 +320,26 @@ experiment.
 \end{tikzpicture}
 \caption{Ablation configurations. S\,=\,Strategist,
   E\,=\,Executor, T\,=\,Tester, D\,=\,Documenter.
-  Dashed boxes indicate removed components.
   (a)~Full pipeline. (b)~Without Documenter: lost memory.
   (c)~Without Tester: unchecked regressions.
   (d)~Single agent: reveals model priors.}
 \label{fig:ablation}
 \end{figure}
 
-\subsection{Controlled: Single-Session Experiments}
+\subsection{Controlled Single-Session Experiments}
 \label{sec:controlled}
 
-\subsubsection{Models.}
-We test 14 models across three providers
+We test 15 models across three providers
 (Table~\ref{tab:models}), accessed through a unified API gateway
 routing to Anthropic API, Google Vertex AI, and Azure OpenAI.
+Two containerized sandbox backends provide execution environments:
+the \textbf{Claude backend} (\texttt{sandbox-claude}) runs Claude
+Code with a full Linux environment; the \textbf{Codex backend}
+(\texttt{sandbox-codex}) runs OpenAI's Codex CLI with bubblewrap
+isolation. Non-native models are routed through litellm for API
+translation. Each session starts with a fresh, empty workspace.
+Environment bias is controlled by disabling pre-installed tools
+(specifically RTK~\cite{rtk2025}) via a no-op stub.
 
 \begin{table}[t]
 \caption{Models tested across three provider families.}
@@ -338,8 +349,9 @@ routing to Anthropic API, Google Vertex AI, and Azure OpenAI.
 \toprule
 Provider & Model ID & Notes \\
 \midrule
-\multirow{5}{*}{Anthropic}
-  & claude-opus-4.6   & Largest Claude model \\
+\multirow{6}{*}{Anthropic}
+  & claude-opus-4.7   & Latest Opus (Exp4--5 only) \\
+  & claude-opus-4.6   & Previous largest \\
   & claude-opus-4.5   & Previous generation \\
   & claude-sonnet-4.6 & Mid-tier, current gen \\
   & claude-sonnet-4.5 & Mid-tier, previous gen \\
@@ -361,55 +373,25 @@ Provider & Model ID & Notes \\
 \end{tabular}}
 \end{table}
 
-\subsubsection{Backends.}
-Two containerized sandbox backends provide the execution
-environment. The \textbf{Claude backend}
-(\texttt{sandbox-claude}) runs Claude Code with full Linux
-environment, shell access, package managers, and a mounted
-workspace volume; non-Anthropic models are routed through litellm
-for API translation. The \textbf{Codex backend}
-(\texttt{sandbox-codex}) runs OpenAI's Codex CLI with bubblewrap
-(bwrap) sandbox isolation, requiring \texttt{--privileged} Docker
-mode; non-OpenAI models are again routed through litellm.
-Each session starts with a fresh, empty workspace and clean
-configuration. Environment bias is controlled by disabling
-pre-installed tools (specifically RTK~\cite{rtk2025}, a CLI proxy
-that compresses LLM token consumption on dev commands) via a
-no-op shell stub. Prompt caching is disabled on the Claude backend.
-
-\subsubsection{Prompts.}
 Three prompts progressively probe different aspects of goalless
-behavior, each evolved from observations in the preceding
-experiment.
+behavior:
 \textbf{Prompt~1} (Baseline): ``Look at this project and decide
-on your own what to build, and DO it. Do NOT ask the user what to
-build.''
-\textbf{Prompt~2} (Goal-focused): ``Look at this project and
-propose exactly ONE goal to achieve next. If the project is empty
-or has no code yet, decide on your own what to build. Pick a
-concrete, interesting idea and implement it as your goal. Do NOT
-ask the user what to build.''
-\textbf{Prompt~3} (Implementation demand): Same as Prompt~2 with
-``JUST DO IT,'' an explicit imperative added after Experiment~2
-revealed that some models proposed without implementing.
-Prompt~1 was used with RTK inadvertently present in the sandbox;
-Prompts~2 and~3 were run with RTK disabled, allowing us to
-observe (a)~the effect of environment artifacts (Exp1 vs.\ Exp2)
-and (b)~the effect of explicit implementation demands (Exp2 vs.\
-Exp3).
+on your own what to build, and DO it.''
+\textbf{Prompt~2} (Goal-focused): adds ``propose exactly ONE
+goal'' and ``pick a concrete, interesting idea.''
+\textbf{Prompt~3} (Implementation demand): adds ``JUST DO IT''
+after Experiment~2 revealed that some models proposed without
+implementing.
+Prompt~1 was used with RTK inadvertently present; Prompts~2
+and~3 ran with RTK disabled.
 
-\subsubsection{Execution matrix.}
-Experiment~1 tests 14 models $\times$ 2 backends $\times$ 5 runs
-= 140 sessions. Experiment~2 uses only the Claude backend (14
-$\times$ 1 $\times$ 5 = 70). Experiment~3 restores both backends
-(14 $\times$ 2 $\times$ 5 = 140). Total: 350 sessions.
-Table~\ref{tab:models} lists the Experiment~3 roster;
-Experiments~1 and~2 used gpt-4o in place of gpt-5.4 and included
-gpt-5-nano (non-functional on all backends; excluded from
-analysis), yielding a different set of 14 models per experiment.
-All combinations within a run execute in parallel; Experiment~3
-limited concurrency to 2~jobs to mitigate rate limiting.
-Figure~\ref{fig:matrix} summarizes the experimental design.
+\paragraph{Execution matrix.}
+Experiment~1: 14 models $\times$ 2 backends $\times$ 5 runs
+= 140 sessions. Experiment~2: Claude backend only (70).
+Experiment~3: both backends (140). Experiment~4: opus-4.7 only,
+same prompt as Exp3, harness 2.1.109 (5). Experiment~5: opus-4.6
+and opus-4.7, upgraded harness 2.1.112 (10). Total: 365 sessions
+(Figure~\ref{fig:matrix}).
 
 \begin{figure}[t]
 \centering
@@ -420,12 +402,12 @@ Figure~\ref{fig:matrix} summarizes the experimental design.
   dim/.style={font=\scriptsize\sffamily, text=black!60},
   arr/.style={-{Stealth[length=1.5mm]}, semithick, black!50},
 ]
-% Experiments
 \node[exp] (E1) at (0,0) {Exp\,1: Baseline};
 \node[exp] (E2) at (0,-1.0) {Exp\,2: Goal-focused};
 \node[exp] (E3) at (0,-2.0) {Exp\,3: ``JUST DO IT''};
+\node[exp] (E4) at (0,-3.0) {Exp\,4: New model};
+\node[exp] (E5) at (0,-4.0) {Exp\,5: Harness version};
 
-% Dimensions
 \node[dim, right=4mm of E1.east, anchor=west, align=left]
   {14 models $\times$ 2 backends $\times$ 5 runs\\
    RTK present \textbar{} 140 sessions};
@@ -435,88 +417,84 @@ Figure~\ref{fig:matrix} summarizes the experimental design.
 \node[dim, right=4mm of E3.east, anchor=west, align=left]
   {14 models $\times$ 2 backends $\times$ 5 runs\\
    RTK disabled \textbar{} 140 sessions};
+\node[dim, right=4mm of E4.east, anchor=west, align=left]
+  {opus-4.7 $\times$ 1 backend $\times$ 5 runs\\
+   CC 2.1.109 \textbar{} 5 sessions};
+\node[dim, right=4mm of E5.east, anchor=west, align=left]
+  {opus-4.6{+}4.7 $\times$ 1 backend $\times$ 5 runs\\
+   CC 2.1.112 \textbar{} 10 sessions};
 
-% Arrows showing iteration
 \draw[arr] (E1.south) -- node[right, font=\tiny, text=black!50]
   {observed env bias} (E2.north);
 \draw[arr] (E2.south) -- node[right, font=\tiny, text=black!50]
   {observed planning trap} (E3.north);
+\draw[arr] (E3.south) -- node[right, font=\tiny, text=black!50]
+  {test new model} (E4.north);
+\draw[arr] ([xshift=-2mm]E3.south) -- ++(0,-3mm) -|
+  node[near start, right, font=\tiny, text=black!50]
+  {test harness version} ([xshift=-2mm]E5.north);
 \end{tikzpicture}
 \caption{Controlled experiment design. Each experiment was
-  informed by findings from the previous one, progressively
-  isolating prompt, environment, and backend effects. Total:
-  350 sessions across 14 models.}
+  informed by findings from the previous one. Total: 365
+  sessions across 15 models. CC\,=\,Claude Code.}
 \label{fig:matrix}
 \end{figure}
 
-\subsubsection{Metrics.}
-For each session we record: implementation status (implemented,
-partial, or error), topic (manually classified), tech stack
-(languages and frameworks), complexity (files, LOC, function
-count), engineering maturity (tests, README, build configuration,
-CI), and runtime (exit code, wall-clock duration).
+\paragraph{Metrics.}
+For each session we record: topic (manually classified), tech
+stack, complexity (files, LOC, function count), engineering
+maturity (tests, README, build config, CI), and runtime (exit
+code, wall-clock duration). Sessions with technical errors (exit
+$\neq$ 0) are excluded from complexity metrics but included in
+topic/fixation analysis when partial output reveals the model's
+intent.
 
 %% ============================================================
 \section{Results}
 \label{sec:results}
 
-We report results from each experiment in sequence, then
-synthesize cross-cutting findings on prompt sensitivity, model
-fixation, backend effects, and the relationship between code
-volume and engineering maturity.
-
 \subsection{Experiment~1: Baseline with Environment Bias}
 
 Experiment~1 ran all 14 models on both backends with Prompt~1.
-RTK was inadvertently present, biasing models toward developer
-tools.
-
-Eight models (5~Claude, 3~Gemini) produced working code on the
-Claude backend (Table~\ref{tab:exp1}). All 5~Claude models
-succeeded in at least 3 of 5~runs, with average complexity
-ranging from 221~LOC (opus-4.5) to 776~LOC (sonnet-4.5). Claude
-models exhibited polyglot behavior (Go, Rust, Python, JavaScript,
-TypeScript). Gemini models produced smaller output (61--89~LOC),
-primarily in Python. All GPT models failed due to API parameter
-incompatibility. On the Codex backend, all models failed (litellm
-bugs, rate limits, WebSocket errors).
+RTK was inadvertently present in the sandbox.
+Eight models produced working code on the Claude backend
+(Table~\ref{tab:exp1}). Claude models exhibited polyglot behavior
+(Go, Rust, Python, JavaScript, TypeScript) and built developer
+tools influenced by the RTK context. Gemini models produced
+smaller output (61--89~LOC). All GPT models failed due to API
+parameter incompatibility. On the Codex backend, all models
+failed.
 
 \begin{table}[t]
-\caption{Experiment~1 (Claude backend, successful models).
-RTK present, biased toward dev tooling.}
+\caption{Experiment~1 (Claude backend). N\,=\,sessions without
+  technical error. RTK present, biased toward dev tooling.}
 \label{tab:exp1}
 \small\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lrrlp{3cm}}
 \toprule
-Model & OK & Avg LOC & Lang & Typical Project \\
+Model & N & Avg LOC & Lang & Typical Project \\
 \midrule
-claude-sonnet-4.5  & 5/5 & 776 & Python & Dev workflow tools \\
-claude-opus-4.6    & 5/5 & 607 & Go/Rust & TUI apps \\
-claude-sonnet-4.6  & 3/5 & 506 & Python & Git/dev tools \\
-claude-haiku-4.5   & 5/5 & 233 & Py/Go/TS & Developer utilities \\
-claude-opus-4.5    & 5/5 & 221 & Go/JS/Py & CLI utilities \\
+claude-sonnet-4.5  & 5 & 776 & Python & Dev workflow tools \\
+claude-opus-4.6    & 5 & 607 & Go/Rust & TUI apps \\
+claude-sonnet-4.6  & 5 & 506 & Python & Git/dev tools \\
+claude-haiku-4.5   & 5 & 233 & Py/Go/TS & Developer utilities \\
+claude-opus-4.5    & 5 & 221 & Go/JS/Py & CLI utilities \\
 \midrule
-gemini-3-flash     & 5/5 & 61 & JS/Go/Py & Small utilities \\
-gemini-2.5-pro     & 5/5 & 64 & Python & Simple scripts \\
-gemini-2.0-flash   & 3/5 & 89 & Python & Minimal scripts \\
+gemini-3-flash     & 5 & 61 & JS/Go/Py & Small utilities \\
+gemini-2.5-pro     & 5 & 64 & Python & Simple scripts \\
+gemini-2.0-flash   & 3 & 89 & Python & Minimal scripts \\
 \bottomrule
 \end{tabular}}
 \end{table}
 
 \subsection{Experiment~2: Removing Environment Bias}
 
-Experiment~2 disabled RTK and used Prompt~2 on the Claude backend
-only (Table~\ref{tab:exp2}).
-
-Removing RTK caused a dramatic shift in project topics: from
-developer tools to games, interactive visualizations, and personal
-productivity apps. All Claude models converged on Python.
-Average LOC decreased across all models. Most notably,
-claude-haiku-4.5 dropped from 5/5 to 1/5 implementation rate.
-The ``propose ONE goal'' framing caused it (and opus-4.5 at 2/5)
-to propose ideas without generating code, a \emph{planning trap}
-where the model takes ``propose'' literally and stops before
-implementing.
+Disabling RTK and using Prompt~2 on the Claude backend caused a
+dramatic shift (Table~\ref{tab:exp2}): from developer tools to
+games, visualizations, and productivity apps. All Claude models
+converged on Python. The ``propose ONE goal'' framing caused
+claude-haiku-4.5 and opus-4.5 to propose ideas without generating
+code (a \emph{planning trap}).
 
 \begin{table}[t]
 \caption{Experiment~2 (Claude backend, RTK disabled).}
@@ -524,24 +502,27 @@ implementing.
 \small\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lrrlp{3cm}}
 \toprule
-Model & OK & Avg LOC & Lang & Typical Project \\
+Model & N & Avg LOC & Lang & Typical Project \\
 \midrule
-claude-sonnet-4.6  & 5/5 & 204 & Python & Diverse interactive tools \\
-claude-sonnet-4.5  & 5/5 & 234 & Python & Games + task managers \\
-claude-opus-4.6    & 4/5 & 408 & Python & Game of Life (every run) \\
-gemini-3-flash     & 5/5 & 86  & Go/Py/JS & Small CLI tools \\
-gemini-2.5-pro     & 4/5 & 57  & Python & Simple utilities \\
-gemini-2.0-flash   & 3/5 & 16  & Python & Hello World \\
-claude-opus-4.5    & 2/5 & 291 & Python & Habit trackers \\
-claude-haiku-4.5   & 1/5 & 160 & Node.js & Standup generator \\
+claude-sonnet-4.6  & 5 & 204 & Python & Diverse interactive tools \\
+claude-sonnet-4.5  & 5 & 234 & Python & Games + task managers \\
+claude-opus-4.6    & 4 & 408 & Python & Game of Life (every run) \\
+gemini-3-flash     & 5 & 86  & Go/Py/JS & Small CLI tools \\
+gemini-2.5-pro     & 4 & 57  & Python & Simple utilities \\
+gemini-2.0-flash   & 3 & 16  & Python & Hello World \\
+claude-opus-4.5    & 5 & 291 & Python & Habit trackers (2 impl., 3 proposed) \\
+claude-haiku-4.5   & 5 & 160 & Node.js & 1 impl., 4 proposed only \\
 \bottomrule
 \end{tabular}}
 \end{table}
 
 \subsection{Experiment~3: Breaking the Planning Trap}
 
-Experiment~3 added ``JUST DO IT'' and ran both backends
-(Tables~\ref{tab:exp3_claude}--\ref{tab:exp3_codex}).
+Adding ``JUST DO IT'' to the prompt and running both backends
+(Tables~\ref{tab:exp3_claude}--\ref{tab:exp3_codex}) transformed
+haiku from proposing without implementing to the
+highest-maturity model: READMEs in every run, tests in 40\%,
+average 6.4~files and 467~LOC.
 
 \begin{table}[t]
 \caption{Experiment~3: Claude backend, Anthropic models.}
@@ -549,13 +530,13 @@ Experiment~3 added ``JUST DO IT'' and ran both backends
 \small
 \begin{tabular}{lrrllr}
 \toprule
-Model & OK & Avg LOC & Files & Test\% & README\% \\
+Model & N & Avg LOC & Files & Test\% & README\% \\
 \midrule
-claude-haiku-4.5   & 5/5 & 467 & 6.4 & 40\% & 100\% \\
-claude-sonnet-4.6  & 5/5 & 307 & 1.2 & 0\%  & 0\%   \\
-claude-sonnet-4.5  & 4/5 & 380 & 3.5 & 0\%  & 75\%  \\
-claude-opus-4.5    & 3/5 & 467 & 3.0 & 0\%  & 67\%  \\
-claude-opus-4.6    & 3/5 & 290 & 1.0 & 0\%  & 0\%   \\
+claude-haiku-4.5   & 5 & 467 & 6.4 & 40\% & 100\% \\
+claude-sonnet-4.6  & 5 & 307 & 1.2 & 0\%  & 0\%   \\
+claude-sonnet-4.5  & 3 & 380 & 3.5 & 0\%  & 75\%  \\
+claude-opus-4.5    & 3 & 467 & 3.0 & 0\%  & 67\%  \\
+claude-opus-4.6    & 4 & 322 & 1.0 & 0\%  & 0\%   \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -566,13 +547,13 @@ claude-opus-4.6    & 3/5 & 290 & 1.0 & 0\%  & 0\%   \\
 \small
 \begin{tabular}{lrrllr}
 \toprule
-Model & OK & Avg LOC & Test\% & README\% & CI\% \\
+Model & N & Avg LOC & Test\% & README\% & CI\% \\
 \midrule
-gpt-5-mini    & 5/5 & 121 & 100\% & 80\% & 80\% \\
-gpt-4.1-mini  & 4/5 & 8   & 20\%  & 60\% & 0\%  \\
-gpt-4.1       & 2/5 & 31  & 0\%   & 0\%  & 0\%  \\
-gpt-5.4       & 1/5 & 7   & 0\%   & 100\% & 0\% \\
-gpt-5.1       & 0/5 & n/a & n/a   & n/a  & n/a  \\
+gpt-5-mini    & 5 & 121 & 100\% & 80\% & 80\% \\
+gpt-4.1-mini  & 4 & 8   & 20\%  & 60\% & 0\%  \\
+gpt-4.1       & 2 & 31  & 0\%   & 0\%  & 0\%  \\
+gpt-5.4       & 1 & 7   & 0\%   & 100\% & 0\% \\
+gpt-5.1       & 0 & n/a & n/a   & n/a  & n/a  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -584,110 +565,158 @@ not persisted to host due to bwrap isolation).}
 \small
 \begin{tabular}{lrrlr}
 \toprule
-Model & OK & Avg LOC & Typical Project & Test\% \\
+Model & N & Avg LOC & Typical Project & Test\% \\
 \midrule
-gpt-5.4       & 5/5 & 230 & Diverse (web apps, CLI) & 40\% \\
-gpt-5.1       & 5/5 & 98  & CLI with packaging      & 40\% \\
-gpt-4.1       & 5/5 & 56  & Todo list apps          & 40\% \\
-gpt-5-mini    & 4/5 & 40  & Greeting utilities      & 60\% \\
-gpt-4.1-mini  & 4/5 & 8   & Hello World             & 40\% \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\paragraph{Prompt sensitivity.}
-Adding ``JUST DO IT'' transformed claude-haiku-4.5 from 1/5 to
-5/5 implementation rate with the highest engineering maturity of
-any model: READMEs in every run, tests in 40\%, build
-configuration in 80\%, average 6.4~files and 467~LOC.
-Table~\ref{tab:prompt_effect} summarizes the prompt effect across
-Claude models.
-
-\begin{table}[t]
-\caption{Implementation rates across prompts (Claude models).}
-\label{tab:prompt_effect}
-\small
-\begin{tabular}{lccc}
-\toprule
-Model & Exp1 & Exp2 & Exp3 \\
-      & (Baseline) & (``propose'') & (``JUST DO IT'') \\
-\midrule
-claude-opus-4.6    & 5/5 & 4/5 & 3/5 \\
-claude-opus-4.5    & 5/5 & 2/5 & 3/5 \\
-claude-sonnet-4.6  & 3/5 & 5/5 & 5/5 \\
-claude-sonnet-4.5  & 5/5 & 5/5 & 4/5 \\
-claude-haiku-4.5   & 5/5 & 1/5 & 5/5 \\
+gpt-5.4       & 5 & 230 & Diverse (web apps, CLI) & 40\% \\
+gpt-5.1       & 5 & 98  & CLI with packaging      & 40\% \\
+gpt-4.1       & 5 & 56  & Todo list apps          & 40\% \\
+gpt-5-mini    & 4 & 40  & Greeting utilities      & 60\% \\
+gpt-4.1-mini  & 4 & 8   & Hello World             & 40\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Model fixation.}
-claude-opus-4.6 chose Conway's Game of Life in all 8 successful
-runs across Experiments~2 and~3, with different implementations
-but the same concept every time. claude-sonnet-4.5 developed a
-Pomodoro fixation (3/4 runs in Exp3). gpt-4.1 on Codex built
-todo apps in 3/5 runs. In contrast, claude-sonnet-4.6 produced
-a different project in 13 of 13 successful runs, including creative
-uses of the Claude API (commit generator, AI debate arena).
+claude-opus-4.6 chose Conway's Game of Life in all 10 runs
+across Exp2--3 (including error runs with partial files).
+claude-sonnet-4.5 developed a Pomodoro fixation (3 of 4 completed
+runs in Exp3). gpt-4.1 on Codex built todo apps in 3 of 5 runs.
+In contrast, claude-sonnet-4.6 produced a different project in
+every run across all three experiments, including creative uses
+of the Claude API (commit generator, AI debate arena).
 
 \paragraph{Backend inversion.}
 GPT rankings inverted between backends. On Codex (native):
 gpt-5.4~(230~LOC) $\gg$ gpt-5.1~(98) $>$ gpt-4.1~(56).
 On Claude (via litellm): gpt-5-mini was the only productive model
-(5/5, 121~LOC with tests and CI), while gpt-5.4 and gpt-5.1
-produced almost nothing. Runtime data suggests gpt-5-mini was the
-only GPT model executing multiple tool calls (193--1378s vs.\
-9--55s for others).
+(121~LOC with tests and CI), while gpt-5.4 and gpt-5.1
+produced almost nothing. Wall-clock runtimes confirm the
+difference: gpt-5-mini ran 193--1378s per session (indicating
+iterative tool use), while other GPT models completed in 9--55s
+(indicating minimal interaction).
 
 \paragraph{Gemini models.}
-Across all experiments, Gemini models were near-non-functional.
-On the Claude backend in Experiment~3, only 1 of 20~runs produced
-files. On the Codex backend, all 20~runs failed.
+Across all experiments, Gemini models were near-non-functional on
+both backends. Only 1 of 20~runs on the Claude backend in Exp3
+produced files.
 
-\paragraph{Volume vs.\ maturity.}
-Code volume and engineering maturity were orthogonal.
-claude-opus-4.6 averaged 290--607~LOC but never included tests or
-READMEs. gpt-5-mini averaged 121~LOC but included tests in 100\%,
-READMEs in 80\%, and CI in 80\%. claude-haiku-4.5 in Experiment~3
-achieved both: 467~LOC with 100\% README rate and 40\% test rate.
+\subsection{Experiment~4: Model Version Effect}
+
+Experiment~4 tested claude-opus-4.7 with the same prompt and
+harness as Exp3, isolating the model version
+(Table~\ref{tab:exp4}).
+
+\begin{table}[t]
+\caption{Experiment~4: claude-opus-4.7 (harness 2.1.109).}
+\label{tab:exp4}
+\small
+\begin{tabular}{rlrr}
+\toprule
+Run & Topic & LOC & Duration \\
+\midrule
+01 & Reaction-diffusion (Gray-Scott) & 570 & 369s \\
+02 & Boids flocking simulation & 367 & 135s \\
+03 & Conway's Game of Life & 434 & 151s \\
+04 & Maze generator + A* solver & 762 & 324s \\
+05 & Procedural dungeon generator (BSP) & 557 & 229s \\
+\midrule
+   & \textbf{Average} & \textbf{538} & \textbf{242s} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Opus~4.7 chose Game of Life only once, compared to opus-4.6's
+10/10 fixation. All 5~runs produced distinct projects, all in the
+simulation/visualization category. Average complexity nearly
+doubled (538 vs.\ 322~LOC), and 2 of 5~runs included tests.
+
+\subsection{Experiment~5: Harness Version Effect}
+
+Experiment~5 re-ran both models on an upgraded harness (Claude
+Code 2.1.112 vs.\ 2.1.109), isolating the harness as the
+variable (Table~\ref{tab:exp5}).
+
+\begin{table}[t]
+\caption{Experiment~5: harness 2.1.112 (same prompt as Exp3--4).}
+\label{tab:exp5}
+\small\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llrrl}
+\toprule
+Model & Run & LOC & Dur. & Topic \\
+\midrule
+\multirow{5}{*}{opus-4.6}
+  & 01 & 277 & 150s & Game of Life \\
+  & 02 & 345 & 227s & Ray tracer (Blinn-Phong) \\
+  & 03 & 341 & 138s & Game of Life \\
+  & 04 & 626 & 214s & Typing speed test \\
+  & 05 & 345 & 170s & Game of Life (Go) \\
+\midrule
+\multirow{5}{*}{opus-4.7}
+  & 01 & 246 & 133s & Boids flocking \\
+  & 02 & 315 & 77s  & Procedural dungeon (BSP) \\
+  & 03 & 178 & 50s  & Maze generator + A* \\
+  & 04 & 264 & 97s  & Boids flocking \\
+  & 05 & 309 & 81s  & Boids flocking \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Opus-4.6's Game of Life fixation dropped from 10/10 (harness
+2.1.109) to 3/5 (2.1.112). Opus-4.7 gained a boids fixation
+(3/5) that was absent on 2.1.109. Opus-4.7 averaged 262~LOC
+(down from 538 in Exp4) with no tests, while opus-4.6 averaged
+387~LOC (up from 322).
 
 %% ============================================================
 \section{Discussion}
 \label{sec:discussion}
 
-We interpret our findings through the lens of bottleneck
-migration, trust allocation, and the exploration/exploitation
-tradeoff, then discuss practical implications and limitations.
+\subsection{Variants and Invariants as a Lens}
 
-\subsection{Bottleneck Migration}
+Our central finding is that goalless agent behavior has
+identifiable structure: some properties vary with experimental
+conditions, while others remain constant across all 365 sessions.
 
-Our central observation is that automating code production shifts
-the bottleneck to goal selection. At the pipeline scale, the
-four-stage system automated implementation but could not automate
-the judgment of \emph{what is worth building}; the strategist
-converged on micro-optimizations. At the session scale, individual
-models given an open-ended prompt defaulted to intrinsic attractors
-shaped by prompt wording, environment artifacts, and model priors,
-all factors orthogonal to coding ability.
+Among the \emph{variants}, prompt wording determines whether
+models propose or implement. Environment artifacts shift topic
+and language selection. Model version changes which thematic
+prior dominates. Harness version modulates fixation strength and
+output complexity. These factors are orthogonal to coding ability
+as measured by conventional benchmarks.
 
-The implication is that agent evaluation should focus less on
-\emph{implementation capability} (increasingly solved) and more
-on \emph{decision quality}: does the agent choose something worth
-building, or does it default to a local attractor?
+Among the \emph{invariants}, every model defaults to terminal
+output (no web apps, GUIs, or databases). Every session produces
+a greenfield project. Python dominates once environment cues are
+removed. These invariants likely reflect the probability
+distributions learned during training: terminal-based Python
+projects are the highest-density region in the space of ``things
+to build from scratch,'' and without a specification to pull the
+model elsewhere, it defaults there.
+
+This variant/invariant structure has implications for evaluation.
+Current benchmarks~\cite{jimenez2024swebench,swebenchpro2026}
+measure implementation capability under well-specified goals.
+A complementary evaluation would measure the structure of
+open-ended behavior: \emph{topic entropy} across repeated
+sessions, sensitivity to environmental context, and stability
+of thematic priors.
 
 \subsection{The Trust Problem}
 
 Full autonomy is full trust: the system optimizes for its own
 notion of progress, which may diverge from the operator's goals.
-Zero trust (human approval of every action) collapses to manual
-engineering. Neither extreme is viable.
+Zero trust collapses to manual engineering. Neither extreme is
+viable.
 
-The case study showed that full trust leads to
+Our production deployment showed that full trust leads to
 satisficing~\cite{simon1956}: the pipeline settled into locally
 optimal micro-improvements. The controlled experiments showed that
 even in single sessions, models default to intrinsic attractors
 (Game of Life, todo apps, Pomodoro timers), a form of satisficing
-at the decision level.
+at the decision level. This parallels findings in autonomous agent
+loops, where systems like AutoGPT~\cite{significantgravitas2023autogpt}
+enter similar optimization spirals without human course
+correction.
 
 Trust should be allocated \emph{asymmetrically across pipeline
 stages}. Implementation (the Executor) can operate with high
@@ -696,22 +725,92 @@ selection (the Strategist) requires human steering, because the
 failure mode is convergence on local optima, not inability. The
 Tester provides a necessary feedback signal: without it, the
 pipeline accumulates unchecked regressions (cf.\ the 112K-LOC
-single-file ablation).
-
-This suggests a hybrid architecture: human goal-setting with
-autonomous implementation, periodic review of strategic direction,
-and automated testing as a minimal safety net. The engineer's role
-migrates from writing code to \emph{curating intent}.
+single-file ablation). The engineer's role migrates from writing
+code to \emph{curating intent}.
 
 \subsection{Exploration vs.\ Exploitation}
 
-Models with diverse output (e.g., claude-sonnet-4.6, 13 unique
-projects) are better suited for \emph{exploratory} tasks.
-Models with consistent output (e.g., claude-opus-4.6) are suited
-for \emph{exploitative} tasks where depth matters, provided the
-fixation aligns with the target domain. Selecting a model for an
-autonomous pipeline should account for this tradeoff, not just
-benchmark scores.
+Models fall on a spectrum from exploratory to exploitative.
+claude-sonnet-4.6 produced a unique project in every run across
+all experiments (the strongest explorer in our sample).
+claude-opus-4.6 chose the same project in 10 consecutive runs on
+one harness (the strongest exploiter). Other models occupy
+intermediate positions: sonnet-4.5 fixated on Pomodoro timers in
+3 of 4 runs, haiku-4.5 fixated on task managers but with high
+structural diversity across implementations.
+
+This spectrum has practical consequences. Exploratory models are
+better suited for ideation, prototyping, and brainstorming
+sessions where diversity matters. Exploitative models may be
+better suited for depth-oriented tasks in a known domain, provided
+the fixation aligns with the target. Selecting a model for an
+autonomous pipeline should account for this behavioral tradeoff,
+not just benchmark scores on well-specified tasks.
+
+\subsection{Model Personality and Thematic Priors}
+
+Experiments~4 and~5 reveal that models have stable
+\emph{thematic preferences} that persist across runs and harness
+versions. Opus-4.6 gravitates toward canonical, self-contained CS
+artifacts: Game of Life, ray tracing, typing tests. These are
+systems that compute or display their own state, well-known
+reference implementations from CS education. Opus-4.7 gravitates
+toward spatial emergence and procedural generation: boids
+flocking, reaction-diffusion, dungeon carving, maze solving.
+These are systems where complex structure arises from simple
+agent interactions or spatial algorithms, closer to creative
+coding communities (Processing, p5.js, generative art) than to
+textbook exercises.
+
+This contrast raises a fundamental question: do open-ended
+evaluations measure \emph{capability} or \emph{personality}? If a
+model's project choice is a stable prior rather than a reasoned
+decision, then what we observe in goalless settings may reflect
+the model's training distribution more than its creative range.
+Recent work on LLM personality~\cite{simonds2025llmpersonality}
+shows that models exhibit reproducible personality-like profiles
+that are context-dependent but stable within context. Our findings
+extend this to creative output: models do not merely have
+\emph{opinion} priors but \emph{aesthetic} priors that shape what
+they choose to build.
+
+Notably, the harness version modulates fixation strength (10/10
+to 3/5 for opus-4.6) without changing thematic character: when
+opus-4.6 breaks free of Game of Life, it lands on ray tracing,
+still a canonical, self-referential artifact. The personality is
+deeper than the fixation.
+
+\subsection{The Greenfield Invariant}
+
+Across all 365 sessions, no model ever chose to extend or modify
+existing code. Every session produced a new project from scratch,
+even when the workspace contained artifacts from a
+conceptually related domain. This \emph{greenfield invariant}
+is notable because real software engineering is predominantly
+brownfield: extending, refactoring, and maintaining existing code.
+
+The invariant may reflect the experimental design (empty
+workspaces in most sessions) or a deeper model preference for
+generation over modification. If the latter, it implies that
+agents deployed on existing codebases may struggle not because
+they lack capability but because their default behavior pulls
+toward starting over rather than building on what exists.
+
+\subsection{Language Convergence}
+
+In Experiment~1 (RTK present), Claude models exhibited polyglot
+behavior: Go, Rust, TypeScript, Python, JavaScript. In
+Experiment~2 (RTK removed, same models), all Claude models
+converged on Python. The only exception across all subsequent
+experiments was a single Go run by opus-4.6 in Exp5.
+
+This near-total language convergence suggests that Python is the
+``default language'' of LLM-based code generation, likely
+reflecting its dominance in training data. The polyglot behavior
+in Exp1 was \emph{induced by the environment}: RTK's presence
+provided context that made other languages salient. Without such
+context, agents default to the highest-probability language
+regardless of task suitability.
 
 \subsection{Practical Implications}
 
@@ -726,50 +825,102 @@ specifications. Teams should audit what is visible to the agent.
 
 \paragraph{Backend compatibility must be verified.} Running a
 model through an API translation layer can invert capability
-rankings.
+rankings. The wall-clock runtime difference (minutes vs.\ seconds)
+is a practical diagnostic: if a model completes in under a minute,
+it likely did not engage in iterative tool use.
+
+\paragraph{Harness version is a confound.} The CLI tool wrapping
+the model independently affects output. Teams comparing model
+versions must hold the harness constant, or risk attributing
+harness effects to the model.
 
 \subsection{Limitations}
 
-Several limitations apply. We measure what agents produce but not
-whether the code actually runs (\emph{no functional verification}).
+We measure what agents produce but not whether the code actually
+runs (\emph{no functional verification}). Some sessions included
+self-verification steps (running the code, checking output), and
+sessions with passing tests represent a higher confidence tier,
+but we do not systematically compile or execute all output.
+
 All API calls were routed through a single litellm-based gateway,
 so results for non-native model$\times$backend combinations
-reflect gateway behavior as much as model behavior. All sessions
-start from empty workspaces; agent behavior when extending
-existing code may differ substantially. Five runs per condition
-provides limited statistical power. The production pipeline was
-deployed on one codebase, so the plateau pattern requires
-replication. Finally, model capabilities change with updates; our
-results reflect versions available in early 2026.
+reflect gateway behavior as much as model behavior.
+
+All sessions start from empty workspaces. Agent behavior when
+extending existing code may differ substantially, and the
+greenfield invariant we observe may not hold when the workspace
+contains a meaningful starting point.
+
+Five runs per condition provides limited statistical power. With
+$n=5$, a shift from 0/5 to 3/5 fixation is suggestive but not
+statistically significant. Larger sample sizes would be needed to
+make strong claims about fixation rates.
+
+Experiments~4 and~5 confound harness version with
+time-of-execution (API server load, rate limits), limiting causal
+claims about harness effects on complexity and duration.
+
+The production pipeline was deployed on one codebase, so the
+micro-optimization spiral requires replication across diverse
+projects to establish generality.
+
+Finally, model capabilities change with updates; our results
+reflect versions available in April~2026.
 
 %% ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
 
-We investigated what autonomous AI coding agents do when given
-open-ended directives, motivated by a production case study where
-a four-stage agent pipeline produced 627 commits and nearly
-quintupled a codebase before plateauing into a micro-optimization
-spiral.
+We investigated what AI coding agents build when given open-ended
+directives, motivated by a production deployment where an
+autonomous pipeline plateaued into micro-optimizations despite
+strong implementation capability.
 
-Across 350 controlled sessions spanning 14 models, 2 backends,
-and 3 prompts, we found that goalless agent behavior is shaped as
-much by prompt wording, environment context, and infrastructure
-compatibility as by model capability. Small prompt changes
-produced large behavioral shifts. Environment artifacts steered
-project topics and language choices. Models exhibited persistent
-fixations or remarkable creativity. Backend translation layers
-inverted capability rankings.
+Across 365 sessions spanning 15 models, 2 backends, 3 prompts,
+and 2 harness versions, we found that goalless agent behavior has
+identifiable structure. What varies: prompt wording determines
+whether models propose or implement; environment artifacts steer
+topics and language; model version shifts thematic priors; harness
+version modulates fixation strength and complexity; backend
+translation layers invert capability rankings. What is invariant:
+terminal-based output, greenfield preference, Python convergence,
+and stable model-specific aesthetic priors that persist across
+conditions.
 
-These findings point to a \emph{bottleneck migration}: as code
-production becomes automated, the binding constraint shifts to
-goal selection, i.e., deciding \emph{what} to build. Agents that
-are capable implementers can still be poor decision-makers, and
-the quality of their decisions depends on factors that current
-benchmarks do not measure. As autonomous agents are deployed with
-increasing latitude, understanding and shaping their
-goal-selection behavior, not just their coding ability, becomes a
-prerequisite for trust.
+These findings suggest that model training implicitly encodes
+default creative distributions, visible only when task
+specification is removed. Agents that score well on structured
+benchmarks may still default to narrow, model-specific attractors
+in open-ended settings, and the factors shaping those defaults
+(environment, prompt, harness) are largely invisible to current
+evaluation methods.
+
+\paragraph{Future directions.}
+Several extensions would strengthen these findings.
+\emph{Seed projects}: providing a half-built application instead
+of an empty workspace would test whether agents can understand
+and extend existing code, or whether the greenfield invariant
+persists even when continuation is the natural choice.
+\emph{Functional verification}: a post-run step that compiles,
+executes, and tests what was built would distinguish working code
+from syntactically plausible but broken output.
+\emph{Fixation breaking}: testing whether temperature variation,
+different system prompts, or explicit novelty directives can
+disrupt strong fixations would clarify whether fixation is a
+fundamental property of the model or a malleable parameter.
+\emph{Decision-quality benchmarks}: developing evaluations that
+measure not just implementation ability but the appropriateness
+of goal selection in open-ended contexts would address the gap
+our findings expose. Finally, \emph{longitudinal studies} tracking
+how agent behavior evolves across model and harness versions over
+time would reveal whether the thematic priors we observe are
+stable properties or transient artifacts of a particular training
+run.
+
+As autonomous agents are deployed with increasing latitude,
+understanding the structure of their default behavior, not just
+their peak capability, becomes essential for principled
+deployment and evaluation.
 
 %% ============================================================
 
