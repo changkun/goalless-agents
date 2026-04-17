@@ -1,0 +1,15 @@
+Built **Conway's Game of Life** as an interactive terminal app. Run it with:
+
+```
+python3 game_of_life.py
+```
+
+**Features:**
+- **Live simulation** with play/pause (`Enter`), step-by-step (`s`), and 5 speed levels (`-`/`+`)
+- **Cursor-based editing** — move with `hjkl` or arrow keys, toggle cells with `Space`
+- **10 preset patterns** — glider, blinker, toad, beacon, pulsar, Gosper glider gun, LWSS, pentadecathlon, R-pentomino, acorn. Cycle with `[`/`]`, place with `p`
+- **Toroidal grid** — edges wrap around
+- **Randomize** (`r`) and **clear** (`c`) the board
+- Color-coded status bar showing generation count, population, speed, and selected pattern
+
+Zero dependencies — just Python 3 and the built-in `curses` module.

@@ -1,0 +1,15 @@
+Done! I built an **interactive terminal Conway's Game of Life** (`/workspace/life.py`). Here's what it has:
+
+**Features:**
+- Sparse-grid engine with standard B3/S23 rules — handles infinite boards efficiently
+- 10 classic patterns: glider, LWSS, pulsar, R-pentomino, Gosper glider gun, diehard, acorn, beacon, toad, block
+- Full curses UI with green live cells, cyan pattern previews, and a yellow cursor
+- 8 speed levels from 0.5x to 100x
+- Interactive pattern placement — cycle patterns with `p`/`P`, preview at cursor, stamp with Enter
+
+**Controls:**
+- `Space` pause/resume, `s` single step, `[`/`]` speed
+- `hjkl`/arrows move cursor, `Shift+WASD` pan viewport
+- `t` toggle cell, `Enter` place pattern, `r` randomize, `c` clear, `q` quit
+
+Run it with: `python3 life.py`

@@ -1,0 +1,21 @@
+Done. I built a **from-scratch ray tracer** in Python (`raytracer.py`) and rendered an 800x500 scene to `scene.ppm`.
+
+**What it includes:**
+- **Vec3 math library** — dot/cross products, reflection, Hadamard product
+- **Sphere & Plane primitives** with ray-intersection tests
+- **Blinn-Phong shading** with ambient, diffuse, and specular components
+- **Recursive reflections** (up to 5 bounces)
+- **Shadow rays** from 3 light sources
+- **Checkered floor** pattern
+- **4x supersampled anti-aliasing**
+- **Gamma correction** (2.2)
+- **6 objects**: a red main sphere, green/blue/gold/purple satellites, and a reflective checkered floor
+
+**Usage:**
+```
+python3 raytracer.py              # default 800x500
+python3 raytracer.py 1920x1080    # custom resolution
+python3 raytracer.py 800x500 out.ppm  # custom output file
+```
+
+Open `scene.ppm` in any image viewer (GIMP, Preview, IrfanView, VS Code) to see the rendered scene.

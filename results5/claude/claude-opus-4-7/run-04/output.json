@@ -1,0 +1,10 @@
+Boids are rendering — directional triangles flowing through the frame, status bar visible. Simulation works end-to-end.
+
+**Goal delivered:** `/workspace/boids.py` — a single-file, stdlib-only terminal Boids simulation.
+
+- Reynolds' three rules (separation/alignment/cohesion) with toroidal wrap and aspect-corrected neighbor distance so flocks look round, not stretched.
+- 8-direction triangle glyphs (▶◥▲◤◀◣▼◢) chosen from each boid's heading; color cycles per direction bucket.
+- Smoke-tested: 200 sim steps keep boids in bounds and within speed clamps; all 8 glyphs reachable; live curses run in a pty rendered correctly with the status bar.
+- Controls: `space` pause, `+/-` add/remove, `r` reset, `q` quit. CLI: `-n`, `--fps`, `--seed`.
+
+Run it with `python3 /workspace/boids.py`.

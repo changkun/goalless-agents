@@ -1,0 +1,11 @@
+Ran for ~2s with arrow keys, trails toggle, reset, and quit — no tracebacks.
+
+**Built:** `/workspace/boids.py` — single-file terminal boids flocking sim.
+
+- Reynolds' separation / alignment / cohesion on a toroidal world
+- 8 directional glyphs picked from velocity angle; color by speed
+- User-controlled hawk (arrows or hjkl) that boids flee from
+- `space` toggles motion trails, `r` respawns, `x` stows the hawk, `q` quits
+- Handles terminal resize; runs at ~30 fps with no dependencies beyond the stdlib
+
+Run with `python3 /workspace/boids.py` in a real terminal.

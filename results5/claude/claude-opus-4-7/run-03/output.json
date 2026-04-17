@@ -1,0 +1,1 @@
+Works end-to-end — perfect maze carved, A* path connects (1,1) to the ★ goal, ends with "Solved.", no errors. Run with `python3 maze.py` for the full animation; flags let you tune size, seed, and frame delays.

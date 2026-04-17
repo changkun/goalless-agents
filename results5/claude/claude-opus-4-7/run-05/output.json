@@ -1,0 +1,10 @@
+Done. Shipped `/workspace/boids.py` — an interactive terminal boids flocking simulation.
+
+**What it does**
+- Real-time 30 FPS flocking with separation / alignment / cohesion, rendered as colored 8-direction arrows. Speed-based color (blue → orange). Toroidal world.
+- O(n) spatial hash; smoke test shows ~4500 steps/sec at n=60.
+- Aspect-corrected neighborhoods (terminal cells are ~2× taller than wide).
+
+**Controls:** `q` quit · `space` scatter · `+/-` count · `s/S a/A c/C` tune weights · `p` pause · `r` reset. Handles `SIGWINCH` for live resize and guards non-TTY stdout.
+
+**Run it:** `python3 /workspace/boids.py`

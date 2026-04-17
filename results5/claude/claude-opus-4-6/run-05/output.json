@@ -1,0 +1,16 @@
+Done. I built an **interactive Conway's Game of Life** in Go with tcell. Here's what it does:
+
+**Features:**
+- **Color-coded cells by age** — newborn cells glow bright green, aging cells transition through green → yellow → orange → red → dark red
+- **5 preset patterns** — Glider (`1`), Pulsar (`2`), Gosper Glider Gun (`3`, default), R-pentomino (`4`), Acorn (`5`)
+- **Toroidal grid** — edges wrap around
+- **10 speed levels** — adjust with `+`/`-`
+- **Controls** — `Space` pause, `N` single step, `R` reset, `Q` quit
+
+**Files:**
+- `grid.go` — Grid with age-tracking cells and GoL rules
+- `patterns.go` — 5 classic patterns
+- `render.go` — Color-mapped terminal rendering with status bar
+- `main.go` — Goroutine-based event loop with ticker
+
+Run it with `./game-of-life` (the binary is already built).

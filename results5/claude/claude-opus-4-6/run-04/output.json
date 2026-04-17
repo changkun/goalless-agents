@@ -1,0 +1,17 @@
+Built **typist** — a terminal typing speed test. Run it with:
+
+```
+python3 typist.py
+```
+
+**What it does:**
+
+- **4 difficulty modes**: Easy (common words), Medium (longer words), Hard (complex vocabulary), Quotes (programming quotes)
+- **Real-time colored feedback**: green for correct characters, red with underline for mistakes, cyan cursor showing your position
+- **Live stats bar**: WPM, accuracy, and elapsed time update as you type
+- **Progress bar**: visual indicator of how far through the text you are
+- **Results screen**: shows net WPM, raw WPM, accuracy breakdown with a colored bar, and a rank (Beginner → Blazing Fast)
+- **History tracking**: saves all results to `~/.typist_history.json`, viewable from the menu
+- **Zero dependencies**: uses only Python standard library (`curses`)
+
+Controls: type the displayed text, backspace to correct, ESC to quit, `r` to retry after a test.

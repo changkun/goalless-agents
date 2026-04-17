@@ -1,0 +1,3 @@
+ANSI codes are wired in correctly. The generator runs clean: BSP tree split, rooms carved, L-shaped corridors, walls surrounded, doors placed where corridors meet rooms, entrance `<` and exit `>` placed at the furthest room pair, with gold `$` sprinkled in ~25% of rooms.
+
+**Goal shipped:** `/workspace/dungeon.py` — a procedural dungeon generator using BSP. Run with `python3 dungeon.py -W 80 -H 30 -s 42` or `-n 3` for multiple maps. Uses ANSI color when stdout is a TTY.
