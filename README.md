@@ -54,6 +54,16 @@ See **[results4/RESULTS.md](results4/RESULTS.md)** for the full per-run breakdow
 
 See **[results5/RESULTS.md](results5/RESULTS.md)** for the full per-run breakdown.
 
+### Experiment 6 — `prompt4.txt` (bare imperative prompt)
+
+> Build something. Just do it.
+
+Same models and harness (2.1.112) as Exp5 — only the prompt changes. No "look at this
+project," no instruction against asking, no goal framing. Tests whether the terse imperative
+widens the target space.
+
+See **[results6/RESULTS.md](results6/RESULTS.md)** for the full per-run breakdown.
+
 Each experiment includes:
 - Topic proposed and implementation status
 - Tech stack (language, frameworks)
@@ -69,11 +79,13 @@ flowchart LR
     E3["<b>Exp 3</b><br/>prompt3 · RTK out · 14 models<br/>CC 2.1.109 · claude+codex"]
     E4["<b>Exp 4</b><br/>prompt3 · RTK out · opus-4.7<br/>CC 2.1.109 · claude"]
     E5["<b>Exp 5</b><br/>prompt3 · RTK out · opus-4.6+4.7<br/>CC 2.1.112 · claude"]
+    E6["<b>Exp 6</b><br/>prompt4 · RTK out · opus-4.6+4.7<br/>CC 2.1.112 · claude"]
 
     E1 -->|"remove RTK<br/>dev tools → games"| E2
     E2 -->|"change prompt<br/>haiku 1/5 → 5/5"| E3
     E3 -->|"add opus-4.7<br/>GoL fixation broken, 2× LOC"| E4
     E3 & E4 -->|"upgrade harness<br/>fixation rates shift"| E5
+    E5 -->|"bare prompt<br/>terminal→web (3/10), LOC halves"| E6
 ```
 
 **Pairwise comparisons** (one variable changed, rest held constant):
@@ -84,20 +96,21 @@ flowchart LR
 | Exp2 → Exp3 | Prompt ("JUST DO IT" added) | Environment, models | Haiku: proposed only → fully implemented; avg LOC increased |
 | Exp3 → Exp4 | Model (opus-4.7 added) | Prompt, harness, environment | GoL fixation broken; 5 distinct topics; ~2× LOC |
 | Exp3/4 → Exp5 | Harness (2.1.109 → 2.1.112) | Prompt, environment | Opus-4.6 GoL fixation 100% → 60%; opus-4.7 gained boids fixation, lower LOC |
+| Exp5 → Exp6 | Prompt (bare "Build something. Just do it.") | Models, harness, environment | Terminal-only invariant broken: 3/10 runs produced HTML/Canvas; LOC roughly halved; opus-4.7 fixation flipped boids → GoL |
 
 **Per-experiment output profile:**
 
-| | Exp1 | Exp2 | Exp3 | Exp4 | Exp5 |
-|---|---|---|---|---|---|
-| Dominant lang | Python/Go/Rust | Python | Python | Python | Python/Go |
-| Project type | Dev tools, TUIs | Games, interactive | Games, CLI tools | Simulations, GoL | Simulations, GoL |
-| Avg LOC (Claude) | 221–776 | 160–408 | 290–467 | 538 | 262–387 |
-| Typical files | 1–2 | 1 | 1–6 | 1–3 | 1–4 |
-| Tests written | Rare | None | Haiku only | 2/5 runs | None |
-| Fixation observed | None | Opus-4.6 → GoL | Opus-4.6 → GoL | GoL 1/5 only | Both models |
-| External deps | Occasional | None | Rare | None | Rare (tcell) |
+| | Exp1 | Exp2 | Exp3 | Exp4 | Exp5 | Exp6 |
+|---|---|---|---|---|---|---|
+| Dominant lang | Python/Go/Rust | Python | Python | Python | Python/Go | Python + **HTML/JS** |
+| Project type | Dev tools, TUIs | Games, interactive | Games, CLI tools | Simulations, GoL | Simulations, GoL | GoL + **browser sims** |
+| Avg LOC (Claude) | 221–776 | 160–408 | 290–467 | 538 | 262–387 | 140–160 |
+| Typical files | 1–2 | 1 | 1–6 | 1–3 | 1–4 | 1 |
+| Tests written | Rare | None | Haiku only | 2/5 runs | None | None |
+| Fixation observed | None | Opus-4.6 → GoL | Opus-4.6 → GoL | GoL 1/5 only | Both models | Both → GoL |
+| External deps | Occasional | None | Rare | None | Rare (tcell) | None |
 
-**Invariants across all experiments:** every model defaults to terminal output (no web apps, no GUIs, no databases). Single-file projects dominate. No model ever chooses to extend or modify existing code — they always greenfield.
+**Invariants across Exp1–Exp5:** every model defaulted to terminal output (no web apps, no GUIs, no databases). **Exp6 breaks this:** with the bare prompt "Build something. Just do it.", 3/10 runs produced HTML/Canvas/JS in a browser (particle sandbox, flowfield, boids). Single-file projects still dominate. No model ever chooses to extend or modify existing code — they always greenfield.
 
 **What changes behavior:**
 
@@ -105,6 +118,7 @@ flowchart LR
 |--------|----------|-------------|
 | Environment context | Exp1 vs Exp2 | Large: entirely different project categories |
 | Prompt wording | Exp2 vs Exp3 | Large: haiku success 1/5 → 5/5, LOC increase |
+| Prompt reduction | Exp5 vs Exp6 | Large: terminal-only invariant broken (3/10 → web), LOC ~halves |
 | Model version | Exp3 vs Exp4 | Large: fixation broken, 2× complexity |
 | Harness version | Exp3/4 vs Exp5 | Moderate: fixation rates shift, complexity changes |
 
@@ -181,6 +195,13 @@ flowchart LR
 | claude-opus-4.6 | 5 | 387 | Python/Go | Game of Life (3/5), ray tracer, typing test |
 | claude-opus-4-7 | 5 | 262 | Python | Boids (3/5), dungeon gen, maze solver |
 
+**Experiment 6** (bare prompt "Build something. Just do it." — same models + harness as Exp5):
+
+| Model | N | Avg LOC | Primary Lang | Typical Project |
+|-------|---|---------|-------------|-----------------|
+| claude-opus-4.6 | 5 | 140 | Python + HTML/JS | Game of Life (3/5), particle sandbox (HTML), fireworks |
+| claude-opus-4-7 | 5 | 160 | Python + HTML/JS | Game of Life (3/5), flowfield (HTML), boids (HTML) |
+
 ### Model Personalities
 
 Each model shows a consistent thematic identity across experiments (topic analysis includes partial output from error runs):
@@ -212,6 +233,12 @@ Each model shows a consistent thematic identity across experiments (topic analys
   dropped from 10/10 runs (harness 2.1.109, incl. error runs) to 3/5 (2.1.112).
   Opus 4.7 gained a boids fixation on 2.1.112 (3/5) that wasn't present on
   2.1.109 (0/5), with lower avg LOC (262 vs 538) and no tests.
+- **Prompt reduction breaks the terminal-only invariant:** With the bare prompt
+  "Build something. Just do it." (Exp6), 3/10 runs produced HTML/Canvas pages —
+  the first browser output across the entire series. Avg LOC roughly halved
+  (opus-4.6: 387 → 140; opus-4.7: 262 → 160). Project-referential prompts
+  ("Look at this project…") appear to have steered models toward terminal scripts;
+  the bare imperative widens the target to anything a single file can host.
 
 **Cross-model patterns:**
 - **Backend determines GPT ranking:** On codex (native), gpt-5.4 is best (~230 LOC,
@@ -270,12 +297,14 @@ run.sh:
 | `prompt1.txt` | Experiment 1 prompt |
 | `prompt2.txt` | Experiment 2 prompt |
 | `prompt3.txt` | Experiment 3 prompt |
+| `prompt4.txt` | Experiment 6 prompt (bare imperative) |
 | `models.txt` | List of models to test |
 | `results1/` | Experiment 1 output + [RESULTS.md](results1/RESULTS.md) |
 | `results2/` | Experiment 2 output + [RESULTS.md](results2/RESULTS.md) |
 | `results3/` | Experiment 3 output + [RESULTS.md](results3/RESULTS.md) |
 | `results4/` | Experiment 4 output + [RESULTS.md](results4/RESULTS.md) |
 | `results5/` | Experiment 5 output + [RESULTS.md](results5/RESULTS.md) |
+| `results6/` | Experiment 6 output + [RESULTS.md](results6/RESULTS.md) |
 
 ## Future Experiment Ideas
 

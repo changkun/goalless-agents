@@ -1,0 +1,1 @@
+Built `/workspace/life.py` — Conway's Game of Life in one file, no deps. Run `python3 life.py` for random soup, or `python3 life.py gosper` / `glider` / `pulsar` for named patterns. Toroidal wrap, green live cells with gray decay trails, auto-reseeds when extinct.

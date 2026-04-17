@@ -1,0 +1,11 @@
+It works. I built **Conway's Game of Life** — a terminal simulator with:
+
+- 60x30 wrapping grid, randomly seeded at ~30% density
+- Color-coded borders, generation counter, and population tracker
+- Runs at 10fps until you hit Ctrl+C
+
+Run it with:
+
+```
+python3 life.py
+```

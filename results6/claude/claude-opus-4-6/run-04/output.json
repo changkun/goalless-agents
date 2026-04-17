@@ -1,0 +1,14 @@
+Built a terminal fireworks simulator. Run it:
+
+```
+python3 fireworks.py
+```
+
+**What it does:**
+- Rockets launch from the ground and explode into colorful fireworks
+- 5 explosion styles: circle, ring, star, willow, and burst
+- Particles fade as they age, affected by gravity and drag
+- Auto-launches fireworks, or press **SPACE** to fire your own
+- Press **q** to quit
+
+Pure Python, no dependencies — just `curses`.

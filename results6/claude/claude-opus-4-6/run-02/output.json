@@ -1,0 +1,15 @@
+Built **Conway's Game of Life** — a colorful terminal animation at `/workspace/life.py`.
+
+**Features:**
+- Cells age over time and shift color from green through yellow to orange
+- Cell characters evolve from `░` to `█` as they age
+- Wrapping toroidal grid (edges connect)
+- Auto-seeds with a random classic pattern (Gosper glider gun, R-pentomino, acorn, or diehard)
+- Adapts to your terminal size
+
+**Run it:**
+```
+python3 life.py
+```
+
+Hit `Ctrl+C` to stop.

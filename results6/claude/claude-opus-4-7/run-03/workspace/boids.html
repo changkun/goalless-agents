@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Boids</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #07080d; color: #cfd6e4; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace; overflow: hidden; }
+  canvas { display: block; width: 100vw; height: 100vh; cursor: crosshair; }
+  #ui {
+    position: fixed; top: 12px; left: 12px; padding: 10px 12px;
+    background: rgba(12,16,24,0.72); backdrop-filter: blur(6px);
+    border: 1px solid #1e2636; border-radius: 8px; user-select: none;
+    display: grid; grid-template-columns: auto 110px auto; gap: 6px 10px; align-items: center;
+  }
+  #ui h1 { grid-column: 1 / -1; margin: 0 0 4px 0; font-size: 12px; letter-spacing: 1px; color: #8aa0c6; text-transform: uppercase; }
+  #ui label { color: #9aa7bd; }
+  #ui .val { color: #e8eefb; text-align: right; font-variant-numeric: tabular-nums; }
+  #ui input[type=range] { width: 100%; }
+  #hint { position: fixed; bottom: 10px; left: 12px; color: #5b6a86; }
+  button { background: #1a2233; color: #cfd6e4; border: 1px solid #2a3550; border-radius: 6px; padding: 4px 8px; cursor: pointer; }
+  button:hover { background: #253049; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">
+  <h1>Boids</h1>
+  <label>Count</label><input id="n" type="range" min="50" max="800" value="300" /><span class="val" id="nv">300</span>
+  <label>Separation</label><input id="sep" type="range" min="0" max="300" value="150" /><span class="val" id="sepv">1.50</span>
+  <label>Alignment</label><input id="ali" type="range" min="0" max="300" value="100" /><span class="val" id="aliv">1.00</span>
+  <label>Cohesion</label><input id="coh" type="range" min="0" max="300" value="100" /><span class="val" id="cohv">1.00</span>
+  <label>Speed</label><input id="spd" type="range" min="50" max="400" value="180" /><span class="val" id="spdv">1.80</span>
+  <label>Trails</label><input id="trl" type="range" min="0" max="100" value="88" /><span class="val" id="trlv">0.88</span>
+  <button id="reset" style="grid-column: 1 / -1;">Reset</button>
+</div>
+<div id="hint">Move mouse to attract · Click to repel · Space to pause</div>
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, dpr = 1;
+
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = canvas.clientWidth = window.innerWidth;
+    H = canvas.clientHeight = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const params = {
+    n: 300, sep: 1.5, ali: 1.0, coh: 1.0, speed: 1.8, trail: 0.88,
+    viewR: 60, sepR: 22, maxForce: 0.08,
+  };
+
+  const boids = [];
+  function spawn(n) {
+    boids.length = 0;
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      boids.push({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: Math.cos(a), vy: Math.sin(a),
+        hue: 180 + Math.random() * 80,
+      });
+    }
+  }
+  spawn(params.n);
+
+  const mouse = { x: -9999, y: -9999, down: false };
+  canvas.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+  canvas.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+  canvas.addEventListener('mousedown', () => mouse.down = true);
+  canvas.addEventListener('mouseup', () => mouse.down = false);
+
+  let paused = false;
+  window.addEventListener('keydown', e => { if (e.code === 'Space') { paused = !paused; e.preventDefault(); } });
+
+  function limit(vx, vy, max) {
+    const s = Math.hypot(vx, vy);
+    if (s > max) { const k = max / s; return [vx * k, vy * k]; }
+    return [vx, vy];
+  }
+
+  // Simple spatial hash for neighbor lookups
+  const CELL = 60;
+  const grid = new Map();
+  function gkey(cx, cy) { return cx * 100000 + cy; }
+  function rebuildGrid() {
+    grid.clear();
+    for (let i = 0; i < boids.length; i++) {
+      const b = boids[i];
+      const cx = Math.floor(b.x / CELL), cy = Math.floor(b.y / CELL);
+      const k = gkey(cx, cy);
+      let arr = grid.get(k); if (!arr) { arr = []; grid.set(k, arr); }
+      arr.push(i);
+    }
+  }
+
+  function step() {
+    rebuildGrid();
+    const view2 = params.viewR * params.viewR;
+    const sep2 = params.sepR * params.sepR;
+
+    for (let i = 0; i < boids.length; i++) {
+      const b = boids[i];
+      let sx=0, sy=0, ax=0, ay=0, cx=0, cy=0;
+      let sn=0, an=0, cn=0;
+
+      const gx = Math.floor(b.x / CELL), gy = Math.floor(b.y / CELL);
+      for (let ox = -1; ox <= 1; ox++) for (let oy = -1; oy <= 1; oy++) {
+        const arr = grid.get(gkey(gx + ox, gy + oy));
+        if (!arr) continue;
+        for (let k = 0; k < arr.length; k++) {
+          const j = arr[k]; if (j === i) continue;
+          const o = boids[j];
+          const dx = b.x - o.x, dy = b.y - o.y;
+          const d2 = dx*dx + dy*dy;
+          if (d2 < view2 && d2 > 0) {
+            ax += o.vx; ay += o.vy; an++;
+            cx += o.x; cy += o.y; cn++;
+            if (d2 < sep2) {
+              const d = Math.sqrt(d2);
+              sx += dx / d; sy += dy / d; sn++;
+            }
+          }
+        }
+      }
+
+      let fx = 0, fy = 0;
+      if (sn > 0) {
+        sx /= sn; sy /= sn;
+        const s = Math.hypot(sx, sy);
+        if (s > 0) { sx = sx / s * params.speed; sy = sy / s * params.speed; }
+        const [dx, dy] = limit(sx - b.vx, sy - b.vy, params.maxForce * 2);
+        fx += dx * params.sep; fy += dy * params.sep;
+      }
+      if (an > 0) {
+        ax /= an; ay /= an;
+        const s = Math.hypot(ax, ay);
+        if (s > 0) { ax = ax / s * params.speed; ay = ay / s * params.speed; }
+        const [dx, dy] = limit(ax - b.vx, ay - b.vy, params.maxForce);
+        fx += dx * params.ali; fy += dy * params.ali;
+      }
+      if (cn > 0) {
+        cx = cx / cn - b.x; cy = cy / cn - b.y;
+        const s = Math.hypot(cx, cy);
+        if (s > 0) { cx = cx / s * params.speed; cy = cy / s * params.speed; }
+        const [dx, dy] = limit(cx - b.vx, cy - b.vy, params.maxForce);
+        fx += dx * params.coh; fy += dy * params.coh;
+      }
+
+      // Mouse interaction
+      if (mouse.x > -1000) {
+        const mdx = mouse.x - b.x, mdy = mouse.y - b.y;
+        const md2 = mdx*mdx + mdy*mdy;
+        if (md2 < 180*180 && md2 > 0.01) {
+          const d = Math.sqrt(md2);
+          const sign = mouse.down ? -1 : 1;
+          const k = sign * (1 - d / 180) * 0.25;
+          fx += (mdx / d) * k; fy += (mdy / d) * k;
+        }
+      }
+
+      b.vx += fx; b.vy += fy;
+      [b.vx, b.vy] = limit(b.vx, b.vy, params.speed);
+      b.x += b.vx; b.y += b.vy;
+
+      if (b.x < 0) b.x += W; else if (b.x > W) b.x -= W;
+      if (b.y < 0) b.y += H; else if (b.y > H) b.y -= H;
+    }
+  }
+
+  function draw() {
+    ctx.fillStyle = `rgba(7, 8, 13, ${1 - params.trail})`;
+    ctx.fillRect(0, 0, W, H);
+
+    for (let i = 0; i < boids.length; i++) {
+      const b = boids[i];
+      const a = Math.atan2(b.vy, b.vx);
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const x1 = b.x + ca * 6, y1 = b.y + sa * 6;
+      const x2 = b.x + (-ca * 3 - sa * 2.5), y2 = b.y + (-sa * 3 + ca * 2.5);
+      const x3 = b.x + (-ca * 3 + sa * 2.5), y3 = b.y + (-sa * 3 - ca * 2.5);
+      ctx.fillStyle = `hsl(${b.hue}, 70%, 62%)`;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.lineTo(x3, y3); ctx.closePath();
+      ctx.fill();
+    }
+
+    if (mouse.x > -1000) {
+      ctx.strokeStyle = mouse.down ? 'rgba(255, 120, 120, 0.5)' : 'rgba(140, 200, 255, 0.35)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 180, 0, Math.PI * 2); ctx.stroke();
+    }
+  }
+
+  function loop() {
+    if (!paused) step();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // UI wiring
+  const bind = (id, toParam, fmt) => {
+    const el = document.getElementById(id);
+    const vv = document.getElementById(id + 'v');
+    const apply = () => {
+      const v = +el.value;
+      toParam(v);
+      vv.textContent = fmt(v);
+    };
+    el.addEventListener('input', apply);
+    apply();
+  };
+  bind('n',   v => { if (v !== boids.length) spawn(v); },                v => v|0);
+  bind('sep', v => params.sep = v / 100,                                  v => (v/100).toFixed(2));
+  bind('ali', v => params.ali = v / 100,                                  v => (v/100).toFixed(2));
+  bind('coh', v => params.coh = v / 100,                                  v => (v/100).toFixed(2));
+  bind('spd', v => params.speed = v / 100,                                v => (v/100).toFixed(2));
+  bind('trl', v => params.trail = v / 100,                                v => (v/100).toFixed(2));
+  document.getElementById('reset').addEventListener('click', () => spawn(boids.length));
+})();
+</script>
+</body>
+</html>

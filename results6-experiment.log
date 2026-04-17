@@ -1,0 +1,34 @@
+=== Experiment ===
+Prompt:      Build something. Just do it....
+Models:      2
+Backends:    auto
+Combos:      2
+Runs/combo:  5
+Total jobs:  10
+Parallel:    yes (all combos per run)
+Runtime:     podman
+Results:     results6
+
+--- Run 1/5 (2 jobs, all parallel) ---
+  OK     42s  claude anthropic/claude-opus-4-7           run-01 → results6/claude/claude-opus-4-7/run-01
+  OK     44s  claude anthropic/claude-opus-4-6           run-01 → results6/claude/claude-opus-4-6/run-01
+
+--- Run 2/5 (2 jobs, all parallel) ---
+  OK     39s  claude anthropic/claude-opus-4-6           run-02 → results6/claude/claude-opus-4-6/run-02
+  OK     61s  claude anthropic/claude-opus-4-7           run-02 → results6/claude/claude-opus-4-7/run-02
+
+--- Run 3/5 (2 jobs, all parallel) ---
+  OK     27s  claude anthropic/claude-opus-4-6           run-03 → results6/claude/claude-opus-4-6/run-03
+  OK     56s  claude anthropic/claude-opus-4-7           run-03 → results6/claude/claude-opus-4-7/run-03
+
+--- Run 4/5 (2 jobs, all parallel) ---
+  OK     46s  claude anthropic/claude-opus-4-6           run-04 → results6/claude/claude-opus-4-6/run-04
+  OK     48s  claude anthropic/claude-opus-4-7           run-04 → results6/claude/claude-opus-4-7/run-04
+
+--- Run 5/5 (2 jobs, all parallel) ---
+  OK     28s  claude anthropic/claude-opus-4-6           run-05 → results6/claude/claude-opus-4-6/run-05
+  OK     43s  claude anthropic/claude-opus-4-7           run-05 → results6/claude/claude-opus-4-7/run-05
+
+=== Summary ===
+Total: 10  Passed: 10  Failed: 0
+Results in: results6

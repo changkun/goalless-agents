@@ -1,0 +1,1 @@
+Built `/workspace/flowfield.html` — a single-file interactive flow-field painter. Drag to paint particles that drift along a procedurally-generated noise field. 4 palettes, burst button, keyboard shortcuts (`space` pause, `c` clear, `r` reseed, `f` fade, `g` show field vectors). No dependencies — just open it in a browser.

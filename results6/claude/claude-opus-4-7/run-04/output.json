@@ -1,0 +1,3 @@
+Built `/workspace/life.py` — Conway's Game of Life in the terminal using half-block glyphs for square cells, toroidal wrap, and ANSI color. Ships with five patterns (glider, gosper gun, pulsar, acorn, random) and auto-sizes to your terminal.
+
+Run: `python3 life.py gun` — or `python3 life.py --help` for options.

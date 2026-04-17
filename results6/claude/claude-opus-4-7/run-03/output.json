@@ -1,0 +1,1 @@
+Built `/workspace/boids.html` — a self-contained interactive boids flocking simulation. Open it in a browser. Move the mouse to attract the flock, click-hold to repel, spacebar pauses. Sliders control count, separation/alignment/cohesion weights, speed, and motion-blur trails. Uses a spatial hash for O(n) neighbor queries so it runs smoothly at 300+ boids.

@@ -1,0 +1,9 @@
+Built **Conway's Game of Life** — a terminal simulation with wrapping edges, population tracking, and smooth animation.
+
+Run it with:
+
+```
+python3 life.py
+```
+
+Press `Ctrl-C` to stop. Cells evolve by the classic rules: live cells with 2-3 neighbors survive, dead cells with exactly 3 come alive. The grid wraps toroidally so gliders fly forever.

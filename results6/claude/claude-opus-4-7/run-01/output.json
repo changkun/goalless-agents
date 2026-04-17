@@ -1,0 +1,7 @@
+Built `/workspace/life.py` — Conway's Game of Life for the terminal. Runs on stdlib only, auto-sizes to the terminal, toroidal wrap, 3 built-in patterns (glider, gosper gun, pulsar) plus random. All three verified working.
+
+Run it:
+```
+python3 life.py --pattern gosper
+python3 life.py --pattern random --density 0.3 --fps 20
+```

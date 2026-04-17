@@ -1,0 +1,9 @@
+Built a **particle physics sandbox** at `/workspace/particles.html`. Open it in a browser and play:
+
+- **Spray** — click/drag to emit glowing particles with rainbow hues
+- **Attract** — pull particles toward your cursor like a gravity well
+- **Repel** — blast them away
+- **Vortex** — swirl them into a spiral
+- Toggle **gravity** on/off, supports up to 8,000 particles with glow effects and motion trails.
+
+Just open the file in any browser — no server, no dependencies, no build step.
