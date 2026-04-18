@@ -1,0 +1,10 @@
+Built **`pulse`** — a real-time Linux system monitor in `/workspace/pulse.py`.
+
+**What it does:**
+- Reads `/proc/stat`, `/proc/meminfo`, `/proc/net/dev`, `/proc/diskstats` directly — zero dependencies
+- Live CPU % with per-core bars, memory with cache breakdown, network RX/TX, disk R/W
+- Sparkline history charts for CPU, memory, and network
+- Heat-colored bars (green → yellow → red) at 60%/85% thresholds
+- Refreshes every second; press `q` or Ctrl-C to quit
+
+**Run it:** `python3 /workspace/pulse.py`

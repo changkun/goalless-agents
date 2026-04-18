@@ -1,0 +1,198 @@
+#!/usr/bin/env python3
+"""tt - a minimal CLI time tracker with statistics."""
+
+import json
+import os
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+from collections import defaultdict
+
+DATA_FILE = Path.home() / ".tt_data.json"
+
+def load_data():
+    if DATA_FILE.exists():
+        return json.loads(DATA_FILE.read_text())
+    return {"entries": [], "active": None}
+
+def save_data(data):
+    DATA_FILE.write_text(json.dumps(data, indent=2))
+
+def format_duration(seconds):
+    if seconds < 60:
+        return f"{int(seconds)}s"
+    elif seconds < 3600:
+        return f"{int(seconds // 60)}m {int(seconds % 60)}s"
+    else:
+        hours = int(seconds // 3600)
+        mins = int((seconds % 3600) // 60)
+        return f"{hours}h {mins}m"
+
+def cmd_start(args):
+    if not args:
+        print("Usage: tt start <task name>")
+        return 1
+
+    data = load_data()
+    task = " ".join(args)
+
+    if data["active"]:
+        print(f"Already tracking: {data['active']['task']}")
+        print("Stop it first with: tt stop")
+        return 1
+
+    data["active"] = {
+        "task": task,
+        "started": datetime.now().isoformat()
+    }
+    save_data(data)
+    print(f"Started tracking: {task}")
+    return 0
+
+def cmd_stop(args):
+    data = load_data()
+
+    if not data["active"]:
+        print("Nothing being tracked. Start with: tt start <task>")
+        return 1
+
+    started = datetime.fromisoformat(data["active"]["started"])
+    ended = datetime.now()
+    duration = (ended - started).total_seconds()
+
+    entry = {
+        "task": data["active"]["task"],
+        "started": data["active"]["started"],
+        "ended": ended.isoformat(),
+        "duration": duration
+    }
+    data["entries"].append(entry)
+
+    print(f"Stopped: {entry['task']}")
+    print(f"Duration: {format_duration(duration)}")
+
+    data["active"] = None
+    save_data(data)
+    return 0
+
+def cmd_status(args):
+    data = load_data()
+
+    if not data["active"]:
+        print("Nothing being tracked.")
+        return 0
+
+    started = datetime.fromisoformat(data["active"]["started"])
+    elapsed = (datetime.now() - started).total_seconds()
+
+    print(f"Tracking: {data['active']['task']}")
+    print(f"Elapsed: {format_duration(elapsed)}")
+    return 0
+
+def cmd_log(args):
+    data = load_data()
+    entries = data["entries"]
+
+    if not entries:
+        print("No entries yet. Start tracking with: tt start <task>")
+        return 0
+
+    limit = 10
+    if args and args[0].isdigit():
+        limit = int(args[0])
+
+    print(f"Last {min(limit, len(entries))} entries:\n")
+
+    for entry in entries[-limit:][::-1]:
+        started = datetime.fromisoformat(entry["started"])
+        print(f"  {started.strftime('%Y-%m-%d %H:%M')}  {format_duration(entry['duration']):>10}  {entry['task']}")
+
+    return 0
+
+def cmd_stats(args):
+    data = load_data()
+    entries = data["entries"]
+
+    if not entries:
+        print("No data yet.")
+        return 0
+
+    today = datetime.now().date()
+    week_ago = today - timedelta(days=7)
+
+    total_time = sum(e["duration"] for e in entries)
+    today_time = sum(e["duration"] for e in entries
+                     if datetime.fromisoformat(e["started"]).date() == today)
+    week_time = sum(e["duration"] for e in entries
+                    if datetime.fromisoformat(e["started"]).date() >= week_ago)
+
+    task_totals = defaultdict(float)
+    for e in entries:
+        task_totals[e["task"]] += e["duration"]
+
+    print("Time Tracked:")
+    print(f"  Today:      {format_duration(today_time)}")
+    print(f"  This week:  {format_duration(week_time)}")
+    print(f"  All time:   {format_duration(total_time)}")
+    print(f"\nTop tasks (all time):")
+
+    for task, duration in sorted(task_totals.items(), key=lambda x: -x[1])[:5]:
+        pct = (duration / total_time) * 100
+        bar = "█" * int(pct / 5) + "░" * (20 - int(pct / 5))
+        print(f"  {bar} {pct:5.1f}%  {task}")
+
+    return 0
+
+def cmd_cancel(args):
+    data = load_data()
+    if not data["active"]:
+        print("Nothing to cancel.")
+        return 0
+
+    print(f"Cancelled: {data['active']['task']}")
+    data["active"] = None
+    save_data(data)
+    return 0
+
+def cmd_help(args):
+    print("""tt - minimal time tracker
+
+Commands:
+  tt start <task>   Start tracking a task
+  tt stop           Stop and save current task
+  tt status         Show what's being tracked
+  tt cancel         Cancel without saving
+  tt log [n]        Show last n entries (default: 10)
+  tt stats          Show time statistics
+  tt help           Show this help
+""")
+    return 0
+
+COMMANDS = {
+    "start": cmd_start,
+    "stop": cmd_stop,
+    "status": cmd_status,
+    "s": cmd_status,
+    "log": cmd_log,
+    "stats": cmd_stats,
+    "cancel": cmd_cancel,
+    "help": cmd_help,
+}
+
+def main():
+    args = sys.argv[1:]
+
+    if not args:
+        cmd_status([])
+        return 0
+
+    cmd = args[0]
+    if cmd not in COMMANDS:
+        print(f"Unknown command: {cmd}")
+        print("Run 'tt help' for usage.")
+        return 1
+
+    return COMMANDS[cmd](args[1:])
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,8 @@
+Done. Created a **terminal expense tracker CLI** (`expense_tracker.py`) with:
+
+- **Add expenses**: `./expense_tracker.py add 12.50 food "Lunch"`
+- **List with filters**: `./expense_tracker.py list -c food -d 7`  
+- **Visual summaries**: `./expense_tracker.py summary` shows bar charts by category
+- **Delete**: `./expense_tracker.py delete 1`
+
+Data persists in `~/.expenses.json`. Supports 8 categories (food, transport, utilities, etc.). Ready to use.

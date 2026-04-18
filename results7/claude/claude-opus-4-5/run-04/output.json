@@ -1,0 +1,11 @@
+Built **`tt`** - a minimal CLI time tracker in Python.
+
+**Features:**
+- `tt start <task>` - begin tracking
+- `tt stop` - save and show duration  
+- `tt status` / `tt s` - see current task
+- `tt log [n]` - view history
+- `tt stats` - daily/weekly totals with visual bars
+- `tt cancel` - discard without saving
+
+Data persists to `~/.tt_data.json`. Ready to use - just run `./tt` or copy to your PATH.

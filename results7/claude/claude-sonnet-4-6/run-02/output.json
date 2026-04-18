@@ -1,0 +1,14 @@
+Built `/workspace/pomodoro.py` — a Pomodoro timer CLI with:
+
+- **Live progress bar** with ANSI color and countdown (`work` / `break` subcommands)
+- **Persistent session history** saved to `~/.pomodoro_sessions.json`
+- **Stats dashboard** showing today's focus time, all-time totals, day streak, and last 5 sessions
+- **Custom durations** via `-m N` flag
+
+Usage:
+```
+python3 pomodoro.py work          # 25-min work session
+python3 pomodoro.py break -m 10  # 10-min break
+python3 pomodoro.py stats         # view history & streak
+python3 pomodoro.py clear         # reset history
+```

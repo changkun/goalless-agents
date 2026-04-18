@@ -1,0 +1,10 @@
+Done. `/workspace/pulse.py` is a live terminal system monitor with:
+
+- **CPU** — overall + per-core bars with % readout
+- **Memory** — RAM and swap usage bars + human-readable sizes
+- **Disk I/O** — read/write rates with peak tracking
+- **Network** — RX/TX rates with peak tracking
+- **Sparklines** — 30-sample rolling history for every metric
+- **Zero dependencies** — reads `/proc/stat`, `/proc/meminfo`, `/proc/diskstats`, `/proc/net/dev` directly
+
+Run it with `python3 pulse.py` (press `q` or Ctrl-C to quit).

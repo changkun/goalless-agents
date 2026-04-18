@@ -1,0 +1,19 @@
+## ✅ Built: Pomodoro Timer CLI
+
+Created a fully functional productivity tool with:
+
+**Core Features:**
+- 🍅 Start/stop/status commands for work sessions & breaks
+- 📊 Progress bars with emoji-rich output
+- 💾 Persistent session history in JSON
+- 📈 Statistics showing completion rates & daily breakdowns
+- 🔔 Desktop notifications (via notify-send)
+
+**What makes it useful:**
+- Zero external dependencies (Python 3.7+ stdlib only)
+- Tracks interrupted vs completed sessions
+- Automatic detection of completed timers
+- Customizable durations
+- Clean, intuitive CLI interface
+
+Try it: `python3 pomodoro.py start` to begin a 25-minute focus session!

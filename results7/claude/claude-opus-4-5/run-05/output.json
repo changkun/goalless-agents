@@ -1,0 +1,19 @@
+Built **Conway's Game of Life** at `/workspace/life.py`.
+
+**Features:**
+- Colorful terminal visualization with green cells
+- Toroidal grid (wraps at edges)
+- Interactive controls: pause, reset, clear, spawn gliders
+- Real-time generation and population counter
+
+**Run it:**
+```bash
+python3 life.py
+```
+
+**Controls:**
+- `SPACE` - pause/resume
+- `R` - randomize grid
+- `G` - add glider at random position
+- `C` - clear grid
+- `Q` - quit

@@ -1,0 +1,7 @@
+Created `life.py` — a terminal Conway's Game of Life. Run it with:
+
+```
+python3 life.py
+```
+
+It fills your terminal with a random seed and evolves it in real time. Press **Ctrl+C** to stop. The grid wraps around at the edges like a torus, so gliders and other patterns can travel infinitely.

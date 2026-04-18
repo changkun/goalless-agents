@@ -1,0 +1,1 @@
+Made a Mandelbrot ASCII renderer at `mandelbrot.py`. The cardioid and period-2 bulb come through nicely — the dense chars trace the fractal boundary where escape time is high, and the set's interior shows as empty space.

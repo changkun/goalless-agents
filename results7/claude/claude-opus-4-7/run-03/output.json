@@ -1,0 +1,1 @@
+There's the Mandelbrot set, rendered in ASCII. An 80×30 escape-time view with a 10-char density ramp — you can see the main cardioid and the period-2 bulb clearly. Saved at `/workspace/mandelbrot.py`.

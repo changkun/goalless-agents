@@ -1,0 +1,9 @@
+**Done!** Built a fully functional terminal Snake game with:
+
+✓ **Smooth controls** - Arrow keys to move, anti-reverse logic  
+✓ **Classic gameplay** - Eat food (◆), grow longer, avoid walls & self  
+✓ **Score tracking** - 10 points per food  
+✓ **Polish** - Clean box-drawing UI, game over screen with restart  
+✓ **Ready to play** - `python3 snake.py` and start gaming
+
+The game is complete, tested, and playable right now!

@@ -1,0 +1,8 @@
+Perfect! **Built a CLI Pomodoro Timer** with beautiful terminal UI featuring:
+
+✨ **Live progress visualization** - animated countdown with color-coded sessions (🍅 work / ☕ break)
+📊 **Session tracking** - counts completed pomodoros
+⚙️ **Fully customizable** - configure work/break durations via CLI args
+🎯 **Classic Pomodoro flow** - 25min work → 5min break → long break every 4 sessions
+
+Ready to use: `./pomo` or `python pomodoro.py -w 50 -b 10` for custom timings.

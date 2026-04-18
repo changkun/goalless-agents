@@ -1,0 +1,7 @@
+I wrote a **Conway's Game of Life** simulation for your terminal. Run it with:
+
+```
+python3 /workspace/life.py
+```
+
+It generates a random grid of cells that evolve according to the classic rules — birth, survival, and death — producing mesmerizing emergent patterns. Press Ctrl+C to exit. Enjoy!

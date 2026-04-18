@@ -1,0 +1,20 @@
+{
+  "name": "todo-cli",
+  "version": "1.0.0",
+  "description": "A fast CLI todo manager with persistent storage",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "todo": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --loader tsx src/index.ts",
+    "test": "node --test dist/__tests__/*.js"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

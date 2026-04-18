@@ -1,0 +1,8 @@
+Built a **CLI Pomodoro timer** (`/workspace/pomodoro/`):
+
+- `pomodoro.py start` — runs timer with visual progress bar
+- Supports custom durations (`-d 50`) and tags (`-t coding`)
+- `pomodoro.py stats` — shows completion rate, total focus time, breakdown by tag
+- Sessions persist to `~/.pomodoro_sessions.json`
+
+Ready to use: `python pomodoro.py start -t "deep-work"`

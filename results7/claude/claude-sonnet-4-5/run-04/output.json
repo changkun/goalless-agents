@@ -1,0 +1,10 @@
+**Built: Personal Finance Tracker CLI** 💰
+
+A complete command-line expense manager with:
+- Transaction tracking (expenses + income)
+- Category-based organization
+- Visual spending breakdowns with bar charts
+- Monthly summaries showing surplus/deficit
+- JSON storage in `~/.finance_tracker.json`
+
+The demo shows it working perfectly - tracking $3,500 income vs $1,528 expenses with a visual breakdown showing rent takes 78.5% of spending. Ready to use for real budgeting!

@@ -1,0 +1,13 @@
+Everything works. Here's what was built:
+
+**`/workspace/timetrack.py`** — a zero-dependency terminal time tracker.
+
+Commands:
+- `python3 timetrack.py start "my task"` — begin tracking (auto-stops any previous task)
+- `python3 timetrack.py stop` — stop the current task
+- `python3 timetrack.py status` — see what's running + elapsed time
+- `python3 timetrack.py log [N]` — colored bar chart summary for today or last N days
+- `python3 timetrack.py edit <id> <new name>` — rename an entry
+- `python3 timetrack.py delete <id>` — remove an entry
+
+Data persists in `~/.timetrack.json`. You can also symlink it into your PATH to use it as a proper CLI tool.

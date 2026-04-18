@@ -1,0 +1,7 @@
+>>> Running claude sandbox
+>>> Image:     ghcr.io/latere-ai/sandbox-claude:latest
+>>> Endpoint:  https://llm.changkun.de
+>>> API Key:   sk-do_Xs...
+>>> Model:     anthropic/claude-opus-4-6
+>>> Workspace: /Users/changkun/dev/changkun.de/goalless-agent-experiment/results7/claude/claude-opus-4-6/run-04/workspace
+

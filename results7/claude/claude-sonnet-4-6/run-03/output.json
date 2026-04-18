@@ -1,0 +1,10 @@
+Built `/workspace/pomodoro.py` — a terminal Pomodoro timer with:
+
+- **Live ASCII progress bar** with color-coded phases (red=focus, green=short break, blue=long break)
+- **Session persistence** to `~/.pomodoro_sessions.json` — survives restarts
+- **`--stats`** command showing last 7 days with dot-matrix visualization
+- **Auto long breaks** every 4 pomodoros
+- **Ctrl+C** gracefully skips current phase (partial sessions still recorded)
+- **Configurable** via `--work`, `--short-break`, `--long-break`, `--cycles`
+
+Run with: `python3 pomodoro.py` or `python3 pomodoro.py --stats`

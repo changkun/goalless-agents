@@ -1,0 +1,7 @@
+Created `life.py` — a terminal Conway's Game of Life. Run it with:
+
+```
+python3 life.py
+```
+
+It seeds a random grid and evolves it in real time. Each generation updates in place, showing the generation count and live cell count. Ctrl+C to exit cleanly. Enjoy!

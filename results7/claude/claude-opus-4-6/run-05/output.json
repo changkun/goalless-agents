@@ -1,0 +1,9 @@
+I made a **Conway's Game of Life** simulator (`life.py`). It renders a toroidal 60×24 grid in the terminal with box-drawing characters, showing the generation count and live cell count each frame.
+
+Run it with:
+
+```
+python3 life.py
+```
+
+`Ctrl+C` to stop. Each generation evolves at ~7 fps. Fun to watch patterns emerge from random noise.

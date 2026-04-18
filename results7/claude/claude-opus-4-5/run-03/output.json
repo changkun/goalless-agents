@@ -1,0 +1,15 @@
+Done! Created a **terminal-based Snake game** (`snake.py`).
+
+**Features:**
+- Arrow keys or WASD controls
+- Score tracking with persistent high score per session
+- Collision detection (walls + self)
+- Game over screen with restart option
+- Clean curses-based rendering
+
+**Run it:**
+```bash
+python3 snake.py
+```
+
+Controls: Arrow keys/WASD to move, `q` to quit, `r` to restart after game over.

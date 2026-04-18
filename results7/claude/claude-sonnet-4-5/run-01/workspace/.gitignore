@@ -1,0 +1,21 @@
+# Pomodoro data files
+.pomodoro_data.json
+.pomodoro_demo_data.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

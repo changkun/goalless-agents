@@ -1,0 +1,12 @@
+#!/bin/bash
+# Convenience wrapper for pomodoro timer
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [ ! -d "$SCRIPT_DIR/venv" ]; then
+    echo "Setting up virtual environment..."
+    python3 -m venv "$SCRIPT_DIR/venv"
+    "$SCRIPT_DIR/venv/bin/pip" install -q -r "$SCRIPT_DIR/requirements.txt"
+fi
+
+"$SCRIPT_DIR/venv/bin/python" "$SCRIPT_DIR/pomodoro.py" "$@"

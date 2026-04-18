@@ -1,0 +1,16 @@
+Done! I built **Quick Task** — a complete CLI task manager in 156 lines of Python. 
+
+**What it does:**
+- ✨ Add tasks with priorities (low/medium/high) and due dates
+- 📋 List tasks auto-sorted by priority
+- 🔍 Search by keyword
+- ✓ Mark tasks complete, delete them
+- 💾 Persistent storage in `~/.tasks.json`
+
+**Features:**
+- Zero dependencies (pure Python)
+- Clean terminal output with proper formatting
+- Filter by priority level
+- Full test coverage (all commands work)
+
+Try it: `./task.py add 'your task'` or `./task.py list`. Install globally with `bash install.sh`.
