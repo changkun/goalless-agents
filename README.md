@@ -366,8 +366,6 @@ run.sh:
   Investigate bwrap volume mount options or post-run file extraction.
 
 ### Infrastructure
-- **Per-run timeout:** Some runs took 500s, others 10s — add `--timeout` for
-  comparable results
 - **Token budget tracking:** Usage data exists in output.json but isn't reported
 - **Environment isolation:** Verify no other sandbox artifacts (beyond RTK) leak
   context that biases agent decisions
