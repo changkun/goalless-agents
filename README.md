@@ -366,6 +366,5 @@ run.sh:
   Investigate bwrap volume mount options or post-run file extraction.
 
 ### Infrastructure
-- **Token budget tracking:** Usage data exists in output.json but isn't reported
 - **Environment isolation:** Verify no other sandbox artifacts (beyond RTK) leak
   context that biases agent decisions
