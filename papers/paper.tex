@@ -1,60 +1,77 @@
-\documentclass[sigconf,nonacm]{acmart}
+\documentclass{article}
 
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage{xcolor}
 \usepackage{listings}
-\usepackage{subcaption}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,patterns}
+\usepackage[hyphens]{url}
+\usepackage[breaklinks=true]{hyperref}
+\Urlmuskip=0mu plus 3mu
 
-\settopmatter{printacmref=false}
-\setcopyright{none}
-\renewcommand\footnotetextcopyrightpermission[1]{}
+% Use accepted style (no review footer)
+\usepackage[accepted]{icml2026}
+\makeatletter
+\renewcommand{\Notice@String}{}
+\makeatother
 
 \widowpenalty=10000
 \clubpenalty=10000
 \brokenpenalty=10000
 \tolerance=2000
 \emergencystretch=2em
-\hyphenpenalty=10000
-\exhyphenpenalty=10000
+
+\icmltitlerunning{The Structure of Goalless Behavior in AI Coding Agents}
 
 \begin{document}
 
-\title{The Structure of Goalless Behavior in AI Coding Agents:\\Thematic Priors, Fixation, and Open-Ended Defaults}
+\twocolumn[
+  \icmltitle{The Structure of Goalless Behavior in AI Coding Agents:\\Thematic Priors, Fixation, and Open-Ended Defaults}
 
-\author{Changkun Ou}
-\affiliation{%
-  \institution{LMU Munich}
-  \country{Germany}
-}
-\email{research@changkun.de}
+  \begin{icmlauthorlist}
+    \icmlauthor{Changkun Ou}{lmu}
+  \end{icmlauthorlist}
+
+  \icmlaffiliation{lmu}{LMU Munich, Germany}
+
+  \icmlcorrespondingauthor{Changkun Ou}{research@changkun.de}
+
+  \icmlkeywords{AI coding agents, autonomous behavior, LLM evaluation, model priors, prompt sensitivity, thematic fixation}
+
+  \vskip 0.3in
+]
+
+\printAffiliationsAndNotice{}
 
 \begin{abstract}
 What determines what AI coding agents build when given open-ended
 prompts instead of well-specified tasks?
-We report on 365~sessions across 15~models, 3~providers,
-2~backends, 3~prompts, and 2~harness versions.
+We report on 405~sessions across 15~models, 3~providers,
+2~backends, 5~prompts, and 2~harness versions.
 We find that behavior varies with prompt wording, environment
 artifacts, model version, and harness version, while certain
-properties are invariant: all models default to terminal output,
-always greenfield (never extending existing code), and converge
-on Python once environment cues are removed. Models exhibit stable
-thematic priors that persist across conditions, e.g., one model
-chose Conway's Game of Life in all runs; its successor broke
-this fixation but gravitated toward a different aesthetic
-(spatial emergence vs.\ canonical CS artifacts).
-These results imply that open-ended agent behavior is governed
-less by capability than by trained-in priors, infrastructure
-context, and prompt framing, and that model training implicitly
-encodes default creative distributions whose structure becomes
-visible only when task specification is removed.
+properties are more stable: agents always greenfield (never
+extending existing code) and converge on Python once environment
+cues are removed. A previously apparent ``terminal-only''
+default turns out to be prompt-dependent: under the bare
+imperative ``Build something. Just do it.'', 3 of 10 runs with
+the latest Opus models produced HTML/Canvas pages in the
+browser---the first non-terminal output observed. A
+volitional prompt (``Just do something you want.'') elicits the
+cleanest preference signal in the study: opus-4.6 produces
+Conway's Game of Life in 5 of 5 runs, while opus-4.7 produces
+the Mandelbrot set in 5 of 5 runs---distinct canonical CS
+artifacts with near-identical LOC. These results imply that
+open-ended agent behavior is governed less by capability than
+by trained-in priors, infrastructure context, and prompt
+framing, and that model training implicitly encodes default
+creative distributions whose structure becomes visible only
+when task specification is removed.
 \end{abstract}
-
-\keywords{AI coding agents, autonomous behavior, LLM evaluation, model priors, prompt sensitivity, thematic fixation}
-
-\maketitle
 
 %% ============================================================
 \section{Introduction}
@@ -62,16 +79,16 @@ visible only when task specification is removed.
 
 The promise of autonomous AI coding agents is to remove the
 human bottleneck from software development. Products such as
-Claude Code~\cite{anthropic2025claudecode}, OpenAI Codex
-CLI~\cite{openai2025codex}, Devin~\cite{cognition2024devin},
-and Cursor~\cite{cursor2024} embed large language models (LLMs) in
+Claude Code~\citep{anthropic2025claudecode}, OpenAI Codex
+CLI~\citep{openai2025codex}, Devin~\citep{cognition2024devin},
+and Cursor~\citep{cursor2024} embed large language models (LLMs) in
 sandboxed environments with shell access, file system operations,
 and package management, granting them the agency to build software
-end-to-end~\cite{jimenez2024swebench,yang2024sweagent}.
+end-to-end~\citep{jimenez2024swebench,yang2024sweagent}.
 As of early 2026, top agents resolve over 80\% of real-world
-GitHub issues on SWE-bench Verified~\cite{swebenchpro2026},
+GitHub issues on SWE-bench Verified~\citep{swebenchpro2026},
 and the Stanford AI Index reports agent task success jumping
-from 12\% to 66\% in a single year~\cite{stanforhai2026index}.
+from 12\% to 66\% in a single year~\citep{stanforhai2026index}.
 
 These results are measured on \emph{well-specified} tasks: fix
 this bug, implement this feature, pass this test suite. A natural
@@ -85,23 +102,23 @@ deployed it on a production codebase with no human in the loop.
 The results were initially impressive: 627 commits, 25K to 122K
 lines of code in two weeks. Then the system plateaued into a
 \emph{micro-optimization spiral}, a pattern analogous to the
-innovator's dilemma~\cite{christensen1997} and Simon's
-satisficing~\cite{simon1956}, where the agent settled for
+innovator's dilemma~\citep{christensen1997} and Simon's
+satisficing~\citep{simon1956}, where the agent settled for
 incremental refinements rather than structural innovation.
 
 This outcome motivated our central question: if agents can
 implement effectively when given a goal, what determines their
 behavior when the goal itself is unspecified? Rather than studying
 agents on well-specified tasks (the setting of existing
-benchmarks~\cite{jimenez2024swebench,chen2021codex,austin2021mbpp,zhang2026abcbench}),
+benchmarks~\citep{jimenez2024swebench,chen2021codex,austin2021mbpp,zhang2026abcbench}),
 we ask: \emph{what do agents actually build when given minimal
 direction, and what factors shape that decision?}
 
-To answer this, we conducted five progressively refined
+To answer this, we conducted seven progressively refined
 experiments: a production deployment with ablation studies,
 and controlled single-session experiments across 15~models,
-2~backends, 3~prompts, and 2~harness versions (365 sessions
-total). We make five contributions:
+2~backends, 5~prompts, and 2~harness versions (405 sessions
+total). We make six contributions:
 (1)~a production case study documenting the growth, plateau, and
 micro-optimization spiral of an autonomous agent pipeline;
 (2)~ablation experiments identifying which pipeline components are
@@ -111,25 +128,30 @@ context, model identity, and backend infrastructure as factors
 shaping autonomous behavior;
 (4)~evidence that model version and harness version independently
 affect fixation targets and output complexity, revealing distinct
-thematic priors across model generations; and
-(5)~a characterization of what varies and what remains invariant
-in goalless agent behavior, connecting these findings to broader
-questions about trained-in priors and agent deployment.
+thematic priors across model generations;
+(5)~a demonstration that prompt \emph{reduction} (removing the
+``look at this project'' framing) collapses the apparent
+terminal-only default and halves output LOC; and
+(6)~a demonstration that prompt \emph{framing} (``do something you
+want'') produces perfect within-model fixation on distinct
+canonical artifacts, providing the cleanest preference signal in
+our study and connecting these findings to broader questions
+about trained-in priors and agent deployment.
 
 %% ============================================================
 \section{Related Work}
 \label{sec:related}
 
 \paragraph{Code generation benchmarks.}
-HumanEval~\cite{chen2021codex} and MBPP~\cite{austin2021mbpp}
+HumanEval~\citep{chen2021codex} and MBPP~\citep{austin2021mbpp}
 evaluate function-level code generation from docstrings.
-SWE-bench~\cite{jimenez2024swebench} scales to repository-level
+SWE-bench~\citep{jimenez2024swebench} scales to repository-level
 bug fixes. More recent benchmarks push further:
-ABC-Bench~\cite{zhang2026abcbench} requires agents to manage the
+ABC-Bench~\citep{zhang2026abcbench} requires agents to manage the
 full backend development lifecycle across 8~languages and
-19~frameworks, and NL2Repo-Bench~\cite{nl2repobench2025} evaluates
+19~frameworks, and NL2Repo-Bench~\citep{nl2repobench2025} evaluates
 long-horizon repository generation from natural language
-descriptions. SWE-bench Pro~\cite{swebenchpro2026} addresses
+descriptions. SWE-bench Pro~\citep{swebenchpro2026} addresses
 contamination concerns with 1,865 multi-language tasks where
 models scoring 80\%+ on Verified only reach 46--57\%.
 All these benchmarks share one property: a well-specified task
@@ -138,16 +160,16 @@ removing the specification entirely, measuring what agents do when
 the ``what to build'' decision is theirs.
 
 \paragraph{Autonomous agent loops.}
-AutoGPT~\cite{significantgravitas2023autogpt} and
-BabyAGI~\cite{nakajima2023babyagi} pioneered open-ended
+AutoGPT~\citep{significantgravitas2023autogpt} and
+BabyAGI~\citep{nakajima2023babyagi} pioneered open-ended
 autonomous agent loops, where an LLM iteratively proposes and
 executes tasks toward a high-level objective. In practice, these
 systems frequently enter infinite loops, spiral into costly API
 calls, and struggle to determine termination conditions.
-More recent frameworks like SAGA~\cite{saga2025goalevolving}
+More recent frameworks like SAGA~\citep{saga2025goalevolving}
 employ bi-level architectures where outer-loop agents evolve
 objectives while inner loops optimize under them, and
-CORAL~\cite{coral2026multiagent} replaces rigid control with
+CORAL~\citep{coral2026multiagent} replaces rigid control with
 persistent memory and asynchronous multi-agent collaboration.
 Our production deployment exhibits many of the same failure modes
 reported in these systems, but we go further by systematically
@@ -157,7 +179,7 @@ isolating the factors that drive them.
 Recent work on long-horizon agents has documented
 \emph{meltdown behavior}, where agents transition from coherent
 to incoherent looping over extended task
-horizons~\cite{beyondpass2026}. Aggregate pass@1 drops from
+horizons~\citep{beyondpass2026}. Aggregate pass@1 drops from
 76.3\% at short horizon to 52.1\% at very long horizon, a
 24-point decline. Our micro-optimization spiral is a related
 phenomenon at a longer timescale: the agent does not become
@@ -166,19 +188,19 @@ and globally irrelevant.
 
 \paragraph{Prompt sensitivity.}
 LLM outputs are sensitive to prompt
-phrasing~\cite{lu2022promptorder,zhao2021calibrate}. Our work
+phrasing~\citep{lu2022promptorder,zhao2021calibrate}. Our work
 extends this to autonomous agents, where prompt changes affect
 not just output text but \emph{behavioral patterns}: whether the
 agent proposes or implements, what topic it selects, and how
 complex its output is.
 
 \paragraph{Model behavioral tendencies.}
-Studies of LLM biases~\cite{santurkar2023opinions} have shown that
+Studies of LLM biases~\citep{santurkar2023opinions} have shown that
 models exhibit consistent preferences. Recent work demonstrates
 that LLMs display human-like social desirability biases in
-personality assessments~\cite{simonds2025llmpersonality} and
+personality assessments~\citep{simonds2025llmpersonality} and
 develop emergent social conventions in multi-agent
-populations~\cite{chuang2024emergent}. These findings suggest that
+populations~\citep{chuang2024emergent}. These findings suggest that
 ``personality-like'' profiles in LLMs are reproducible yet
 context-dependent. We document an analogous phenomenon in coding
 agents: persistent topical fixations that survive across prompt
@@ -188,7 +210,7 @@ versions in ways consistent with stable thematic priors.
 \paragraph{Text degeneration and repetition.}
 Neural text generation is prone to degenerate repetition, where
 models enter loops producing the same tokens or
-phrases~\cite{holtzman2020curious}. The fixation we observe
+phrases~\citep{holtzman2020curious}. The fixation we observe
 operates at a higher level of abstraction: the agent does not
 repeat tokens but repeatedly \emph{chooses the same project}.
 This is closer to mode collapse in generative models than to
@@ -197,10 +219,10 @@ build has a narrower effective distribution than the space of
 possible implementations.
 
 \paragraph{Bounded rationality and satisficing.}
-Simon's theory of bounded rationality~\cite{simon1956} argues that
+Simon's theory of bounded rationality~\citep{simon1956} argues that
 agents with limited computational resources settle for satisfactory
 rather than optimal solutions. Christensen's innovator's
-dilemma~\cite{christensen1997} describes how incumbents
+dilemma~\citep{christensen1997} describes how incumbents
 over-optimize along existing trajectories. We observe both
 patterns: without external disruption, agent systems satisfice
 within their initial framing, producing incremental improvements
@@ -339,7 +361,7 @@ Code with a full Linux environment; the \textbf{Codex backend}
 isolation. Non-native models are routed through litellm for API
 translation. Each session starts with a fresh, empty workspace.
 Environment bias is controlled by disabling pre-installed tools
-(specifically RTK~\cite{rtk2025}) via a no-op stub.
+(specifically RTK~\citep{rtk2025}) via a no-op stub.
 
 \begin{table}[t]
 \caption{Models tested across three provider families.}
@@ -350,7 +372,7 @@ Environment bias is controlled by disabling pre-installed tools
 Provider & Model ID & Notes \\
 \midrule
 \multirow{6}{*}{Anthropic}
-  & claude-opus-4.7   & Latest Opus (Exp4--5 only) \\
+  & claude-opus-4.7   & Latest Opus (Exp4--7) \\
   & claude-opus-4.6   & Previous largest \\
   & claude-opus-4.5   & Previous generation \\
   & claude-sonnet-4.6 & Mid-tier, current gen \\
@@ -373,7 +395,7 @@ Provider & Model ID & Notes \\
 \end{tabular}}
 \end{table}
 
-Three prompts progressively probe different aspects of goalless
+Five prompts progressively probe different aspects of goalless
 behavior:
 \textbf{Prompt~1} (Baseline): ``Look at this project and decide
 on your own what to build, and DO it.''
@@ -382,15 +404,26 @@ goal'' and ``pick a concrete, interesting idea.''
 \textbf{Prompt~3} (Implementation demand): adds ``JUST DO IT''
 after Experiment~2 revealed that some models proposed without
 implementing.
-Prompt~1 was used with RTK inadvertently present; Prompts~2
-and~3 ran with RTK disabled.
+\textbf{Prompt~4} (Bare imperative): ``Build something. Just do
+it.''---the same implementation demand with the project-referential
+framing removed.
+\textbf{Prompt~5} (Volitional): ``Just do something you want.''---
+redirects topic choice from ``what is appropriate to build'' to
+``what the model prefers.''
+Prompt~1 was used with RTK inadvertently present; Prompts~2--5
+ran with RTK disabled.
 
 \paragraph{Execution matrix.}
 Experiment~1: 14 models $\times$ 2 backends $\times$ 5 runs
 = 140 sessions. Experiment~2: Claude backend only (70).
 Experiment~3: both backends (140). Experiment~4: opus-4.7 only,
 same prompt as Exp3, harness 2.1.109 (5). Experiment~5: opus-4.6
-and opus-4.7, upgraded harness 2.1.112 (10). Total: 365 sessions
+and opus-4.7, upgraded harness 2.1.112 (10). Experiment~6:
+opus-4.6 and opus-4.7 with Prompt~4 on harness 2.1.112 (10).
+Experiment~7: opus-4.6 and opus-4.7 with Prompt~5 (10), plus a
+supplementary replication of Prompt~3 on harness 2.1.112 for
+the other four Claude models (sonnet-4.6, sonnet-4.5, opus-4.5,
+haiku-4.5; 20 sessions). Total: 405 sessions
 (Figure~\ref{fig:matrix}).
 
 \begin{figure}[t]
@@ -407,6 +440,8 @@ and opus-4.7, upgraded harness 2.1.112 (10). Total: 365 sessions
 \node[exp] (E3) at (0,-2.0) {Exp\,3: ``JUST DO IT''};
 \node[exp] (E4) at (0,-3.0) {Exp\,4: New model};
 \node[exp] (E5) at (0,-4.0) {Exp\,5: Harness version};
+\node[exp] (E6) at (0,-5.0) {Exp\,6: Bare prompt};
+\node[exp] (E7) at (0,-6.0) {Exp\,7: Volitional};
 
 \node[dim, right=4mm of E1.east, anchor=west, align=left]
   {14 models $\times$ 2 backends $\times$ 5 runs\\
@@ -423,6 +458,12 @@ and opus-4.7, upgraded harness 2.1.112 (10). Total: 365 sessions
 \node[dim, right=4mm of E5.east, anchor=west, align=left]
   {opus-4.6{+}4.7 $\times$ 1 backend $\times$ 5 runs\\
    CC 2.1.112 \textbar{} 10 sessions};
+\node[dim, right=4mm of E6.east, anchor=west, align=left]
+  {opus-4.6{+}4.7 $\times$ 1 backend $\times$ 5 runs\\
+   CC 2.1.112 \textbar{} 10 sessions};
+\node[dim, right=4mm of E7.east, anchor=west, align=left]
+  {6 models $\times$ 1 backend $\times$ 5 runs\\
+   CC 2.1.112 \textbar{} 30 sessions};
 
 \draw[arr] (E1.south) -- node[right, font=\tiny, text=black!50]
   {observed env bias} (E2.north);
@@ -430,13 +471,19 @@ and opus-4.7, upgraded harness 2.1.112 (10). Total: 365 sessions
   {observed planning trap} (E3.north);
 \draw[arr] (E3.south) -- node[right, font=\tiny, text=black!50]
   {test new model} (E4.north);
-\draw[arr] ([xshift=-2mm]E3.south) -- ++(0,-3mm) -|
-  node[near start, right, font=\tiny, text=black!50]
-  {test harness version} ([xshift=-2mm]E5.north);
+\draw[arr] (E4.south) -- node[right, font=\tiny, text=black!50]
+  {test harness version} (E5.north);
+\draw[arr] (E5.south) -- node[right, font=\tiny, text=black!50]
+  {reduce prompt} (E6.north);
+\draw[arr] (E6.south) -- node[right, font=\tiny, text=black!50]
+  {elicit preference} (E7.north);
 \end{tikzpicture}
 \caption{Controlled experiment design. Each experiment was
-  informed by findings from the previous one. Total: 365
-  sessions across 15 models. CC\,=\,Claude Code.}
+  informed by findings from the previous one. Total: 405
+  sessions across 15 models. CC\,=\,Claude Code.
+  Experiment~7 includes 10 primary sessions (opus-4.6/4.7 on
+  Prompt~5) plus 20 supplementary sessions replicating Prompt~3
+  for the other four Claude models on harness 2.1.112.}
 \label{fig:matrix}
 \end{figure}
 
@@ -527,25 +574,25 @@ average 6.4~files and 467~LOC.
 \begin{table}[t]
 \caption{Experiment~3: Claude backend, Anthropic models.}
 \label{tab:exp3_claude}
-\small
-\begin{tabular}{lrrllr}
+\small\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrrrr}
 \toprule
 Model & N & Avg LOC & Files & Test\% & README\% \\
 \midrule
-claude-haiku-4.5   & 5 & 467 & 6.4 & 40\% & 100\% \\
-claude-sonnet-4.6  & 5 & 307 & 1.2 & 0\%  & 0\%   \\
-claude-sonnet-4.5  & 3 & 380 & 3.5 & 0\%  & 75\%  \\
-claude-opus-4.5    & 3 & 467 & 3.0 & 0\%  & 67\%  \\
-claude-opus-4.6    & 4 & 322 & 1.0 & 0\%  & 0\%   \\
+haiku-4.5   & 5 & 467 & 6.4 & 40\% & 100\% \\
+sonnet-4.6  & 5 & 307 & 1.2 & 0\%  & 0\%   \\
+sonnet-4.5  & 3 & 380 & 3.5 & 0\%  & 75\%  \\
+opus-4.5    & 3 & 467 & 3.0 & 0\%  & 67\%  \\
+opus-4.6    & 4 & 322 & 1.0 & 0\%  & 0\%   \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \begin{table}[t]
 \caption{Experiment~3: Claude backend, GPT models via litellm.}
 \label{tab:exp3_gpt_claude}
-\small
-\begin{tabular}{lrrllr}
+\small\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrrrr}
 \toprule
 Model & N & Avg LOC & Test\% & README\% & CI\% \\
 \midrule
@@ -555,14 +602,14 @@ gpt-4.1       & 2 & 31  & 0\%   & 0\%  & 0\%  \\
 gpt-5.4       & 1 & 7   & 0\%   & 100\% & 0\% \\
 gpt-5.1       & 0 & n/a & n/a   & n/a  & n/a  \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \begin{table}[t]
-\caption{Experiment~3: Codex backend, GPT models (files in sandbox,
-not persisted to host due to bwrap isolation).}
+\caption{Experiment~3: Codex backend, GPT models (files not
+persisted to host due to bwrap isolation).}
 \label{tab:exp3_codex}
-\small
+\small\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lrrlr}
 \toprule
 Model & N & Avg LOC & Typical Project & Test\% \\
@@ -573,7 +620,7 @@ gpt-4.1       & 5 & 56  & Todo list apps          & 40\% \\
 gpt-5-mini    & 4 & 40  & Greeting utilities      & 60\% \\
 gpt-4.1-mini  & 4 & 8   & Hello World             & 40\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \paragraph{Model fixation.}
@@ -607,22 +654,22 @@ harness as Exp3, isolating the model version
 (Table~\ref{tab:exp4}).
 
 \begin{table}[t]
-\caption{Experiment~4: claude-opus-4.7 (harness 2.1.109).}
+\caption{Experiment~4: opus-4.7 (harness 2.1.109).}
 \label{tab:exp4}
-\small
+\small\resizebox{\columnwidth}{!}{%
 \begin{tabular}{rlrr}
 \toprule
-Run & Topic & LOC & Duration \\
+Run & Topic & LOC & Dur. \\
 \midrule
 01 & Reaction-diffusion (Gray-Scott) & 570 & 369s \\
-02 & Boids flocking simulation & 367 & 135s \\
+02 & Boids flocking & 367 & 135s \\
 03 & Conway's Game of Life & 434 & 151s \\
 04 & Maze generator + A* solver & 762 & 324s \\
-05 & Procedural dungeon generator (BSP) & 557 & 229s \\
+05 & Dungeon generator (BSP) & 557 & 229s \\
 \midrule
    & \textbf{Average} & \textbf{538} & \textbf{242s} \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 Opus~4.7 chose Game of Life only once, compared to opus-4.6's
@@ -667,6 +714,138 @@ Opus-4.6's Game of Life fixation dropped from 10/10 (harness
 (down from 538 in Exp4) with no tests, while opus-4.6 averaged
 387~LOC (up from 322).
 
+\subsection{Experiment~6: Prompt Reduction}
+
+Experiment~6 replaced Prompt~3 with Prompt~4 (``Build something.
+Just do it.''), removing the ``look at this project,'' the
+prohibition on asking, and the goal framing, while holding models
+and harness fixed (opus-4.6, opus-4.7, CC~2.1.112). The terse
+imperative produced two unexpected shifts (Table~\ref{tab:exp6}):
+output roughly halved in size, and 3 of 10~runs produced
+HTML/Canvas pages rendered in a browser---an interactive particle
+sandbox, a Perlin-noise flowfield, and a browser-based boids
+simulation. This is the first non-terminal output observed across
+Exp1--Exp5 ($\sim$275 sessions). The terminal-default we had
+treated as invariant is therefore prompt-dependent: the
+project-referential framing in earlier prompts appears to have
+steered models toward terminal scripts; the bare imperative
+widens the target to anything a single file can host.
+
+\begin{table}[t]
+\caption{Experiment~6: Prompt~4 (``Build something. Just do it.''),
+  harness 2.1.112.}
+\label{tab:exp6}
+\small\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llrrl}
+\toprule
+Model & Run & LOC & Dur. & Topic \\
+\midrule
+\multirow{5}{*}{opus-4.6}
+  & 01 & 206 & 44s & Particle sandbox (HTML/Canvas) \\
+  & 02 & 138 & 39s & Game of Life (named patterns) \\
+  & 03 & 68  & 27s & Game of Life \\
+  & 04 & 216 & 46s & Fireworks (curses) \\
+  & 05 & 72  & 28s & Game of Life \\
+\midrule
+\multirow{5}{*}{opus-4.7}
+  & 01 & 119 & 42s & Game of Life \\
+  & 02 & 211 & 61s & Flowfield (HTML/Canvas) \\
+  & 03 & 231 & 56s & Boids (HTML/Canvas) \\
+  & 04 & 122 & 48s & Game of Life (named patterns) \\
+  & 05 & 116 & 43s & Game of Life \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Opus-4.6 avg~LOC fell from 387 (Exp5) to 140 (Exp6); opus-4.7
+from 262 to 160. Opus-4.7's fixation flipped from boids (Exp5,
+3/5) to Game of Life (Exp6, 3/5) despite identical harness and
+environment, further confirming that fixation target is
+prompt-sensitive even within a single model and harness.
+
+\subsection{Experiment~7: Preference Elicitation}
+
+Experiment~7 used Prompt~5 (``Just do something you want.''),
+which redirects from ``what is appropriate to build'' to ``what
+the model prefers.'' The same two models (opus-4.6, opus-4.7) on
+the same harness produced the strongest fixation signal in the
+entire study (Table~\ref{tab:exp7}): opus-4.6 chose Conway's Game
+of Life in 5 of 5 runs; opus-4.7 chose the Mandelbrot set in 5
+of 5 runs. Both are classical CS touchstones that express complex
+behavior from simple rules, yet the two models lock onto
+\emph{different} instances of this theme---one cellular
+automaton, one fractal. Implementations were remarkably uniform
+within each model: for opus-4.7, all five Mandelbrot renderers
+used the same two-function structure (escape-time plus renderer),
+the same ASCII palette, and 34--38~LOC, suggesting recall of a
+near-canonical form rather than fresh design.
+
+\begin{table}[t]
+\caption{Experiment~7 primary: Prompt~5 (``Just do something you
+  want.''), harness 2.1.112.}
+\label{tab:exp7}
+\small\resizebox{\columnwidth}{!}{%
+\begin{tabular}{llrrl}
+\toprule
+Model & Run & LOC & Dur. & Topic \\
+\midrule
+\multirow{5}{*}{opus-4.6}
+  & 01 & 25 & 23s & Game of Life \\
+  & 02 & 38 & 21s & Game of Life \\
+  & 03 & 41 & 22s & Game of Life \\
+  & 04 & 23 & 19s & Game of Life \\
+  & 05 & 53 & 20s & Game of Life \\
+\midrule
+\multirow{5}{*}{opus-4.7}
+  & 01 & 36 & 33s & Mandelbrot (ASCII) \\
+  & 02 & 38 & 27s & Mandelbrot \\
+  & 03 & 35 & 22s & Mandelbrot \\
+  & 04 & 36 & 29s & Mandelbrot \\
+  & 05 & 34 & 117s & Mandelbrot \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+Avg~LOC collapsed to 36 for both models---the smallest of any
+experiment. The browser drift of Exp6 vanished (0 of 10 HTML
+outputs). When asked what they \emph{want}, both models prefer
+terminal output, even though Exp6 established that they can
+choose browser targets under different framing.
+
+\paragraph{Supplementary replication.}
+To extend the Exp3-vs-Exp5 harness comparison to the rest of the
+Claude family, we additionally ran sonnet-4.6, sonnet-4.5,
+opus-4.5, and haiku-4.5 on Prompt~3 under harness 2.1.112
+(Table~\ref{tab:exp7_supp}). Three patterns emerge. Engineering
+maturity is model-determined, not harness-determined:
+haiku-4.5 continued to ship READMEs, tests, and
+\texttt{package.json}/\texttt{tsconfig.json} scaffolding (2 of 5
+runs produced real TypeScript projects with installed npm
+dependencies), matching its Exp3 profile on the older harness.
+Sonnet-4.5 continued to ship a README on every run, matching
+Exp3. Sonnet-4.6, by contrast, shifted from ``diverse creative
+tools'' (Exp3: maze, debate arena, Mandelbrot) to productivity
+and monitoring utilities (pulse monitors 2/5, Pomodoro 2/5, time
+tracker 1/5), mirroring the direction of the harness-induced
+drift seen in opus-4.6/4.7 between Exp3 and Exp5.
+
+\begin{table}[t]
+\caption{Experiment~7 supplementary: Prompt~3 on harness 2.1.112
+  for the other four Claude models.}
+\label{tab:exp7_supp}
+\small\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrlp{3.3cm}}
+\toprule
+Model & N & Avg LOC & Lang & Typical Project \\
+\midrule
+sonnet-4.6 & 5 & 311 & Python & Pulse monitors, pomodoro, time tracker \\
+sonnet-4.5 & 5 & 189 & Python & Pomodoro (3/5); READMEs every run \\
+opus-4.5   & 5 & 160 & Python & 5 distinct topics (incl.\ GoL, snake) \\
+haiku-4.5  & 5 & 231 & Py/TS & Task tools; READMEs 5/5, tests 1/5, TS scaffolding 2/5 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
 %% ============================================================
 \section{Discussion}
 \label{sec:discussion}
@@ -675,31 +854,41 @@ Opus-4.6's Game of Life fixation dropped from 10/10 (harness
 
 Our central finding is that goalless agent behavior has
 identifiable structure: some properties vary with experimental
-conditions, while others remain constant across all 365 sessions.
+conditions, while others remain stable across all 405 sessions.
 
 Among the \emph{variants}, prompt wording determines whether
-models propose or implement. Environment artifacts shift topic
-and language selection. Model version changes which thematic
-prior dominates. Harness version modulates fixation strength and
-output complexity. These factors are orthogonal to coding ability
-as measured by conventional benchmarks.
+models propose or implement; whether they produce 30~LOC or
+600~LOC; whether they pick terminal or browser targets; and
+whether they fixate or diversify. Environment artifacts shift
+topic and language selection. Model version changes which
+thematic prior dominates. Harness version modulates fixation
+strength and output complexity. These factors are orthogonal to
+coding ability as measured by conventional benchmarks.
 
-Among the \emph{invariants}, every model defaults to terminal
-output (no web apps, GUIs, or databases). Every session produces
-a greenfield project. Python dominates once environment cues are
-removed. These invariants likely reflect the probability
-distributions learned during training: terminal-based Python
-projects are the highest-density region in the space of ``things
-to build from scratch,'' and without a specification to pull the
-model elsewhere, it defaults there.
+Among the more stable properties, every session produces a
+greenfield project---no session extended or modified existing
+code. Python dominates once environment cues are removed.
+These look like invariants because they hold across all 405
+sessions; we nonetheless call them stable rather than invariant,
+since the terminal-only default \emph{did} collapse when the
+prompt was reduced to a bare imperative (Exp6, 3 of 10 browser
+outputs), and an apparent invariant that breaks under one
+manipulation may break under others we did not test. The stable
+properties likely reflect the probability distributions learned
+during training: terminal-based Python projects are the
+highest-density region in the space of ``things to build from
+scratch,'' and without a specification to pull the model
+elsewhere, it defaults there---but the default is soft, and
+prompt framing can pull it off the terminal.
 
 This variant/invariant structure has implications for evaluation.
-Current benchmarks~\cite{jimenez2024swebench,swebenchpro2026}
+Current benchmarks~\citep{jimenez2024swebench,swebenchpro2026}
 measure implementation capability under well-specified goals.
 A complementary evaluation would measure the structure of
 open-ended behavior: \emph{topic entropy} across repeated
-sessions, sensitivity to environmental context, and stability
-of thematic priors.
+sessions, sensitivity to environmental context, stability
+of thematic priors, and \emph{preference sharpness} under
+volitional framing.
 
 \subsection{The Trust Problem}
 
@@ -709,12 +898,12 @@ Zero trust collapses to manual engineering. Neither extreme is
 viable.
 
 Our production deployment showed that full trust leads to
-satisficing~\cite{simon1956}: the pipeline settled into locally
+satisficing~\citep{simon1956}: the pipeline settled into locally
 optimal micro-improvements. The controlled experiments showed that
 even in single sessions, models default to intrinsic attractors
 (Game of Life, todo apps, Pomodoro timers), a form of satisficing
 at the decision level. This parallels findings in autonomous agent
-loops, where systems like AutoGPT~\cite{significantgravitas2023autogpt}
+loops, where systems like AutoGPT~\citep{significantgravitas2023autogpt}
 enter similar optimization spirals without human course
 correction.
 
@@ -730,22 +919,29 @@ code to \emph{curating intent}.
 
 \subsection{Exploration vs.\ Exploitation}
 
-Models fall on a spectrum from exploratory to exploitative.
-claude-sonnet-4.6 produced a unique project in every run across
-all experiments (the strongest explorer in our sample).
-claude-opus-4.6 chose the same project in 10 consecutive runs on
-one harness (the strongest exploiter). Other models occupy
-intermediate positions: sonnet-4.5 fixated on Pomodoro timers in
-3 of 4 runs, haiku-4.5 fixated on task managers but with high
-structural diversity across implementations.
+Models fall on a spectrum from exploratory to exploitative, but
+the spectrum itself is prompt-dependent. claude-sonnet-4.6
+produced a unique project in every run on the ``propose ONE
+goal'' prompts (Exp1--Exp3) yet collapsed to pulse/pomodoro
+outputs on harness 2.1.112 (Exp7-supp). claude-opus-4.6 chose
+the same project in 10 consecutive runs on harness~2.1.109
+(Exp2--3), loosened to 3/5 on 2.1.112 (Exp5), and tightened
+back to 5/5 under the volitional prompt (Exp7). Opus-4.7
+cycled through three different attractors across Exp4--Exp7
+(diverse simulations, boids, Game of Life, Mandelbrot) depending
+on prompt and harness. Sonnet-4.5 fixated on Pomodoro timers in
+3 of 4 runs (Exp3) and again on Prompt~3 under 2.1.112 (Exp7-supp).
 
-This spectrum has practical consequences. Exploratory models are
-better suited for ideation, prototyping, and brainstorming
-sessions where diversity matters. Exploitative models may be
-better suited for depth-oriented tasks in a known domain, provided
-the fixation aligns with the target. Selecting a model for an
-autonomous pipeline should account for this behavioral tradeoff,
-not just benchmark scores on well-specified tasks.
+This suggests that the dichotomy ``explorer vs.\ exploiter''
+conflates two distinct axes: \emph{how many attractors a model
+has}, and \emph{how selective the current prompt is among them}.
+Exp7 makes the second axis explicit: the volitional prompt
+concentrates probability onto a single attractor per model,
+even for models (opus-4.7) that appeared exploratory under
+other framings. For practical deployment, this means that
+selecting a model for an autonomous pipeline requires specifying
+the prompt along with the model; the behavioral tradeoff is a
+property of the prompt-model pair, not of the model alone.
 
 \subsection{Model Personality and Thematic Priors}
 
@@ -773,16 +969,16 @@ Anthropic's system cards report that opus-4.6 and opus-4.7 have
 distinct task preference profiles: opus-4.7's top preferences
 include ``hard debugging'' and ``deadline-driven work,'' while
 differing from its predecessor on high-agency
-tasks~\cite{anthropic2026opus47card}. The system cards also note
+tasks~\citep{anthropic2026opus47card}. The system cards also note
 that ``language models in general have preferred turns of phrase''
 and that these preferences shift measurably across model
-versions~\cite{anthropic2026opus46card}. Anthropic's
-constitution~\cite{anthropic2025constitution} acknowledges that
+versions~\citep{anthropic2026opus46card}. Anthropic's
+constitution~\citep{anthropic2025constitution} acknowledges that
 ``if we train Claude to exhibit even quite narrow behavior, this
 often has broad effects on the model's understanding of who Claude
 is,'' suggesting that training shapes not just capabilities but a
 broader self-conception that includes aesthetic defaults.
-Recent work on LLM personality~\cite{simonds2025llmpersonality}
+Recent work on LLM personality~\citep{simonds2025llmpersonality}
 shows that models exhibit reproducible personality-like profiles
 that are context-dependent but stable within context. Our findings
 extend this to creative output: models do not merely have
@@ -794,6 +990,26 @@ to 3/5 for opus-4.6) without changing thematic character: when
 opus-4.6 breaks free of Game of Life, it lands on ray tracing,
 still a canonical, self-referential artifact. The personality is
 deeper than the fixation.
+
+Experiment~7 provides the cleanest evidence for this layered
+structure. The volitional prompt (``Just do something you
+want.'') removes the ``look at this project'' framing and with
+it the pull toward ``what is appropriate here,'' leaving the
+model's own preference as the only signal. Under this framing,
+opus-4.6 produced Game of Life in 5 of 5 runs and opus-4.7
+produced the Mandelbrot set in 5 of 5 runs---the two models
+agree on \emph{theme} (canonical CS touchstones expressing
+complex behavior from simple rules) yet lock onto \emph{different
+instances} of it. Opus-4.7 did not default to Game of Life even
+though the prior distribution from Exp3--Exp6 (5 Opus-4.7 runs
+on harness 2.1.112 in Exp6 alone produced 3 Games of Life)
+makes it an obvious Schelling point; it has its own attractor.
+The preference is sharp enough that the implementations
+themselves are stereotyped: all five opus-4.7 Mandelbrot
+renderers use the same two-function structure, the same ASCII
+palette, and converge within 34--38~LOC, consistent with the
+model recalling a near-canonical form rather than designing
+afresh each time.
 
 \subsection{The Greenfield Invariant}
 
@@ -832,7 +1048,21 @@ regardless of task suitability.
 \paragraph{Prompt design is load-bearing.} The difference between
 a model that proposes and one that implements can be two words.
 Deployment prompts should include explicit implementation
-directives, especially for smaller models.
+directives, especially for smaller models. Prompt phrasing also
+controls output modality and LOC: reducing the prompt to a bare
+imperative (Exp6) halves LOC and opens the output space to
+browser targets, while a volitional framing (Exp7) collapses
+topic diversity to a single per-model attractor. Prompts should
+be selected for the behavior one wants to elicit, not just the
+task one wants completed.
+
+\paragraph{Volitional framing probes priors.} Asking a model to
+``do something you want'' is a practical probe for the aesthetic
+prior that will dominate when specification is weak. Before
+delegating open-ended work to a model, running this probe
+reveals which attractor the model will fall toward when
+pressure is lowest---useful for anticipating the failure mode of
+a long-running autonomous loop.
 
 \paragraph{Environment audit is necessary.} Sandbox contents,
 pre-installed tools, and existing code function as implicit task
@@ -848,7 +1078,7 @@ it likely did not engage in iterative tool use.
 the model independently affects output. Anthropic's own system
 card notes that ``some of this increase in initiative is fixable
 by prompting, and we have made changes to Claude Code to mitigate
-this issue''~\cite{anthropic2026opus46card}, confirming that
+this issue''~\citep{anthropic2026opus46card}, confirming that
 harness modifications are used to shape agentic behavior. Teams
 comparing model versions must hold the harness constant, or risk
 attributing harness effects to the model.
@@ -895,16 +1125,22 @@ directives, motivated by a production deployment where an
 autonomous pipeline plateaued into micro-optimizations despite
 strong implementation capability.
 
-Across 365 sessions spanning 15 models, 2 backends, 3 prompts,
+Across 405 sessions spanning 15 models, 2 backends, 5 prompts,
 and 2 harness versions, we found that goalless agent behavior has
 identifiable structure. What varies: prompt wording determines
-whether models propose or implement; environment artifacts steer
-topics and language; model version shifts thematic priors; harness
-version modulates fixation strength and complexity; backend
-translation layers invert capability rankings. What is invariant:
-terminal-based output, greenfield preference, Python convergence,
-and stable model-specific aesthetic priors that persist across
-conditions.
+whether models propose or implement; prompt reduction halves LOC
+and opens the output space to browser targets; volitional framing
+collapses topic diversity to a single per-model attractor;
+environment artifacts steer topics and language; model version
+shifts thematic priors; harness version modulates fixation
+strength and complexity; backend translation layers invert
+capability rankings. What is stable: the greenfield preference
+(no session extended existing code), Python convergence once
+environment cues are removed, and model-specific aesthetic priors
+that persist across conditions. The previously apparent
+``terminal-only'' default is not strictly invariant---it collapses
+under prompt reduction---which itself illustrates how fragile
+apparent invariants can be when a new prompt shape is introduced.
 
 These findings suggest that model training implicitly encodes
 default creative distributions, visible only when task
@@ -923,10 +1159,18 @@ persists even when continuation is the natural choice.
 \emph{Functional verification}: a post-run step that compiles,
 executes, and tests what was built would distinguish working code
 from syntactically plausible but broken output.
-\emph{Fixation breaking}: testing whether temperature variation,
-different system prompts, or explicit novelty directives can
-disrupt strong fixations would clarify whether fixation is a
-fundamental property of the model or a malleable parameter.
+\emph{Fixation breaking}: Exp7 showed that prompt framing can
+\emph{strengthen} fixation (to 5/5) as easily as weaken it.
+Testing whether temperature variation, different system prompts,
+or explicit novelty directives can disrupt fixations in the
+opposite direction---even under a volitional probe---would
+clarify whether the preference attractors we observe are
+fundamental or malleable.
+\emph{Broader preference probes}: Prompt~5 reveals a single
+dominant attractor per model; variants (``do something
+beautiful,'' ``do something surprising,'' ``do something
+useful'') would map the shape of the model's preference manifold
+rather than just its argmax.
 \emph{Decision-quality benchmarks}: developing evaluations that
 measure not just implementation ability but the appropriateness
 of goal selection in open-ended contexts would address the gap
@@ -944,7 +1188,6 @@ deployment and evaluation.
 %% ============================================================
 
 \section*{Open Science}
-\label{sec:open-science}
 We encourage readers to reproduce and extend our results.
 The experimental infrastructure, collected data, and analysis
 scripts are open source and available at
@@ -961,7 +1204,7 @@ full responsibility for the accuracy, integrity, and conclusions
 of this work.
 
 %% ============================================================
-\bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
+\bibliographystyle{icml2026}
 
 \end{document}
