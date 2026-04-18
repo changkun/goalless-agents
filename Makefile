@@ -36,7 +36,7 @@ endif
 
 RUN_FLAGS += --workspace $(WORKSPACE)
 
-.PHONY: help claude codex experiment experiment-dry pull pull-claude pull-codex models
+.PHONY: help claude codex experiment experiment-dry pull pull-claude pull-codex models paper paper-clean
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -101,3 +101,9 @@ pull-claude: ## Pull Claude sandbox image
 
 pull-codex: ## Pull Codex sandbox image
 	$(RUNTIME) pull ghcr.io/latere-ai/sandbox-codex:latest
+
+paper: ## Build papers/paper.pdf
+	$(MAKE) -C papers
+
+paper-clean: ## Remove LaTeX build intermediates
+	$(MAKE) -C papers clean
