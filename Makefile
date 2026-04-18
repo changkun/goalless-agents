@@ -102,8 +102,8 @@ pull-claude: ## Pull Claude sandbox image
 pull-codex: ## Pull Codex sandbox image
 	$(RUNTIME) pull ghcr.io/latere-ai/sandbox-codex:latest
 
-paper: ## Build papers/paper.pdf
-	$(MAKE) -C papers
+paper: ## Build papers/paper.pdf (forces rebuild)
+	$(MAKE) -B -C papers
 
 paper-clean: ## Remove LaTeX build intermediates
 	$(MAKE) -C papers clean
