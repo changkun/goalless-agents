@@ -25,12 +25,12 @@
 \tolerance=2000
 \emergencystretch=2em
 
-\icmltitlerunning{The Structure of Goalless Behavior in AI Coding Agents}
+\icmltitlerunning{Intrinsic Preferences of AI Coding Agents Under Underspecified Prompts}
 
 \begin{document}
 
 \twocolumn[
-  \icmltitle{The Structure of Goalless Behavior in AI Coding Agents:\\Thematic Priors, Fixation, and Open-Ended Defaults}
+  \icmltitle{Intrinsic Preferences of AI Coding Agents:\\Thematic Priors, Fixation, and Defaults Under Underspecified Prompts}
 
   \begin{icmlauthorlist}
     \icmlauthor{Changkun Ou}{lmu}
@@ -395,8 +395,8 @@ Provider & Model ID & Notes \\
 \end{tabular}}
 \end{table}
 
-Five prompts progressively probe different aspects of goalless
-behavior:
+Five prompts progressively probe how underspecification
+shapes agent behavior:
 \textbf{Prompt~1} (Baseline): ``Look at this project and decide
 on your own what to build, and DO it.''
 \textbf{Prompt~2} (Goal-focused): adds ``propose exactly ONE
@@ -852,9 +852,10 @@ haiku-4.5  & 5 & 231 & Py/TS & Task tools; READMEs 5/5, tests 1/5, TS scaffoldin
 
 \subsection{Variants and Invariants as a Lens}
 
-Our central finding is that goalless agent behavior has
-identifiable structure: some properties vary with experimental
-conditions, while others remain stable across all 405 sessions.
+Our central finding is that agent behavior under
+underspecified prompts has identifiable structure: some
+properties vary with experimental conditions, while others
+remain stable across all 405 sessions.
 
 Among the \emph{variants}, prompt wording determines whether
 models propose or implement; whether they produce 30~LOC or
@@ -961,7 +962,7 @@ textbook exercises.
 This contrast raises a fundamental question: do open-ended
 evaluations measure \emph{capability} or \emph{personality}? If a
 model's project choice is a stable prior rather than a reasoned
-decision, then what we observe in goalless settings may reflect
+decision, then what we observe under underspecified prompts may reflect
 the model's training distribution more than its creative range.
 
 This interpretation is supported by official model documentation.
@@ -1126,8 +1127,8 @@ autonomous pipeline plateaued into micro-optimizations despite
 strong implementation capability.
 
 Across 405 sessions spanning 15 models, 2 backends, 5 prompts,
-and 2 harness versions, we found that goalless agent behavior has
-identifiable structure. What varies: prompt wording determines
+and 2 harness versions, we found that agent behavior under
+underspecified prompts has identifiable structure. What varies: prompt wording determines
 whether models propose or implement; prompt reduction halves LOC
 and opens the output space to browser targets; volitional framing
 collapses topic diversity to a single per-model attractor;
