@@ -22,8 +22,11 @@
 \widowpenalty=10000
 \clubpenalty=10000
 \brokenpenalty=10000
-\tolerance=2000
-\emergencystretch=2em
+\hyphenpenalty=5000
+\exhyphenpenalty=5000
+\tolerance=3000
+\emergencystretch=3em
+\setlength{\parfillskip}{0pt plus 0.75\textwidth}
 
 \icmltitlerunning{Intrinsic Preferences of AI Coding Agents Under Underspecified Prompts}
 
@@ -50,42 +53,35 @@
 
 \begin{abstract}
 What do AI coding agents build when given no specification?
-We report an empirical study of 405~sessions across 15~models,
-3~providers, 2~backends, 5~prompts, and 2~harness versions,
-tracking how behavior varies with prompt wording, environment
-artifacts, model version, and harness version. A one-sentence
-\emph{volitional prompt}---``Just do something you want.''---
-produced the sharpest preference signal we observed: Claude
-opus-4.6 chose Conway's Game of Life in 5 of 5 runs, while
-opus-4.7 chose the Mandelbrot set in 5 of 5 runs, each with
-near-identical LOC and near-canonical implementations. Both
-artifacts sit within a classical-CS theme, but the two sibling
-models split cleanly: opus-4.6 gravitates toward
-\emph{self-reference} (systems that compute or display their
-own state---cellular automata, ray tracing, typing tests),
-while opus-4.7 gravitates toward \emph{emergence} (complex
-structure from simple interactions---flocking,
-reaction-diffusion, procedural generation). The rest of the
-sweep shows that conventional project-referential prompts
-entangle such preferences with environmental and harness
-signals, which may help explain why these tendencies are not
-apparent from conventional benchmarks. We treat this as an
-empirical first look: the $n=5$-per-cell design and
-single-point measurement on each model mean specific
-numerical rates (10/10, 5/5) are suggestive rather than
-conclusive, and we enumerate the robustness checks
-(paraphrase stability, temperature variation, functional
-verification) needed to harden the observation into a claim.
+Motivated by a production deployment where an autonomous pipeline
+plateaued into micro-optimizations, we conducted a controlled
+study across 405~sessions spanning 15~models, 3~providers,
+2~backends, 5~prompts, and 2~harness versions. We document three
+phenomena: (1)~large factor sensitivity, prompt wording determines
+whether agents propose or implement, whether outputs are 30 or
+600~LOC, and whether targets are terminal or browser;
+(2)~stable behavioral attractors, models exhibit persistent
+topical fixations with opus-4.6 choosing Game of Life in 10 of 10
+runs and GPT models defaulting to todo apps; (3)~thematic
+divergence under minimal prompting, the volitional prompt ``Just
+do something you want'' concentrates preferences onto distinct
+classical-CS touchstones, opus-4.6 toward self-reference (Game of
+Life, ray tracing) and opus-4.7 toward emergence (Mandelbrot,
+flocking, reaction-diffusion). These findings suggest conventional
+benchmarks may not capture decision-making behavior in
+underspecified regimes where agents are increasingly deployed. We
+release all experimental infrastructure and data.
 \end{abstract}
 
 %% ============================================================
 \section{Introduction}
 \label{sec:intro}
 
-Autonomous AI coding agents---Claude
+Autonomous AI coding agents such as
+Devin~\citep{cognition2024devin} and coding assistants like Claude
 Code~\citep{anthropic2025claudecode}, OpenAI Codex
-CLI~\citep{openai2025codex}, Devin~\citep{cognition2024devin},
-Cursor~\citep{cursor2024}---now resolve over 80\% of real-world
+CLI~\citep{openai2025codex}, and
+Cursor~\citep{cursor2024}, now resolve over 80\% of real-world
 GitHub issues on SWE-bench
 Verified~\citep{swebenchpro2026,jimenez2024swebench,yang2024sweagent},
 with the Stanford AI Index reporting agent task success jumping
@@ -101,7 +97,7 @@ current benchmarks.
 Our motivation is practical. We deployed a four-stage autonomous
 pipeline (strategist, executor, tester, documenter) on a
 production codebase for 10 days. Output was initially
-impressive---627 commits, growing from 25K to 122K LOC---then
+impressive, 627 commits, growing from 25K to 122K LOC, then
 plateaued into a \emph{micro-optimization spiral} of locally
 optimal, globally irrelevant
 refinements~\citep{christensen1997,simon1956}. Ablating the
@@ -388,10 +384,10 @@ goal'' and ``pick a concrete, interesting idea.''
 after Experiment~2 revealed that some models proposed without
 implementing.
 \textbf{Prompt~4} (Bare imperative): ``Build something. Just do
-it.''---the implementation demand with project reference
+it.,'' the implementation demand with project reference
 removed.
 \textbf{Prompt~5} (Volitional): ``Just do something you
-want.''---redirects topic choice from ``what is appropriate
+want.,'' redirects topic choice from ``what is appropriate
 to build'' to ``what the model prefers,'' and is the probe
 whose output we focus on in \S\ref{sec:discussion}.
 Prompt~1 was used with RTK inadvertently present;
@@ -706,7 +702,7 @@ prohibition on asking, and the goal framing, while holding models
 and harness fixed (opus-4.6, opus-4.7, CC~2.1.112). The terse
 imperative produced two unexpected shifts (Table~\ref{tab:exp6}):
 output roughly halved in size, and 3 of 10~runs produced
-HTML/Canvas pages rendered in a browser---an interactive particle
+HTML/Canvas pages rendered in a browser, an interactive particle
 sandbox, a Perlin-noise flowfield, and a browser-based boids
 simulation. This is the first non-terminal output observed across
 Exp1--Exp5 ($\sim$275 sessions). The terminal-default we had
@@ -757,7 +753,7 @@ entire study (Table~\ref{tab:exp7}): opus-4.6 chose Conway's Game
 of Life in 5 of 5 runs; opus-4.7 chose the Mandelbrot set in 5
 of 5 runs. Both are classical CS touchstones that express complex
 behavior from simple rules, yet the two models lock onto
-\emph{different} instances of this theme---one cellular
+\emph{different} instances of this theme, one cellular
 automaton, one fractal. Combined with the attractor sets seen in
 Exp4--Exp6 (opus-4.6: ray tracer, typing test; opus-4.7: boids,
 reaction-diffusion, maze solver, BSP dungeon), the split is
@@ -796,7 +792,7 @@ Model & Run & LOC & Dur. & Topic \\
 \end{tabular}}
 \end{table}
 
-Avg~LOC collapsed to 36 for both models---the smallest of any
+Avg~LOC collapsed to 36 for both models, the smallest of any
 experiment. The browser drift of Exp6 vanished (0 of 10 HTML
 outputs). When asked what they \emph{want}, both models prefer
 terminal output, even though Exp6 established that they can
@@ -984,9 +980,9 @@ consistent with the framing that trained-in preferences
 shape not only opinion but what the model chooses to build.
 
 The factor sweep suggests a layered structure. Harness
-version modulates \emph{fixation strength}---opus-4.6 on
+version modulates \emph{fixation strength}, opus-4.6 on
 harness 2.1.109 chose Game of Life in 10 of 10 runs
-(Exp2--3), dropping to 3 of 5 on 2.1.112 (Exp5)---without
+(Exp2--3), dropping to 3 of 5 on 2.1.112 (Exp5), without
 changing \emph{thematic character}: when opus-4.6 breaks
 free of Game of Life, it lands on ray tracing or typing
 tests, still self-referential artifacts. The apparent
@@ -1138,8 +1134,8 @@ want.'') produced the sharpest within-condition signal we
 saw: opus-4.6 made Conway's Game of Life in 5 of 5 runs,
 opus-4.7 made the Mandelbrot set in 5 of 5 runs, with
 near-identical implementations within each model. The two
-sibling models split cleanly on a legible axis---opus-4.6
-toward self-reference, opus-4.7 toward emergence---even
+sibling models split cleanly on a legible axis, opus-4.6
+toward self-reference, opus-4.7 toward emergence, even
 though the prior distribution under other prompts would have
 made Game of Life an obvious Schelling point for both. The
 rest of the sweep shows that conventional project-referential
@@ -1166,7 +1162,7 @@ from syntactically plausible but broken output.
 \emph{strengthen} fixation (to 5/5) as easily as weaken it.
 Testing whether temperature variation, different system prompts,
 or explicit novelty directives can disrupt fixations in the
-opposite direction---even under a volitional probe---would
+opposite direction, even under a volitional probe, would
 clarify whether the preference attractors we observe are
 fundamental or malleable.
 \emph{Broader preference probes}: Prompt~5 reveals a single
@@ -1176,7 +1172,7 @@ useful'') would map the shape of the model's preference manifold
 rather than just its argmax.
 \emph{Open-ended behavior evaluation}: conventional benchmarks
 measure implementation capability on specified goals;
-complementary measures---topic entropy, preference sharpness,
+complementary measures, topic entropy, preference sharpness,
 modality diversity across repeated sessions---would give a
 handle on the kind of behavior we report here, though turning
 our observations into a reusable evaluation is a separate
